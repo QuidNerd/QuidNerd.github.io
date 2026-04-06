@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Administrator/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/36f84148-e772-49b5-9f3e-3f7c91baac10/7e62bd72-a0df-43f8-97e8-95c49c15f8c0/skills/xlsx/**)",
+      "Bash(python -c \":*)",
+      "Bash(pip install:*)",
+      "WebFetch(domain:hogwarts.io)",
+      "WebSearch",
+      "WebFetch(domain:wallpapercave.com)"
+    ]
+  }
+}
