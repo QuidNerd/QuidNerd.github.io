@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gringotts Currency Exchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Spectral:wght@500;600&family=Source+Code+Pro:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --body-bg: #e3d7b6;
+  --page-bg: #ece2c8;
+  --border-dark: #3a3226;
+  --border-light: #b9ab8a;
+  --ink: #2a2418;
+  --ink-dim: #6b6050;
+  --ink-faint: #9c9484;
+  --accent: #3f6b52;
+  --accent-bright: #4f8a68;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--body-bg);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(63,107,82,0.06), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(58,50,38,0.05), transparent 45%);
+  color: var(--ink); min-height: 100vh;
+  padding: 40px 16px 70px;
+}
+
+.frame { max-width: 680px; margin: 0 auto; border: 1.5px solid var(--border-dark); padding: 5px; box-shadow: 0 14px 40px rgba(42,36,24,0.25); }
+.page { border: 1px solid var(--border-light); background: var(--page-bg); padding: 50px 54px; }
+
+/* Title block */
+.eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; }
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 3.4rem; color: var(--ink);
+  letter-spacing: 2px; text-align:center; margin: 10px 0 8px; text-transform: uppercase;
+}
+.subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.3rem; color: var(--ink-dim);
+  text-align:center; margin-bottom: 20px;
+}
+.site-nav { text-align:center; font-size: 0.95rem; color: var(--ink-dim); margin-bottom: 26px; }
+.site-nav a { color: var(--ink-dim); text-decoration:none; }
+.site-nav a:hover { color: var(--accent); }
+.site-nav .sep { color: var(--border-light); margin: 0 10px; }
+
+.rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 28px; }
+.rule.wide { width: 100%; margin: 44px auto 40px; }
+
+.rate-label { text-align:center; color: var(--ink-dim); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+.rate-table { max-width: 380px; margin: 0 auto 10px; }
+.rate-row { display:flex; align-items:baseline; gap:8px; font-size: 1.1rem; padding: 7px 0; }
+.rate-row .label { color: var(--ink); font-weight:600; white-space:nowrap; }
+.rate-row .leader { flex:1; border-bottom: 1px dotted var(--border-light); transform: translateY(-5px); margin: 0 4px; }
+.rate-row .value { font-family: 'Source Code Pro', monospace; color: var(--accent); white-space:nowrap; font-size: 1rem; }
+
+.contents-label { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; margin: 26px 0 16px; }
+.toc-entry {
+  display: flex; align-items: baseline; gap: 10px; text-decoration: none;
+  color: var(--ink); font-size: 1.15rem; padding: 8px 2px;
+}
+.toc-entry .num { font-family: 'Cormorant Garamond', Georgia, serif; color: var(--accent); font-weight: 600; width: 26px; flex: none; }
+.toc-entry .leader { flex: 1; border-bottom: 1px dotted var(--border-light); transform: translateY(-6px); margin: 0 4px; }
+.toc-entry:hover { color: var(--accent); }
+.toc-entry:hover .leader { border-color: var(--accent); }
+
+/* Chapters */
+.chapter { scroll-margin-top: 30px; }
+.chapter-eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; }
+.chapter h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 2rem; color: var(--ink);
+  text-align:center; letter-spacing: 1px; margin: 8px 0 20px;
+}
+.chapter .desc { text-align:center; font-style: italic; color: var(--ink-dim); font-size: 1.1rem; margin-bottom: 30px; line-height: 1.7; }
+.rate-note { text-align:center; font-size: 1rem; color: var(--ink-dim); margin: -14px 0 28px; }
+.rate-note b { color: var(--accent); font-weight:600; }
+
+/* Ledger fields */
+.field-row { display:flex; justify-content:center; gap: 36px; flex-wrap: wrap; margin-bottom: 32px; }
+.field { display:flex; flex-direction:column; align-items:center; gap: 8px; }
+.field label { font-size: 0.78rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 1.5px; }
+.field input {
+  font-family: 'Spectral', Georgia, serif; font-size: 1.4rem; font-weight:600; color: var(--ink);
+  background: transparent; border: none; border-bottom: 1.5px dotted var(--border-light);
+  padding: 4px 6px; width: 110px; text-align: center;
+}
+.field input:focus { outline: none; border-bottom-color: var(--accent); color: var(--accent); }
+
+/* Result ledger box */
+.result {
+  border: 1px solid var(--border-light); padding: 24px 20px; text-align: center; margin: 0 auto;
+}
+.result .headline {
+  font-family: 'Spectral', Georgia, serif; font-weight: 600; font-size: 1.9rem; color: var(--accent);
+}
+.result .sub-line {
+  font-family: 'Source Code Pro', monospace; color: var(--ink-dim); font-size: 0.9rem;
+  margin-top: 12px; line-height: 1.7;
+}
+
+.page-num { text-align:center; margin-top: 30px; color: var(--ink-faint); font-size: 1rem; }
+
+@media(max-width:560px) {
+  .page { padding: 40px 24px; }
+  .field-row { gap: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="page">
+
+    <div class="eyebrow">Gringotts Wizarding Bank</div>
+    <h1>Gringotts</h1>
+    <p class="subtitle">Currency Exchange &amp; Conversion</p>
+    <div class="site-nav"><a href="../">Home</a><span class="sep">&middot;</span><a href="../quidmodding/">Quidditch Mod Tool</a></div>
+    <div class="rule"></div>
+
+    <div class="rate-label">Exchange Rates</div>
+    <div class="rate-table">
+      <div class="rate-row">
+        <span class="label">1 Galleon</span>
+        <span class="leader"></span>
+        <span class="value">17 Sickles &nbsp;/&nbsp; 493 Knuts</span>
+      </div>
+      <div class="rate-row">
+        <span class="label">1 Sickle</span>
+        <span class="leader"></span>
+        <span class="value">29 Knuts</span>
+      </div>
+    </div>
+
+    <div class="contents-label">Contents</div>
+    <nav>
+      <a class="toc-entry" href="#chapter-1">
+        <span class="num">I.</span>
+        <span class="title">Potato Peeling Converter</span>
+        <span class="leader"></span>
+      </a>
+      <a class="toc-entry" href="#chapter-2">
+        <span class="num">II.</span>
+        <span class="title">Daily Stipend Countdown</span>
+        <span class="leader"></span>
+      </a>
+    </nav>
+
+    <div class="rule wide"></div>
+
+    <!-- Chapter I: Potato Peeling Converter -->
+    <section class="chapter" id="chapter-1">
+      <div class="chapter-eyebrow">Chapter I</div>
+      <h2>Potato Peeling Converter</h2>
+      <p class="desc">1 Knut = 1 potato peeling.</p>
+
+      <div class="field-row">
+        <div class="field"><label>Galleons</label><input type="number" id="pp-galleons" min="0" value="0" oninput="calcPeelings()"></div>
+        <div class="field"><label>Sickles</label><input type="number" id="pp-sickles" min="0" value="0" oninput="calcPeelings()"></div>
+        <div class="field"><label>Knuts</label><input type="number" id="pp-knuts" min="0" value="0" oninput="calcPeelings()"></div>
+      </div>
+
+      <div class="result">
+        <div class="headline" id="pp-result">0 potato peelings</div>
+        <div class="sub-line" id="pp-breakdown"></div>
+      </div>
+
+      <div class="page-num">&mdash; I &mdash;</div>
+    </section>
+
+    <div class="rule wide"></div>
+
+    <!-- Chapter II: Daily Stipend Countdown -->
+    <section class="chapter" id="chapter-2">
+      <div class="chapter-eyebrow">Chapter II</div>
+      <h2>Daily Stipend Countdown</h2>
+      <p class="desc">Set a savings goal and find out how many days of daily stipend it will take to reach it.</p>
+      <div class="rate-note">Base rate: <b>10 Sickles / day</b>. Staff receive an extra allowance on top &mdash; add it below if it applies to you.</div>
+
+      <div class="field-row">
+        <div class="field"><label>Goal &mdash; Galleons</label><input type="number" id="ds-galleons" min="0" value="0" oninput="calcDays()"></div>
+        <div class="field"><label>Goal &mdash; Sickles</label><input type="number" id="ds-sickles" min="0" value="0" oninput="calcDays()"></div>
+        <div class="field"><label>Goal &mdash; Knuts</label><input type="number" id="ds-knuts" min="0" value="0" oninput="calcDays()"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Staff Bonus (Sickles/day)</label><input type="number" id="ds-staff" min="0" value="0" oninput="calcDays()"></div>
+      </div>
+
+      <div class="result">
+        <div class="headline" id="ds-result">0 days</div>
+        <div class="sub-line" id="ds-breakdown"></div>
+      </div>
+
+      <div class="page-num">&mdash; II &mdash;</div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+const KNUTS_PER_SICKLE = 29;
+const KNUTS_PER_GALLEON = 493;
+
+function toKnuts(galleons, sickles, knuts) {
+  return (galleons||0) * KNUTS_PER_GALLEON + (sickles||0) * KNUTS_PER_SICKLE + (knuts||0);
+}
+
+function calcPeelings() {
+  const g = parseFloat(document.getElementById('pp-galleons').value) || 0;
+  const s = parseFloat(document.getElementById('pp-sickles').value) || 0;
+  const k = parseFloat(document.getElementById('pp-knuts').value) || 0;
+  const total = toKnuts(g, s, k);
+  document.getElementById('pp-result').textContent = total.toLocaleString() + ' potato peeling' + (total === 1 ? '' : 's');
+  document.getElementById('pp-breakdown').textContent =
+    `${g} Galleon${g===1?'':'s'} + ${s} Sickle${s===1?'':'s'} + ${k} Knut${k===1?'':'s'} = ${total.toLocaleString()} Knuts`;
+}
+
+function calcDays() {
+  const g = parseFloat(document.getElementById('ds-galleons').value) || 0;
+  const s = parseFloat(document.getElementById('ds-sickles').value) || 0;
+  const k = parseFloat(document.getElementById('ds-knuts').value) || 0;
+  const staffBonus = parseFloat(document.getElementById('ds-staff').value) || 0;
+
+  const goalKnuts = toKnuts(g, s, k);
+  const dailySickles = 10 + staffBonus;
+  const dailyKnuts = dailySickles * KNUTS_PER_SICKLE;
+
+  if (goalKnuts <= 0) {
+    document.getElementById('ds-result').textContent = 'Set a goal above 0';
+    document.getElementById('ds-breakdown').textContent = '';
+    return;
+  }
+
+  const days = Math.ceil(goalKnuts / dailyKnuts);
+  const weeks = (days / 7).toFixed(1);
+
+  document.getElementById('ds-result').textContent = days.toLocaleString() + ' day' + (days === 1 ? '' : 's');
+  document.getElementById('ds-breakdown').textContent =
+    `Goal: ${goalKnuts.toLocaleString()} Knuts  |  Earning ${dailySickles} Sickles/day (10 base${staffBonus ? ' + ' + staffBonus + ' staff' : ''}) = ${dailyKnuts.toLocaleString()} Knuts/day  |  ~${weeks} weeks`;
+}
+
+calcPeelings();
+calcDays();
+</script>
+</body>
+</html>

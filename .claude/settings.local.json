@@ -6,7 +6,14 @@
       "Bash(pip install:*)",
       "WebFetch(domain:hogwarts.io)",
       "WebSearch",
-      "WebFetch(domain:wallpapercave.com)"
+      "WebFetch(domain:wallpapercave.com)",
+      "Bash(lsof -ti:8080)",
+      "Bash(xargs kill)",
+      "Read(//usr/bin/**)",
+      "Bash(xattr -l /Library/Developer/CommandLineTools/usr/bin/python3)",
+      "Bash(command -v python3.9 python3.10 python3.11 python3.12 python3.13)",
+      "Bash(brew --prefix)",
+      "Bash(rm -f /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/.claude/serve.py)"
     ]
   }
 }
