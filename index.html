@@ -37,8 +37,9 @@ body {
 .fleuron { color: var(--accent); font-size: 1.6rem; margin-bottom: 10px; }
 .eyebrow { color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; }
 h1 {
-  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 3.1rem; color: var(--ink);
-  letter-spacing: 2px; margin-top: 10px; text-transform: uppercase;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: clamp(1.7rem, 9vw, 3.1rem); color: var(--ink);
+  letter-spacing: clamp(0px, 1vw, 2px); margin-top: 10px; text-transform: uppercase;
+  overflow-wrap: anywhere; text-align: center;
 }
 .sub { color: var(--ink-dim); font-size: 1.15rem; margin: 14px 0 34px; font-style: italic; }
 .rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 30px; }
@@ -56,6 +57,13 @@ nav { text-align: left; }
 .toc-entry:hover .leader { border-color: var(--accent); }
 
 .footnote { margin-top: 30px; color: var(--ink-faint); font-size: 0.9rem; font-style: italic; }
+
+@media (max-width: 480px) {
+  .page { padding: 40px 26px; }
+  .toc-entry { font-size: 1.05rem; gap: 8px; }
+  .toc-entry .title { white-space: normal; }
+  .toc-entry .leader { display: none; }
+}
 </style>
 </head>
 <body>
