@@ -42,10 +42,12 @@ h1 {
   font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.3rem; color: var(--ink-dim);
   text-align:center; margin-bottom: 20px;
 }
-.site-nav { text-align:center; font-size: 0.95rem; color: var(--ink-dim); margin-bottom: 26px; }
-.site-nav a { color: var(--ink-dim); text-decoration:none; }
-.site-nav a:hover { color: var(--accent); }
-.site-nav .sep { color: var(--border-light); margin: 0 10px; }
+.site-nav { display:flex; justify-content:center; gap:20px; margin-bottom: 30px; }
+.site-nav a {
+  font-family: 'EB Garamond', Georgia, serif; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--accent); text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s;
+}
+.site-nav a:hover { color: var(--accent-bright); }
 
 .rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 28px; }
 .rule.wide { width: 100%; margin: 44px auto 40px; }
@@ -75,10 +77,14 @@ h1 {
   text-align:center; letter-spacing: 1px; margin: 8px 0 20px;
 }
 .chapter .desc { text-align:center; font-style: italic; color: var(--ink-dim); font-size: 1.1rem; margin-bottom: 30px; line-height: 1.7; }
-.rate-note { text-align:center; font-size: 1rem; color: var(--ink-dim); margin: -14px 0 28px; }
-.rate-note b { color: var(--accent); font-weight:600; }
+.rate-note { text-align:center; margin: -14px 0 32px; }
+.rate-note .line1 { font-size: 1.05rem; color: var(--ink-dim); }
+.rate-note .line1 b { color: var(--accent); font-weight:600; }
+.rate-note .line2 { font-size: 0.92rem; color: var(--ink-faint); font-style: italic; margin-top: 5px; }
 
 /* Ledger fields */
+.rule-dotted { width: 100%; border-top: 1px dotted var(--border-light); margin: 28px 0; }
+.field-group-label { text-align:center; color: var(--ink-dim); font-size: 0.78rem; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 18px; }
 .field-row { display:flex; justify-content:center; gap: 36px; flex-wrap: wrap; margin-bottom: 32px; }
 .field { display:flex; flex-direction:column; align-items:center; gap: 8px; }
 .field label { font-size: 0.78rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 1.5px; }
@@ -100,6 +106,13 @@ h1 {
   font-family: 'Source Code Pro', monospace; color: var(--ink-dim); font-size: 0.9rem;
   margin-top: 12px; line-height: 1.7;
 }
+.result .date-line {
+  font-family: 'EB Garamond', Georgia, serif; font-style: italic; color: var(--ink); font-size: 1.05rem;
+  margin-top: 10px;
+}
+.result .date-line b { font-style: normal; font-weight: 600; color: var(--accent); }
+
+.field.wide input { width: 170px; }
 
 .page-num { text-align:center; margin-top: 30px; color: var(--ink-faint); font-size: 1rem; }
 
@@ -116,7 +129,7 @@ h1 {
     <div class="eyebrow">Gringotts Wizarding Bank</div>
     <h1>Gringotts</h1>
     <p class="subtitle">Currency Exchange &amp; Conversion</p>
-    <div class="site-nav"><a href="../">Home</a><span class="sep">&middot;</span><a href="../quidmodding/">Quidditch Mod Tool</a></div>
+    <div class="site-nav"><a href="../">Home</a><a href="../quidmodding/">Quidditch Mod Tool</a></div>
     <div class="rule"></div>
 
     <div class="rate-label">Exchange Rates</div>
@@ -142,7 +155,7 @@ h1 {
       </a>
       <a class="toc-entry" href="#chapter-2">
         <span class="num">II.</span>
-        <span class="title">Daily Stipend Countdown</span>
+        <span class="title">Stipend Savings Planner</span>
         <span class="leader"></span>
       </a>
     </nav>
@@ -153,7 +166,7 @@ h1 {
     <section class="chapter" id="chapter-1">
       <div class="chapter-eyebrow">Chapter I</div>
       <h2>Potato Peeling Converter</h2>
-      <p class="desc">1 Knut = 1 potato peeling.</p>
+      <p class="desc">1 knut = 1 potato peeling</p>
 
       <div class="field-row">
         <div class="field"><label>Galleons</label><input type="number" id="pp-galleons" min="0" value="0" oninput="calcPeelings()"></div>
@@ -171,24 +184,43 @@ h1 {
 
     <div class="rule wide"></div>
 
-    <!-- Chapter II: Daily Stipend Countdown -->
+    <!-- Chapter II: Stipend Savings Planner -->
     <section class="chapter" id="chapter-2">
       <div class="chapter-eyebrow">Chapter II</div>
-      <h2>Daily Stipend Countdown</h2>
-      <p class="desc">Set a savings goal and find out how many days of daily stipend it will take to reach it.</p>
-      <div class="rate-note">Base rate: <b>10 Sickles / day</b>. Staff receive an extra allowance on top &mdash; add it below if it applies to you.</div>
-
-      <div class="field-row">
-        <div class="field"><label>Goal &mdash; Galleons</label><input type="number" id="ds-galleons" min="0" value="0" oninput="calcDays()"></div>
-        <div class="field"><label>Goal &mdash; Sickles</label><input type="number" id="ds-sickles" min="0" value="0" oninput="calcDays()"></div>
-        <div class="field"><label>Goal &mdash; Knuts</label><input type="number" id="ds-knuts" min="0" value="0" oninput="calcDays()"></div>
+      <h2>Stipend Savings Planner</h2>
+      <p class="desc">set a savings goal & find out how long it will take and the exact date you'll get there</p>
+      <div class="rate-note">
+        <div class="line1">Base rate: <b>10 Sickles / day</b></div>
+        <div class="line2">Staff receive an extra allowance on top &mdash; add it in if it applies to you.</div>
       </div>
+
+      <div class="field-group-label">Your Goal</div>
+      <div class="field-row">
+        <div class="field"><label>Galleons</label><input type="number" id="ds-galleons" min="0" value="0" oninput="calcDays()"></div>
+        <div class="field"><label>Sickles</label><input type="number" id="ds-sickles" min="0" value="0" oninput="calcDays()"></div>
+        <div class="field"><label>Knuts</label><input type="number" id="ds-knuts" min="0" value="0" oninput="calcDays()"></div>
+      </div>
+
+      <div class="rule-dotted"></div>
+
+      <div class="field-group-label">Already Owned</div>
+      <div class="field-row">
+        <div class="field"><label>Galleons</label><input type="number" id="ds-owned-galleons" min="0" value="0" oninput="calcDays()"></div>
+        <div class="field"><label>Sickles</label><input type="number" id="ds-owned-sickles" min="0" value="0" oninput="calcDays()"></div>
+        <div class="field"><label>Knuts</label><input type="number" id="ds-owned-knuts" min="0" value="0" oninput="calcDays()"></div>
+      </div>
+
+      <div class="rule-dotted"></div>
+
+      <div class="field-group-label">Earning Rate &amp; Start Date</div>
       <div class="field-row">
         <div class="field"><label>Staff Bonus (Sickles/day)</label><input type="number" id="ds-staff" min="0" value="0" oninput="calcDays()"></div>
+        <div class="field wide"><label>Starting Date</label><input type="date" id="ds-startdate" oninput="calcDays()"></div>
       </div>
 
       <div class="result">
         <div class="headline" id="ds-result">0 days</div>
+        <div class="date-line" id="ds-targetdate"></div>
         <div class="sub-line" id="ds-breakdown"></div>
       </div>
 
@@ -216,30 +248,57 @@ function calcPeelings() {
     `${g} Galleon${g===1?'':'s'} + ${s} Sickle${s===1?'':'s'} + ${k} Knut${k===1?'':'s'} = ${total.toLocaleString()} Knuts`;
 }
 
+function todayISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
 function calcDays() {
   const g = parseFloat(document.getElementById('ds-galleons').value) || 0;
   const s = parseFloat(document.getElementById('ds-sickles').value) || 0;
   const k = parseFloat(document.getElementById('ds-knuts').value) || 0;
+  const og = parseFloat(document.getElementById('ds-owned-galleons').value) || 0;
+  const os = parseFloat(document.getElementById('ds-owned-sickles').value) || 0;
+  const ok = parseFloat(document.getElementById('ds-owned-knuts').value) || 0;
   const staffBonus = parseFloat(document.getElementById('ds-staff').value) || 0;
+  const startValue = document.getElementById('ds-startdate').value || todayISO();
 
   const goalKnuts = toKnuts(g, s, k);
+  const ownedKnuts = toKnuts(og, os, ok);
+  const remainingKnuts = goalKnuts - ownedKnuts;
   const dailySickles = 10 + staffBonus;
   const dailyKnuts = dailySickles * KNUTS_PER_SICKLE;
 
   if (goalKnuts <= 0) {
     document.getElementById('ds-result').textContent = 'Set a goal above 0';
+    document.getElementById('ds-targetdate').textContent = '';
     document.getElementById('ds-breakdown').textContent = '';
     return;
   }
 
-  const days = Math.ceil(goalKnuts / dailyKnuts);
+  if (remainingKnuts <= 0) {
+    document.getElementById('ds-result').textContent = 'Goal already met!';
+    document.getElementById('ds-targetdate').textContent = '';
+    document.getElementById('ds-breakdown').textContent =
+      `Goal: ${goalKnuts.toLocaleString()} Knuts  |  Already owned: ${ownedKnuts.toLocaleString()} Knuts`;
+    return;
+  }
+
+  const days = Math.ceil(remainingKnuts / dailyKnuts);
   const weeks = (days / 7).toFixed(1);
 
+  const [year, month, day] = startValue.split('-').map(Number);
+  const targetDate = new Date(year, month - 1, day);
+  targetDate.setDate(targetDate.getDate() + days);
+  const targetDateStr = targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
   document.getElementById('ds-result').textContent = days.toLocaleString() + ' day' + (days === 1 ? '' : 's');
+  document.getElementById('ds-targetdate').innerHTML = `you'll reach your goal on <b>${targetDateStr}</b>`;
   document.getElementById('ds-breakdown').textContent =
-    `Goal: ${goalKnuts.toLocaleString()} Knuts  |  Earning ${dailySickles} Sickles/day (10 base${staffBonus ? ' + ' + staffBonus + ' staff' : ''}) = ${dailyKnuts.toLocaleString()} Knuts/day  |  ~${weeks} weeks`;
+    `Goal: ${goalKnuts.toLocaleString()} Knuts  |  Already owned: ${ownedKnuts.toLocaleString()} Knuts  |  Remaining: ${remainingKnuts.toLocaleString()} Knuts  |  Earning ${dailySickles} Sickles/day (10 base${staffBonus ? ' + ' + staffBonus + ' staff' : ''}) = ${dailyKnuts.toLocaleString()} Knuts/day  |  ~${weeks} weeks`;
 }
 
+document.getElementById('ds-startdate').value = todayISO();
 calcPeelings();
 calcDays();
 </script>
