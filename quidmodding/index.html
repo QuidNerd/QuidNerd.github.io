@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quidditch Mod Tool</title>
+<title>Kennilworthy's Almanack — Mamori's very own quidditch mod tool</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Spectral:wght@500;600&family=Source+Code+Pro:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -42,30 +42,58 @@ body {
     radial-gradient(circle at 15% 10%, rgba(63,107,82,0.06), transparent 45%),
     radial-gradient(circle at 85% 90%, rgba(58,50,38,0.05), transparent 45%);
   color: var(--ink); min-height: 100vh;
+  padding: 40px 16px 70px;
 }
 
-header {
-  background: var(--page-bg);
-  padding: 16px 28px; display:flex; align-items:center; gap:18px;
-  border-bottom: 2px solid var(--border-dark); box-shadow: 0 2px 12px rgba(58,50,38,0.08);
-}
-header h1 { font-family:'Cormorant Garamond',Georgia,serif; font-weight:700; font-size:1.6rem; color:var(--ink); letter-spacing:1.5px; }
-header nav { display:flex; gap:4px; }
-header nav button {
-  background:none; color:var(--ink-dim); border:none; border-bottom:2px solid transparent;
-  padding:8px 8px; cursor:pointer; font-family:'EB Garamond',Georgia,serif; font-size:0.92rem;
-  letter-spacing:1px; text-transform:uppercase; transition:all 0.2s;
-}
-header nav button:hover { color:var(--accent); }
-header nav button.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
-.home-link {
-  margin-left:auto; color:var(--accent); text-decoration:underline; text-underline-offset:4px;
-  font-family:'EB Garamond',Georgia,serif; font-size:0.9rem; letter-spacing:1px; text-transform:uppercase;
-  transition:color 0.2s;
-}
-.home-link:hover { color:var(--accent-bright); }
+.frame { max-width: 1100px; margin: 0 auto; border: 1.5px solid var(--border-dark); padding: 5px; box-shadow: 0 14px 40px rgba(42,36,24,0.25); }
+.page { border: 1px solid var(--border-light); background: var(--page-bg); padding: 50px 54px; }
 
-.container { max-width:1200px; margin:0 auto; padding:24px 20px 60px; }
+/* Title block */
+.fleuron { text-align:center; color: var(--accent); font-size: 1.4rem; margin-bottom: 8px; }
+.eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; }
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: clamp(1.9rem, 8vw, 3rem); color: var(--ink);
+  letter-spacing: clamp(0px, 1vw, 2px); text-align:center; margin: 10px 0 8px; text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.3rem; color: var(--ink-dim);
+  text-align:center; margin-bottom: 20px;
+}
+.site-nav { display:flex; justify-content:center; gap:20px; margin-bottom: 30px; flex-wrap: wrap; }
+.site-nav a {
+  font-family: 'EB Garamond', Georgia, serif; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--accent); text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s;
+}
+.site-nav a:hover { color: var(--accent-bright); }
+
+.rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 28px; }
+.rule-orn { display:flex; align-items:center; gap:16px; margin: 40px 0 36px; }
+.rule-orn-line { flex:1; height:1px; background: var(--border-light); }
+.rule-orn-mark { color: var(--accent); font-size: 1rem; }
+
+.contents-label { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; margin: 0 0 16px; }
+.contents-nav { max-width: 480px; margin: 0 auto; }
+.toc-entry {
+  display: flex; align-items: baseline; gap: 10px; text-decoration: none; width: 100%;
+  color: var(--ink-dim); font-size: 1.1rem; padding: 8px 2px; background: none; border: none; cursor: pointer;
+  font-family: 'EB Garamond', Georgia, serif; text-align: left;
+}
+.toc-entry .num { font-family: 'Cormorant Garamond', Georgia, serif; color: var(--accent); font-weight: 600; width: 26px; flex: none; }
+.toc-entry .leader { flex: 1; border-bottom: 1px dotted var(--border-light); transform: translateY(-6px); margin: 0 4px; }
+.toc-entry:hover { color: var(--accent); }
+.toc-entry:hover .leader { border-color: var(--accent); }
+.toc-entry.active { color: var(--ink); font-weight: 600; }
+.toc-entry.active .leader { border-color: var(--accent); }
+
+.chapter-eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; }
+.chapter-title {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 2rem; color: var(--ink);
+  text-align:center; letter-spacing: 1px; margin: 8px 0 30px;
+}
+
+.page-num { text-align:center; margin-top: 36px; color: var(--ink-faint); font-size: 1rem; }
+
 .hidden { display:none !important; }
 
 /* Collapsible */
@@ -222,26 +250,55 @@ input::placeholder { color:var(--ink-faint); }
 @media(max-width:600px) {
   .stat-grid { grid-template-columns:repeat(3,1fr); }
   .beater-grid { grid-template-columns:repeat(3,1fr); }
-  .roll-row { flex-direction:column; }
-  .roll-group input, .roll-group select { width:100%; }
-  header { flex-wrap:wrap; padding:12px 16px; }
+  #roll-panel { padding: 16px; }
+  .roll-row { flex-direction:column; align-items:stretch; gap:10px; }
+  .roll-group { width:100%; }
+  .roll-group input, .roll-group select { width:100% !important; }
+  .roll-btn { width:100%; }
+}
+@media(max-width:560px) {
+  .page { padding: 40px 24px; }
+  .toc-entry .title { white-space: normal; }
+  .toc-entry .leader { display: none; }
 }
 </style>
 </head>
 <body>
-<header>
-  <h1>Quidditch Mod Tool</h1>
-  <nav>
-    <button class="active" onclick="showPanel('action')">Actions</button>
-    <button onclick="showPanel('player')">Players</button>
-    <button onclick="showPanel('db')">Database</button>
-  </nav>
-  <a class="home-link" href="../">Home</a>
-</header>
-<div class="container">
+<div class="frame">
+  <div class="page">
+
+    <div class="fleuron">&#10086;</div>
+    <div class="eyebrow">The Pitch</div>
+    <h1>Kennilworthy's Almanack</h1>
+    <p class="subtitle">Mamori's very own quidditch mod tool</p>
+    <div class="site-nav"><a href="../">Home</a><a href="../gringotts/">Ledger</a><a href="../marginalia/">Marginalia</a></div>
+    <div class="rule"></div>
+
+    <div class="contents-label">Contents</div>
+    <nav class="contents-nav">
+      <button class="toc-entry active" id="toc-action" onclick="showPanel('action', this)">
+        <span class="num">I.</span>
+        <span class="title">Actions &amp; Rules Reference</span>
+        <span class="leader"></span>
+      </button>
+      <button class="toc-entry" id="toc-player" onclick="showPanel('player', this)">
+        <span class="num">II.</span>
+        <span class="title">Player Roster</span>
+        <span class="leader"></span>
+      </button>
+      <button class="toc-entry" id="toc-db" onclick="showPanel('db', this)">
+        <span class="num">III.</span>
+        <span class="title">Team Database</span>
+        <span class="leader"></span>
+      </button>
+    </nav>
+
+    <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
 
 <!-- ===== ACTIONS TAB ===== -->
 <div id="action-panel">
+  <div class="chapter-eyebrow">Chapter I</div>
+  <div class="chapter-title">Actions &amp; Rules Reference</div>
   <!-- Order of Operations -->
   <div class="ref-panel">
     <h3 class="collapse-toggle open" onclick="toggleCollapse(this)">Round Order of Operations</h3>
@@ -307,6 +364,8 @@ input::placeholder { color:var(--ink-faint); }
 
 <!-- ===== PLAYERS TAB ===== -->
 <div id="player-panel" class="hidden">
+  <div class="chapter-eyebrow">Chapter II</div>
+  <div class="chapter-title">Player Roster</div>
   <div class="search-row">
     <input type="text" id="player-search" placeholder="Search player name..." oninput="filterPlayers()">
     <select id="player-team" onchange="filterPlayers()"><option value="">All Teams</option></select>
@@ -316,6 +375,8 @@ input::placeholder { color:var(--ink-faint); }
 
 <!-- ===== DATABASE TAB ===== -->
 <div id="db-panel" class="hidden">
+  <div class="chapter-eyebrow">Chapter III</div>
+  <div class="chapter-title">Team Database</div>
   <div class="db-controls">
     <select id="db-team" onchange="renderDbTable()"></select>
     <button onclick="addPlayer()">+ Add Player</button>
@@ -328,6 +389,9 @@ input::placeholder { color:var(--ink-faint); }
   <div class="table-wrap"><table id="db-table"></table></div>
 </div>
 
+    <div class="page-num">&mdash; I &mdash;</div>
+
+  </div>
 </div>
 <script>
 // ==================== BROOMS ====================
@@ -669,11 +733,11 @@ let rollHistory = [];
 function saveDb() { localStorage.setItem('quidDb2', JSON.stringify(db)); }
 
 // ==================== NAV ====================
-function showPanel(p) {
-  document.querySelectorAll('header nav button').forEach(b => b.classList.remove('active'));
+function showPanel(p, el) {
+  document.querySelectorAll('.toc-entry').forEach(b => b.classList.remove('active'));
   ['action','player','db'].forEach(x => document.getElementById(x+'-panel').classList.add('hidden'));
   document.getElementById(p+'-panel').classList.remove('hidden');
-  event.target.classList.add('active');
+  (el || document.getElementById('toc-'+p)).classList.add('active');
   if (p==='player') { populateFilters(); filterPlayers(); }
   if (p==='db') { populateDbSelects(); renderDbTable(); }
   if (p==='action') renderDcCalc();

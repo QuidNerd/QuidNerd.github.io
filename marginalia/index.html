@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marginalia — BBCode Structure Checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Code+Pro:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --body-bg: #e3d7b6;
+  --page-bg: #ece2c8;
+  --border-dark: #3a3226;
+  --border-light: #b9ab8a;
+  --ink: #2a2418;
+  --ink-dim: #6b6050;
+  --ink-faint: #9c9484;
+  --accent: #3f6b52;
+  --accent-bright: #4f8a68;
+  --red: #8c3a3a;
+  --red-bright: #a94444;
+
+  --depth0: #2e8049;
+  --depth1: #c23b34;
+  --depth2: #2f6fa8;
+  --depth3: #8536a6;
+  --depth4: #c17d1f;
+  --depth5: #b03a72;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--body-bg);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(63,107,82,0.06), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(58,50,38,0.05), transparent 45%);
+  color: var(--ink); min-height: 100vh;
+  padding: 40px 16px 70px;
+}
+
+.frame { max-width: 820px; margin: 0 auto; border: 1.5px solid var(--border-dark); padding: 5px; box-shadow: 0 14px 40px rgba(42,36,24,0.25); }
+.page { border: 1px solid var(--border-light); background: var(--page-bg); padding: 50px 54px; }
+
+.fleuron { text-align:center; color: var(--accent); font-size: 1.4rem; margin-bottom: 8px; }
+.eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; }
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: clamp(1.9rem, 10vw, 3.4rem); color: var(--ink);
+  letter-spacing: clamp(0px, 1vw, 2px); text-align:center; margin: 10px 0 8px; text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.3rem; color: var(--ink-dim);
+  text-align:center; margin-bottom: 20px;
+}
+.site-nav { display:flex; justify-content:center; gap:20px; margin-bottom: 30px; flex-wrap: wrap; }
+.site-nav a {
+  font-family: 'EB Garamond', Georgia, serif; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--accent); text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s;
+}
+.site-nav a:hover { color: var(--accent-bright); }
+
+.rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 32px; }
+.rule-orn { display:flex; align-items:center; gap:16px; margin: 34px 0; }
+.rule-orn-line { flex:1; height:1px; background: var(--border-light); }
+.rule-orn-mark { color: var(--accent); font-size: 1rem; }
+
+.intro { text-align:center; font-style: italic; color: var(--ink-dim); font-size: 1.05rem; margin-bottom: 30px; line-height: 1.7; }
+
+.plate { border: 1px solid var(--border-dark); padding: 4px; }
+.plate-inner { border: 1px solid var(--border-light); }
+
+.field-group-label { text-align:center; color: var(--ink-dim); font-size: 0.78rem; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 12px; }
+
+#bb-input {
+  width: 100%; min-height: 180px; resize: vertical;
+  font-family: 'Source Code Pro', monospace; font-size: 0.88rem; line-height: 1.6; color: var(--ink);
+  background: #f5efdc; border: 1px solid var(--border-light); border-radius: 0;
+  padding: 14px 16px;
+}
+#bb-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(63,107,82,0.12); }
+
+.toolbar { display:flex; justify-content:center; gap: 16px; margin: 14px 0 30px; flex-wrap: wrap; }
+.toolbar a {
+  font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+.toolbar a:hover { color: var(--accent-bright); }
+
+.hint { text-align:center; color: var(--ink-faint); font-size: 0.85rem; font-style: italic; margin-bottom: 18px; }
+
+#code-wrap {
+  position: relative; max-height: 480px; overflow: auto;
+  background: #f5efdc;
+}
+#code-output { font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.7; }
+.code-placeholder { padding: 20px; color: var(--ink-faint); font-style: italic; font-family: 'EB Garamond', Georgia, serif; }
+.code-line { display:flex; white-space: pre; }
+.line-num {
+  flex: none; width: 46px; text-align:right; padding-right: 14px; user-select:none;
+  color: var(--ink-faint); background: rgba(58,50,38,0.03); border-right: 1px solid var(--border-light);
+}
+.line-content { padding-left: 12px; white-space: pre; }
+
+.tag { cursor: pointer; font-weight: 600; border-radius: 2px; padding: 0 1px; transition: background 0.15s; }
+.tag:hover { background: rgba(58,50,38,0.08); }
+.tag.flash { background: var(--accent-bright) !important; color: #f5efdc !important; }
+.tag-depth0 { color: var(--depth0); }
+.tag-depth1 { color: var(--depth1); }
+.tag-depth2 { color: var(--depth2); }
+.tag-depth3 { color: var(--depth3); }
+.tag-depth4 { color: var(--depth4); }
+.tag-depth5 { color: var(--depth5); }
+.tag-warning { text-decoration: underline dotted currentColor; }
+.tag-error { color: var(--red-bright); text-decoration: underline wavy var(--red-bright); font-weight:700; }
+.tag-skip { color: var(--ink-faint); font-weight: 400; }
+
+#arrow-svg { position:absolute; top:0; left:0; pointer-events:none; z-index:5; overflow:visible; }
+
+#issues-panel {
+  padding: 18px 22px;
+}
+.issues-count { font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; color: var(--red-bright); font-size: 1.1rem; margin-bottom: 10px; }
+.issue-item {
+  font-size: 0.92rem; color: var(--ink); padding: 6px 0; border-bottom: 1px dotted var(--border-light);
+  cursor: pointer;
+}
+.issue-item:last-child { border-bottom: none; }
+.issue-item:hover { color: var(--accent); }
+.issue-item b { font-family:'Source Code Pro',monospace; color: var(--red-bright); }
+.issues-ok { color: var(--accent); font-size: 1rem; text-align:center; padding: 6px 0; }
+
+.page-num { text-align:center; margin-top: 30px; color: var(--ink-faint); font-size: 1rem; }
+
+@media(max-width:560px) {
+  .page { padding: 40px 24px; }
+  #code-output { font-size: 0.78rem; }
+  .line-num { width: 32px; padding-right: 8px; }
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="page">
+
+    <div class="fleuron">&#10086;</div>
+    <div class="eyebrow">The Scriptorium</div>
+    <h1>Marginalia</h1>
+    <p class="subtitle">BBCode Structure Checker</p>
+    <div class="site-nav">
+      <a href="../">Home</a>
+      <a href="../quidmodding/">Kennilworthy's Almanack</a>
+      <a href="../gringotts/">Ledger</a>
+    </div>
+    <div class="rule"></div>
+
+    <p class="intro">Paste your BBCode below. Matching tags share a color by nesting depth, click any tag to draw a line to its pair. Unclosed or out-of-order tags are flagged underneath.</p>
+
+    <div class="field-group-label">Paste Your Code</div>
+    <textarea id="bb-input" placeholder="[table]&#10;[tr]&#10;[td]Cell 1[/td]&#10;[/tr]&#10;[/table]" spellcheck="false"></textarea>
+
+    <div class="toolbar">
+      <a id="load-example">Load Broken Example</a>
+      <a id="clear-input">Clear</a>
+    </div>
+
+    <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
+
+    <div class="field-group-label">Analyzed Structure</div>
+    <div class="hint">click any tag to trace its matching pair</div>
+    <div class="plate">
+      <div class="plate-inner">
+        <div id="code-wrap">
+          <div id="code-output"><div class="code-placeholder">Paste BBCode above to see it analyzed here.</div></div>
+          <svg id="arrow-svg"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
+
+    <div class="field-group-label">Issues</div>
+    <div class="plate">
+      <div class="plate-inner">
+        <div id="issues-panel"><div class="issues-ok">nothing to check yet</div></div>
+      </div>
+    </div>
+
+    <div class="page-num">&mdash; III &mdash;</div>
+
+  </div>
+</div>
+
+<script>
+const PALETTE_SIZE = 6;
+const SKIP_TAGS = new Set(['*']);
+const TAG_RE = /\[(\/?)([a-zA-Z0-9*]+)([^\]\n]*)\]/g;
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function analyze(text) {
+  const tags = [];
+  let m;
+  TAG_RE.lastIndex = 0;
+  while ((m = TAG_RE.exec(text))) {
+    tags.push({
+      closing: m[1] === '/',
+      name: m[2].toLowerCase(),
+      raw: m[0],
+      start: m.index,
+      end: m.index + m[0].length,
+    });
+  }
+
+  const lineStarts = [0];
+  for (let i = 0; i < text.length; i++) if (text[i] === '\n') lineStarts.push(i + 1);
+  function lineOf(offset) {
+    let lo = 0, hi = lineStarts.length - 1, res = 0;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (lineStarts[mid] <= offset) { res = mid; lo = mid + 1; } else hi = mid - 1;
+    }
+    return res + 1;
+  }
+  tags.forEach(t => t.line = lineOf(t.start));
+
+  const tagMeta = tags.map(() => ({ depth: null, pairIndex: null, error: null, warning: false, skip: false }));
+  const stack = [];
+  const issues = [];
+
+  tags.forEach((tag, i) => {
+    if (SKIP_TAGS.has(tag.name)) { tagMeta[i].skip = true; return; }
+    if (!tag.closing) {
+      stack.push(i);
+      return;
+    }
+    let found = -1;
+    for (let s = stack.length - 1; s >= 0; s--) {
+      if (tags[stack[s]].name === tag.name) { found = s; break; }
+    }
+    if (found === -1) {
+      tagMeta[i].error = 'unexpected';
+      issues.push({ type: 'unexpected', tagIndex: i });
+      return;
+    }
+    for (let s = stack.length - 1; s > found; s--) {
+      const openIdx = stack[s];
+      tagMeta[openIdx].error = 'unclosed';
+      issues.push({ type: 'unclosed', tagIndex: openIdx });
+    }
+    const openIdx = stack[found];
+    const depth = found;
+    tagMeta[openIdx].depth = depth;
+    tagMeta[openIdx].pairIndex = i;
+    tagMeta[i].depth = depth;
+    tagMeta[i].pairIndex = openIdx;
+    if (found !== stack.length - 1) {
+      tagMeta[openIdx].warning = true;
+      tagMeta[i].warning = true;
+      issues.push({ type: 'out-of-order', tagIndex: openIdx });
+    }
+    stack.length = found;
+  });
+
+  stack.forEach(openIdx => {
+    tagMeta[openIdx].error = 'unclosed';
+    issues.push({ type: 'unclosed', tagIndex: openIdx });
+  });
+
+  return { tags, tagMeta, issues };
+}
+
+function buildLines(text, tags, tagMeta) {
+  let segHtml = '';
+  let cursor = 0;
+  tags.forEach((tag, i) => {
+    if (tag.start > cursor) segHtml += esc(text.slice(cursor, tag.start));
+    const meta = tagMeta[i];
+    let cls = 'tag';
+    if (meta.skip) cls += ' tag-skip';
+    else if (meta.error) cls += ' tag-error';
+    else {
+      cls += ' tag-depth' + (meta.depth % PALETTE_SIZE);
+      if (meta.warning) cls += ' tag-warning';
+    }
+    const pairAttr = meta.pairIndex != null ? ` data-pair="${meta.pairIndex}"` : '';
+    segHtml += `<span class="${cls}" data-tag-id="${i}"${pairAttr}>${esc(tag.raw)}</span>`;
+    cursor = tag.end;
+  });
+  if (cursor < text.length) segHtml += esc(text.slice(cursor));
+
+  return segHtml.split('\n').map((lineHtml, idx) =>
+    `<div class="code-line"><span class="line-num">${idx + 1}</span><span class="line-content">${lineHtml || ''}</span></div>`
+  ).join('');
+}
+
+function renderIssues(issues, tags) {
+  const el = document.getElementById('issues-panel');
+  if (!issues.length) {
+    el.innerHTML = `<div class="issues-ok">&#10003; No structural issues found &mdash; every tag is properly paired.</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="issues-count">${issues.length} issue${issues.length === 1 ? '' : 's'} found</div>` +
+    issues.map(iss => {
+      const tag = tags[iss.tagIndex];
+      let msg = '';
+      if (iss.type === 'unclosed') msg = `<b>[${tag.name}]</b> on line ${tag.line} is never closed`;
+      else if (iss.type === 'unexpected') msg = `<b>[/${tag.name}]</b> on line ${tag.line} has no matching opening tag`;
+      else msg = `<b>[${tag.name}]</b> on line ${tag.line} closes out of order &mdash; check nesting nearby`;
+      return `<div class="issue-item" data-tag-id="${iss.tagIndex}">${msg}</div>`;
+    }).join('');
+}
+
+let activePair = null;
+
+function flash(el) {
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 1400);
+}
+
+function clearArrow() {
+  activePair = null;
+  const svg = document.getElementById('arrow-svg');
+  if (svg) svg.innerHTML = '';
+}
+
+function drawArrow(a, b) {
+  const wrap = document.getElementById('code-wrap');
+  const svg = document.getElementById('arrow-svg');
+  const wrapRect = wrap.getBoundingClientRect();
+  svg.setAttribute('width', wrap.clientWidth);
+  svg.setAttribute('height', wrap.clientHeight);
+  svg.innerHTML = '<defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="currentColor"/></marker></defs>';
+  const ar = a.getBoundingClientRect(), br = b.getBoundingClientRect();
+  const x1 = ar.left - wrapRect.left + ar.width / 2;
+  const y1 = ar.top - wrapRect.top + ar.height / 2;
+  const x2 = br.left - wrapRect.left + br.width / 2;
+  const y2 = br.top - wrapRect.top + br.height / 2;
+  const midY = (y1 + y2) / 2;
+  const color = getComputedStyle(a).color;
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+  path.setAttribute('stroke', color);
+  path.setAttribute('stroke-width', '2');
+  path.setAttribute('fill', 'none');
+  path.setAttribute('style', `color:${color}`);
+  path.setAttribute('marker-end', 'url(#arrowhead)');
+  svg.appendChild(path);
+}
+
+function onTagClick(span) {
+  clearArrow();
+  const pairId = span.getAttribute('data-pair');
+  if (pairId === null) { flash(span); return; }
+  const other = document.querySelector(`.tag[data-tag-id="${pairId}"]`);
+  if (!other) return;
+  flash(span); flash(other);
+  activePair = { a: span, b: other };
+  other.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  drawArrow(span, other);
+  setTimeout(() => { if (activePair) drawArrow(activePair.a, activePair.b); }, 350);
+}
+
+function jumpToTag(tagIndex) {
+  const span = document.querySelector(`.tag[data-tag-id="${tagIndex}"]`);
+  if (!span) return;
+  span.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => onTagClick(span), 300);
+}
+
+function attachHandlers() {
+  document.querySelectorAll('#code-output .tag').forEach(span => {
+    span.addEventListener('click', () => onTagClick(span));
+  });
+  document.querySelectorAll('.issue-item').forEach(item => {
+    item.addEventListener('click', () => jumpToTag(parseInt(item.dataset.tagId, 10)));
+  });
+}
+
+function runAnalysis() {
+  const text = document.getElementById('bb-input').value;
+  clearArrow();
+  if (!text.trim()) {
+    document.getElementById('code-output').innerHTML = '<div class="code-placeholder">Paste BBCode above to see it analyzed here.</div>';
+    document.getElementById('issues-panel').innerHTML = '<div class="issues-ok">nothing to check yet</div>';
+    return;
+  }
+  const { tags, tagMeta, issues } = analyze(text);
+  document.getElementById('code-output').innerHTML = buildLines(text, tags, tagMeta);
+  renderIssues(issues, tags);
+  attachHandlers();
+}
+
+document.getElementById('code-wrap').addEventListener('scroll', () => {
+  if (activePair) drawArrow(activePair.a, activePair.b);
+});
+
+let debounceTimer;
+document.getElementById('bb-input').addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(runAnalysis, 250);
+});
+
+const EXAMPLE = `[table]
+[tr]
+[td]Cell 1[/td]
+[td]Cell 2[/tr]
+[tr]
+[td]Cell 3[/td][/tr]
+[/table]`;
+
+document.getElementById('load-example').addEventListener('click', () => {
+  document.getElementById('bb-input').value = EXAMPLE;
+  runAnalysis();
+});
+document.getElementById('clear-input').addEventListener('click', () => {
+  document.getElementById('bb-input').value = '';
+  runAnalysis();
+});
+</script>
+</body>
+</html>

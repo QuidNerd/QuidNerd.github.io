@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gringotts Currency Exchange</title>
+<title>Ledger — Currency Converter &amp; Stipend Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Spectral:wght@500;600&family=Source+Code+Pro:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -33,6 +33,7 @@ body {
 .page { border: 1px solid var(--border-light); background: var(--page-bg); padding: 50px 54px; }
 
 /* Title block */
+.fleuron { text-align:center; color: var(--accent); font-size: 1.4rem; margin-bottom: 8px; }
 .eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; }
 h1 {
   font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: clamp(1.9rem, 10vw, 3.4rem); color: var(--ink);
@@ -43,7 +44,7 @@ h1 {
   font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.3rem; color: var(--ink-dim);
   text-align:center; margin-bottom: 20px;
 }
-.site-nav { display:flex; justify-content:center; gap:20px; margin-bottom: 30px; }
+.site-nav { display:flex; justify-content:center; gap:20px; margin-bottom: 30px; flex-wrap: wrap; }
 .site-nav a {
   font-family: 'EB Garamond', Georgia, serif; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--accent); text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s;
@@ -52,13 +53,20 @@ h1 {
 
 .rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 28px; }
 .rule.wide { width: 100%; margin: 44px auto 40px; }
+.rule-orn { display:flex; align-items:center; gap:16px; margin: 44px 0 40px; }
+.rule-orn-line { flex:1; height:1px; background: var(--border-light); }
+.rule-orn-mark { color: var(--accent); font-size: 1rem; }
 
 .rate-label { text-align:center; color: var(--ink-dim); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
-.rate-table { max-width: 380px; margin: 0 auto 10px; }
-.rate-row { display:flex; align-items:baseline; gap:8px; font-size: 1.1rem; padding: 7px 0; }
-.rate-row .label { color: var(--ink); font-weight:600; white-space:nowrap; }
-.rate-row .leader { flex:1; border-bottom: 1px dotted var(--border-light); transform: translateY(-5px); margin: 0 4px; }
-.rate-row .value { font-family: 'Source Code Pro', monospace; color: var(--accent); white-space:nowrap; font-size: 1rem; }
+.plate { border: 1px solid var(--border-dark); padding: 4px; max-width: 420px; margin: 0 auto 10px; }
+.plate-inner { border: 1px solid var(--border-light); padding: 18px 24px; }
+.rate-table { }
+.rate-row { display:flex; align-items:center; gap:8px; font-size: 1.1rem; padding: 7px 0; }
+.rate-row .label { color: var(--ink); font-weight:600; white-space:nowrap; flex: none; }
+.rate-row .leader { flex:1; border-bottom: 1px dotted var(--border-light); margin: 0 4px; min-width: 16px; }
+.rate-row .value { font-family: 'Source Code Pro', monospace; color: var(--accent); white-space:nowrap; font-size: 1rem; flex: none; text-align: right; }
+.rate-row .value.multi { display:flex; flex-direction:row; align-items:baseline; gap: 6px; }
+.rate-row .value.multi .sep { color: var(--ink-faint); }
 
 .contents-label { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; margin: 26px 0 16px; }
 .toc-entry {
@@ -98,8 +106,9 @@ h1 {
 
 /* Result ledger box */
 .result {
-  border: 1px solid var(--border-light); padding: 24px 20px; text-align: center; margin: 0 auto;
+  border: 1px solid var(--border-dark); padding: 4px; text-align: center; margin: 0 auto;
 }
+.result-inner { border: 1px solid var(--border-light); padding: 22px 20px; }
 .result .headline {
   font-family: 'Spectral', Georgia, serif; font-weight: 600; font-size: 1.9rem; color: var(--accent);
 }
@@ -124,6 +133,8 @@ h1 {
   .field.wide input { width: 140px; }
   .rate-row { font-size: 1rem; }
   .rate-row .value { font-size: 0.9rem; }
+  .rate-row .value.multi { flex-direction: column; align-items: flex-end; gap: 3px; }
+  .rate-row .value.multi .sep { display: none; }
   .toc-entry .title { white-space: normal; }
   .toc-entry .leader { display: none; }
 }
@@ -133,23 +144,26 @@ h1 {
 <div class="frame">
   <div class="page">
 
-    <div class="eyebrow">Gringotts Wizarding Bank</div>
-    <h1>Gringotts</h1>
-    <p class="subtitle">Currency Exchange &amp; Conversion</p>
-    <div class="site-nav"><a href="../">Home</a><a href="../quidmodding/">Quidditch Mod Tool</a></div>
+    <div class="fleuron">&#10086;</div>
+    <div class="eyebrow">The Counting House</div>
+    <h1>Ledger</h1>
+    <p class="subtitle">Currency Converter &amp; Stipend Planner</p>
+    <div class="site-nav"><a href="../">Home</a><a href="../quidmodding/">Kennilworthy's Almanack</a><a href="../marginalia/">Marginalia</a></div>
     <div class="rule"></div>
 
     <div class="rate-label">Exchange Rates</div>
-    <div class="rate-table">
-      <div class="rate-row">
-        <span class="label">1 Galleon</span>
-        <span class="leader"></span>
-        <span class="value">17 Sickles &nbsp;/&nbsp; 493 Knuts</span>
-      </div>
-      <div class="rate-row">
-        <span class="label">1 Sickle</span>
-        <span class="leader"></span>
-        <span class="value">29 Knuts</span>
+    <div class="plate">
+      <div class="plate-inner rate-table">
+        <div class="rate-row">
+          <span class="label">1 Galleon</span>
+          <span class="leader"></span>
+          <span class="value multi"><span>17 Sickles</span><span class="sep">/</span><span>493 Knuts</span></span>
+        </div>
+        <div class="rate-row">
+          <span class="label">1 Sickle</span>
+          <span class="leader"></span>
+          <span class="value">29 Knuts</span>
+        </div>
       </div>
     </div>
 
@@ -167,7 +181,7 @@ h1 {
       </a>
     </nav>
 
-    <div class="rule wide"></div>
+    <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
 
     <!-- Chapter I: Potato Peeling Converter -->
     <section class="chapter" id="chapter-1">
@@ -182,23 +196,23 @@ h1 {
       </div>
 
       <div class="result">
-        <div class="headline" id="pp-result">0 potato peelings</div>
-        <div class="sub-line" id="pp-breakdown"></div>
+        <div class="result-inner">
+          <div class="headline" id="pp-result">0 potato peelings</div>
+          <div class="sub-line" id="pp-breakdown"></div>
+        </div>
       </div>
-
-      <div class="page-num">&mdash; I &mdash;</div>
     </section>
 
-    <div class="rule wide"></div>
+    <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
 
     <!-- Chapter II: Stipend Savings Planner -->
     <section class="chapter" id="chapter-2">
       <div class="chapter-eyebrow">Chapter II</div>
       <h2>Stipend Savings Planner</h2>
-      <p class="desc">set a savings goal & find out how long it will take and the exact date you'll get there</p>
+      <p class="desc">set a savings goal and find out exactly when you'll reach it</p>
       <div class="rate-note">
         <div class="line1">Base rate: <b>10 Sickles / day</b></div>
-        <div class="line2">Staff receive an extra allowance on top &mdash; add it in if it applies to you.</div>
+        <div class="line2">Staff receive an extra allowance on top, add it in if it applies to you.</div>
       </div>
 
       <div class="field-group-label">Your Goal</div>
@@ -226,9 +240,11 @@ h1 {
       </div>
 
       <div class="result">
-        <div class="headline" id="ds-result">0 days</div>
-        <div class="date-line" id="ds-targetdate"></div>
-        <div class="sub-line" id="ds-breakdown"></div>
+        <div class="result-inner">
+          <div class="headline" id="ds-result">0 days</div>
+          <div class="date-line" id="ds-targetdate"></div>
+          <div class="sub-line" id="ds-breakdown"></div>
+        </div>
       </div>
 
       <div class="page-num">&mdash; II &mdash;</div>
