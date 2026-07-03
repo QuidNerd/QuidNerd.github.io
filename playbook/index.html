@@ -67,15 +67,15 @@ h1 {
 /* rendered BBCode */
 .bb-body { font-size: 0.98rem; line-height: 1.75; color: var(--ink); }
 .bb-quote {
-  border-left: 3px solid var(--accent); padding: 14px 18px; margin: 12px 0;
-  background: rgba(58,50,38,0.035); color: var(--ink); font-style: normal;
+  padding: 14px 18px; margin: 12px 0;
+  background: rgba(63,107,82,0.066); color: var(--ink); font-style: normal;
 }
 .bb-quote > .bb-quote {
-  display: inline-block; border-left: none; border: 1px solid var(--accent);
-  background: rgba(63,107,82,0.09); color: var(--accent); font-weight: 600;
-  font-size: 0.85rem; font-style: normal; padding: 4px 12px; margin: 10px 0 0;
+  display: block; border-left: none; border: 1px solid var(--accent);
+  background: rgba(63,107,82,0.09); color: var(--accent); font-weight: 500;
+  font-size: 0.85rem; font-style: normal; padding: 10px 14px; margin: 10px 0 0;
 }
-.bb-quote > .bb-quote::before { content: "\2192\00A0"; }
+.bb-quote > .bb-quote b { color: var(--accent); font-weight: 700; }
 
 .play-list { display:flex; flex-direction:column; gap: 30px; }
 .play-entry { border: 1px solid var(--border-light); padding: 22px 24px; }
@@ -85,6 +85,14 @@ h1 {
   font-size: 1.5rem; color: var(--ink); margin-bottom: 16px;
 }
 .play-empty { text-align:center; color: var(--ink-faint); font-style: italic; padding: 20px 0; }
+
+.play-refs { margin-top: 16px; padding-top: 14px; border-top: 1px dotted var(--border-light); text-align:center; }
+.play-refs-label { color: var(--ink-dim); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.play-refs-links { display:flex; justify-content:center; gap: 14px; flex-wrap: wrap; }
+.play-refs a {
+  color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font-size: 0.88rem;
+}
+.play-refs a:hover { color: var(--accent-bright); }
 
 .page-num { text-align:center; margin-top: 40px; color: var(--ink-faint); font-size: 1rem; }
 
@@ -103,23 +111,23 @@ h1 {
     <div class="fleuron">&#10086;</div>
     <div class="eyebrow">The War Room</div>
     <h1>Tactica</h1>
-    <p class="subtitle">Quidditch Play &amp; Strategy Drafts</p>
+    <p class="subtitle">Ahem ahem ahem</p>
     <div class="site-nav">
       <a href="../">Home</a>
-      <a href="../quidmodding/">Kennilworthy's Almanack</a>
+      <a href="../quidmodding/">Codex</a>
       <a href="../gringotts/">Ledger</a>
       <a href="../bbcode-fixer/">Marginalia</a>
     </div>
     <select class="site-nav-select" onchange="if(this.value) location.href=this.value;">
       <option value="" selected disabled>Navigate&hellip;</option>
       <option value="../">Home</option>
-      <option value="../quidmodding/">Kennilworthy's Almanack</option>
+      <option value="../quidmodding/">Codex</option>
       <option value="../gringotts/">Ledger</option>
       <option value="../bbcode-fixer/">Marginalia</option>
     </select>
     <div class="rule"></div>
 
-    <p class="intro">A running collection of drafted quidditch plays and strategies, kept here for reference.</p>
+    <p class="intro">you'll get the idea of what this place is meant for once you scroll down and read a few.</p>
 
     <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
 
@@ -136,9 +144,28 @@ h1 {
 const PLAYS = [
   {
     title: "Keeper Truancy",
-    body: `[quote]Your keeper is allergic to keeping. Recommended for keepers with high accuracy and an aggressive playstyle, deployed under a strategist who wants to squeeze every last drop out of the action economy. Given the round limit of five quaffle grabs, hoarding the quaffle technically counts as defense too — if the opposing team does not have the ball, they cannot score.
-[quote]Keeper: Quaffle Grab & Score[/quote]
-[/quote]`
+    body: `[quote]Your keeper is allergic to keeping. Recommended for keepers with high accuracy and an aggressive playstyle, deployed under a strategist who wants to squeeze every last drop out of the action economy. Given the round limit of five quaffle grabs, hoarding the quaffle [i]technically[/i] counts as defense too — if the opposing team does not have the ball, they cannot score.
+[quote][b]Keeper:[/b] Quaffle Grab & Score[/quote]
+[/quote]`,
+    refs: [
+      { label: "GvsH fall 2025", url: "https://hogwarts.io/viewtopic.php?t=41706" },
+      { label: "SvsH winter 2026", url: "https://hogwarts.io/viewtopic.php?t=44042" },
+      { label: "HvsR spring 2026", url: "https://hogwarts.io/viewtopic.php?t=46278" },
+    ]
+  },
+  {
+    title: "Mass Suicide",
+    body: `[quote]Holding a lead but the opposing Seeker's ahead in snitch progress and about to catch it? If taking them out physically isn't an option, because your team's lost its bite or they're buried under bodyguards, try changing your mindset instead. You don't need to catch the Snitch or kill off every enemy to win, killing off your own scorers works just as well! (Beaters are exempt since they can't put points on the board)
+    [quote][b]Highest ACC Player:[/b] Quaffle Grab & Pass (1st grab → pass to player 2, 2nd grab → pass to player 3, 3rd grab → pass to player 4, 4th grab → pass to player 5)
+[b]Player 2:[/b] Chelmondiston Charge (attempt Quaffle Grab; use immediately on first possession)
+[b]Player 3:[/b] Chelmondiston Charge (attempt Quaffle Grab; use immediately on first possession)
+[b]Player 4:[/b] Chelmondiston Charge (attempt Quaffle Grab; use immediately on first possession)
+[b]Player 5:[/b] Chelmondiston Charge (attempt Quaffle Grab; use immediately on first possession)
+[b]Beater 1:[/b] Debuff foul on opponent seeker
+[b]Beater 2:[/b] Chillax[/quote][/quote]`,
+    refs: [
+      { label: "HvsR spring 2026", url: "https://hogwarts.io/viewtopic.php?t=46278" },
+    ]
   },
 ];
 // ================================================================
@@ -200,6 +227,14 @@ function renderBBCode(text) {
 
 const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
 
+function renderRefs(refs) {
+  if (!refs || !refs.length) return '';
+  return `<div class="play-refs">
+    <div class="play-refs-label">Reference Games</div>
+    <div class="play-refs-links">${refs.map(r => `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a>`).join('')}</div>
+  </div>`;
+}
+
 function renderPlayList() {
   const el = document.getElementById('play-list');
   if (!PLAYS.length) {
@@ -211,6 +246,7 @@ function renderPlayList() {
       <div class="play-eyebrow">Play ${ROMAN[i] || (i+1)}</div>
       <span class="play-title-text">${esc(p.title || 'Untitled Play')}</span>
       <div class="bb-body">${renderBBCode(p.body)}</div>
+      ${renderRefs(p.refs)}
     </div>
   `).join('');
 }
