@@ -14,7 +14,9 @@
       "Bash(command -v python3.9 python3.10 python3.11 python3.12 python3.13)",
       "Bash(brew --prefix)",
       "Bash(rm -f /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/.claude/serve.py)",
-      "Bash(grep -n \"<body>\\\\|<header>\\\\|</header>\\\\|class=\\\\\"container\\\\\"\\\\|<!-- ===== \\\\|</div>\\\\s*$\" /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/quidmodding/index.html)"
+      "Bash(grep -n \"<body>\\\\|<header>\\\\|</header>\\\\|class=\\\\\"container\\\\\"\\\\|<!-- ===== \\\\|</div>\\\\s*$\" /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/quidmodding/index.html)",
+      "Bash(python3)",
+      "Bash(git mv *)"
     ]
   }
 }
