@@ -96,6 +96,23 @@ h1 {
 
 .page-num { text-align:center; margin-top: 40px; color: var(--ink-faint); font-size: 1rem; }
 
+.gate { text-align:center; }
+.gate-eyebrow { color: var(--ink-dim); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+.gate input {
+  font-family: 'EB Garamond', Georgia, serif; font-size: 1rem; text-align:center; letter-spacing: 3px;
+  background: #f5efdc; border: 1px solid var(--border-light); border-radius:0;
+  padding: 10px 14px; width: 220px;
+}
+.gate input:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(63,107,82,0.12); }
+.gate-btn {
+  display:block; margin: 14px auto 0; padding: 10px 26px; background: var(--accent); color:#f5efdc;
+  border: 1px solid var(--border-dark); cursor:pointer; font-family:'Cormorant Garamond',Georgia,serif;
+  font-size: 1rem; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+}
+.gate-btn:hover { background: var(--accent-bright); }
+.gate-error { color: #a94444; font-size: 0.85rem; font-style: italic; margin-top: 10px; min-height: 1.2em; }
+#protected-content { display: none; }
+
 @media(max-width:560px) {
   .site-nav { display: none; }
   .site-nav-select { display: block; }
@@ -127,13 +144,22 @@ h1 {
     </select>
     <div class="rule"></div>
 
-    <p class="intro">you'll get the idea of what this place is meant for once you scroll down and read a few.</p>
+    <div class="gate" id="gate">
+      <div class="gate-eyebrow">A Word, Please</div>
+      <input type="password" id="gate-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" maxlength="20">
+      <button class="gate-btn" id="gate-submit">Enter</button>
+      <div class="gate-error" id="gate-error"></div>
+    </div>
 
-    <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
+    <div id="protected-content">
+      <p class="intro">you'll get the idea of what this place is meant for once you scroll down and read a few.</p>
 
-    <div class="play-list" id="play-list"></div>
+      <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
 
-    <div class="page-num">&mdash; IV &mdash;</div>
+      <div class="play-list" id="play-list"></div>
+
+      <div class="page-num">&mdash; IV &mdash;</div>
+    </div>
 
   </div>
 </div>
@@ -251,7 +277,31 @@ function renderPlayList() {
   `).join('');
 }
 
-renderPlayList();
+const PASSWORD = '12345678';
+const LOCK_KEY = 'tacticaUnlocked';
+
+function unlock() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('protected-content').style.display = 'block';
+  renderPlayList();
+}
+
+function tryUnlock() {
+  const input = document.getElementById('gate-input');
+  if (input.value === PASSWORD) {
+    localStorage.setItem(LOCK_KEY, 'true');
+    unlock();
+  } else {
+    document.getElementById('gate-error').textContent = "wrong. try again.";
+    input.value = '';
+    input.focus();
+  }
+}
+
+document.getElementById('gate-submit').addEventListener('click', tryUnlock);
+document.getElementById('gate-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+if (localStorage.getItem(LOCK_KEY) === 'true') unlock();
 </script>
 </body>
 </html>
