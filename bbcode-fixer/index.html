@@ -160,6 +160,7 @@ h1 {
       <a href="../quidmodding/">Codex</a>
       <a href="../gringotts/">Ledger</a>
       <a href="../playbook/">Tactica</a>
+      <a href="../final-v7-real-final/">Vademecum</a>
     </div>
     <select class="site-nav-select" onchange="if(this.value) location.href=this.value;">
       <option value="" selected disabled>Navigate&hellip;</option>
@@ -167,6 +168,7 @@ h1 {
       <option value="../quidmodding/">Codex</option>
       <option value="../gringotts/">Ledger</option>
       <option value="../playbook/">Tactica</option>
+      <option value="../final-v7-real-final/">Vademecum</option>
     </select>
     <div class="rule"></div>
 
@@ -355,7 +357,7 @@ function drawArrow(a, b) {
   const x2 = br.left - wrapRect.left + br.width / 2;
   const y2 = br.top - wrapRect.top + br.height / 2;
   const midY = (y1 + y2) / 2;
-  const color = getComputedStyle(a).color;
+  const color = getComputedStyle(document.documentElement).getPropertyValue('--border-dark').trim();
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
   path.setAttribute('stroke', color);

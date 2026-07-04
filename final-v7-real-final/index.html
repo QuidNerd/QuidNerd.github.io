@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vademecum — a little bit of everything, filed under 'important, probably'</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --body-bg: #e3d7b6;
+  --page-bg: #ece2c8;
+  --border-dark: #3a3226;
+  --border-light: #b9ab8a;
+  --ink: #2a2418;
+  --ink-dim: #6b6050;
+  --ink-faint: #9c9484;
+  --accent: #3f6b52;
+  --accent-bright: #4f8a68;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--body-bg);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(63,107,82,0.06), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(58,50,38,0.05), transparent 45%);
+  color: var(--ink); min-height: 100vh;
+  padding: 40px 16px 70px;
+}
+
+.frame { max-width: 780px; margin: 0 auto; border: 1.5px solid var(--border-dark); padding: 5px; box-shadow: 0 14px 40px rgba(42,36,24,0.25); }
+.page { border: 1px solid var(--border-light); background: var(--page-bg); padding: 50px 54px; }
+
+.fleuron { text-align:center; color: var(--accent); font-size: 1.4rem; margin-bottom: 8px; }
+.eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; }
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: clamp(1.9rem, 10vw, 3.4rem); color: var(--ink);
+  letter-spacing: clamp(0px, 1vw, 2px); text-align:center; margin: 10px 0 8px; text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.3rem; color: var(--ink-dim);
+  text-align:center; margin-bottom: 20px;
+}
+.site-nav { display:flex; justify-content:center; gap:20px; margin-bottom: 30px; flex-wrap: wrap; }
+.site-nav a {
+  font-family: 'EB Garamond', Georgia, serif; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--accent); text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s;
+}
+.site-nav a:hover { color: var(--accent-bright); }
+.site-nav-select {
+  display: none; width: 100%; max-width: 300px; margin: 0 auto 30px;
+  font-family: 'EB Garamond', Georgia, serif; font-size: 0.92rem; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--accent); background: var(--page-bg); border: 1px solid var(--border-light);
+  padding: 10px 14px; text-align: center; text-align-last: center; cursor: pointer;
+}
+.site-nav-select:focus { outline: none; border-color: var(--accent); }
+
+.rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 28px; }
+.rule-orn { display:flex; align-items:center; gap:16px; margin: 44px 0 40px; }
+.rule-orn-line { flex:1; height:1px; background: var(--border-light); }
+.rule-orn-mark { color: var(--accent); font-size: 1rem; }
+
+.contents-label { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; margin: 26px 0 16px; }
+nav { max-width: 460px; margin: 0 auto; }
+.toc-entry {
+  display: flex; align-items: baseline; gap: 10px; text-decoration: none;
+  color: var(--ink-dim); font-size: 1.15rem; padding: 8px 2px; width: 100%;
+  background: none; border: none; cursor: pointer; font-family: 'EB Garamond', Georgia, serif; text-align: left;
+}
+.toc-entry .num { font-family: 'Cormorant Garamond', Georgia, serif; color: var(--accent); font-weight: 600; width: 26px; flex: none; }
+.toc-entry .leader { flex: 1; border-bottom: 1px dotted var(--border-light); transform: translateY(-6px); margin: 0 4px; }
+.toc-entry:hover { color: var(--accent); }
+.toc-entry:hover .leader { border-color: var(--accent); }
+.toc-entry.active { color: var(--ink); font-weight: 600; }
+.toc-entry.active .leader { border-color: var(--accent); }
+
+/* Chapters */
+.hidden { display: none !important; }
+.chapter { scroll-margin-top: 30px; }
+.chapter-eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; }
+.chapter h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 2rem; color: var(--ink);
+  text-align:center; letter-spacing: 1px; margin: 8px 0 26px;
+}
+.chapter-placeholder { text-align:center; color: var(--ink-faint); font-style: italic; padding: 20px 0 10px; }
+
+.notes { max-width: 580px; margin: 0 auto; }
+
+.position-heading {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 1.75rem; color: var(--accent);
+  margin: 30px 0 12px; padding-top: 26px; letter-spacing: 0.5px;
+  border-top: 1px dotted var(--border-light);
+}
+
+.stat-chips { display:flex; flex-wrap:wrap; gap: 8px; margin: 0 0 14px; }
+.stat-chip {
+  border: 1px solid var(--border-light); background: rgba(58,50,38,0.03);
+  padding: 4px 12px; font-size: 0.85rem; color: var(--ink-dim);
+}
+.stat-chip strong { color: var(--accent); }
+
+.notes p { font-size: 1.05rem; line-height: 1.75; color: var(--ink); margin-bottom: 14px; }
+.notes strong { color: var(--ink); }
+.notes ul { margin: 0 0 14px 22px; }
+.notes li { font-size: 1.03rem; line-height: 1.7; color: var(--ink); margin-bottom: 4px; }
+.notes .label { display:block; font-size: 0.78rem; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 1.5px; margin: 18px 0 6px; }
+.notes .group-label { font-weight: 600; color: var(--accent); }
+.notes a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.notes a:hover { color: var(--accent-bright); }
+
+.abilities-box { border: 1px solid var(--border-light); background: rgba(58,50,38,0.02); padding: 18px 20px 6px; margin: 16px 0; }
+.abilities-box .label { margin-top: 0; }
+.abilities-box .group-label:first-of-type { margin-top: 0; }
+
+.addendum { border: 1px dashed var(--border-light); padding: 14px 18px; margin: 16px 0; }
+.addendum-label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
+.addendum p { font-style: normal; color: var(--ink-dim); font-size: 0.98rem; line-height: 1.7; margin: 0; }
+
+.page-num { text-align:center; margin-top: 40px; color: var(--ink-faint); font-size: 1rem; }
+
+@media(max-width:560px) {
+  .site-nav { display: none; }
+  .site-nav-select { display: block; }
+  .page { padding: 40px 24px; }
+  .toc-entry .title { white-space: normal; }
+  .toc-entry .leader { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="page">
+
+    <div class="fleuron">&#10086;</div>
+    <div class="eyebrow">The Study</div>
+    <h1>Vademecum</h1>
+    <p class="subtitle">a little bit of everything, filed under 'important, probably'</p>
+    <div class="site-nav">
+      <a href="../">Home</a>
+      <a href="../quidmodding/">Codex</a>
+      <a href="../gringotts/">Ledger</a>
+      <a href="../bbcode-fixer/">Marginalia</a>
+      <a href="../playbook/">Tactica</a>
+    </div>
+    <select class="site-nav-select" onchange="if(this.value) location.href=this.value;">
+      <option value="" selected disabled>Navigate&hellip;</option>
+      <option value="../">Home</option>
+      <option value="../quidmodding/">Codex</option>
+      <option value="../gringotts/">Ledger</option>
+      <option value="../bbcode-fixer/">Marginalia</option>
+      <option value="../playbook/">Tactica</option>
+    </select>
+    <div class="rule"></div>
+
+    <div class="contents-label">Contents</div>
+    <nav>
+      <button class="toc-entry active" id="toc-1" onclick="showChapter(1, this)">
+        <span class="num">I.</span>
+        <span class="title">Quidditch Build</span>
+        <span class="leader"></span>
+      </button>
+      <button class="toc-entry" id="toc-2" onclick="showChapter(2, this)">
+        <span class="num">II.</span>
+        <span class="title">Duelling Build</span>
+        <span class="leader"></span>
+      </button>
+      <button class="toc-entry" id="toc-3" onclick="showChapter(3, this)">
+        <span class="num">III.</span>
+        <span class="title">Broomracing Build</span>
+        <span class="leader"></span>
+      </button>
+      <button class="toc-entry" id="toc-4" onclick="showChapter(4, this)">
+        <span class="num">IV.</span>
+        <span class="title">Frontend Notes for BBCoders</span>
+        <span class="leader"></span>
+      </button>
+    </nav>
+
+    <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
+
+    <!-- Chapter I: Quidditch Build -->
+    <section class="chapter" id="chapter-1">
+      <div class="chapter-eyebrow">Chapter I</div>
+      <h2>Quidditch Build</h2>
+
+      <div class="notes">
+
+        <p>ARC is a stat Quidditch players have no use for. If you're in this for the long haul and not planning to pivot to something else, leave it at 0 and never think about it again.</p>
+
+        <div class="position-heading">Chaser</div>
+        <div class="stat-chips">
+          <span class="stat-chip"><strong>ACC</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>EVA</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>STR</strong> &mdash; only dump into here if u have too many to spare</span>
+        </div>
+        <p>Max out ACC and EVA, then pick one of two directions for the third stat. </p>
+          
+        <p>STA is the safer bet and more versatile than people give it credit for — not just for Savior Chasers but for team carries too, since a high ACC makes you the second most prioritised target after your Savior Chaser. With saving rolls sitting around 23 these days, 15+ STA means you pass those without breaking a sweat, and even if you drop into negative HP a Savior can rez you at 1 HP. The only way to shut that down entirely is for the enemy to deal 175% of your max HP in a single round, which basically requires both Beaters landing cracked STR rolls or a nat 20 during Dopplebeater for the crit. </p>
+
+        <p>The other option is WIS, which opens up a sneakier build where you cheat more freely and can moonlight as your team's third Seeker if needed. Pick one and commit, splitting them just makes you mediocre at both.</p>
+
+        <p>STR is a scam under most circumstances. What are you going to do with it, Body Blow? Contested Quaffle Grab? High enough ACC means you will unlikely to be in such situation, so only consider it if you've genuinely run out of places to put stat points after maxing everything else.</p>
+
+        <div class="abilities-box">
+        <p class="label">Viable Abilities</p>
+
+        <p class="group-label">Core</p>
+        <ul>
+          <li><strong>The Muggle Condition</strong> &mdash; muggleborns get blessed with that sweet ACC boost</li>
+
+          <li><strong>Statistically Relevant +2 ACC</strong> &mdash; break the ACC cap and make opposing teams start having nightmares about you</li>
+          <li><strong>Statistically Relevant +2 ACC</strong> &mdash; yes u can take this twice</li>
+          <li><strong>Evasive Maneuvers I</strong> &mdash; don't die</li>
+          <li><strong>Evasive Maneuvers II</strong> &mdash; seriously, don't die</li>
+        </ul>
+
+        <p class="group-label">Team Mom Build</p>
+        <ul>
+          <li><strong>Savior</strong> &mdash; save your idiots</li>
+          <li><strong>Rapid Reviver</strong> &mdash; revive one idiot per game; two idiots in one round with Paragon of Health + Savior, or two uses across different rounds with Healing Sage</li>
+          <li><strong>Death Defiance</strong> &mdash; needs Healing Sage, which is useless in Quidditch (for now), but hey, resurrection</li>
+          <li><strong>Healing Sage</strong> &mdash; does nothing standalone but gives Rapid Reviver a second use across different rounds, which is the only reason it's on this list</li>
+          <li><s><strong>Paragon of Health</strong> &mdash; more HP for your idiots means less dying</s>&hellip; on second thought, maybe not</li>
+        </ul>
+
+
+        <p class="group-label">The Sneaky Build</p>
+        <ul>
+          <li><strong>Foulplay</strong> &mdash; because why play fair</li>
+          <li><strong>Cat's Grace</strong> &mdash; if you're fouling, may as well not get caught</li>
+        </ul>
+
+        <p class="group-label">Miscellaneous</p>
+        <ul>
+          <li><strong>Calming Presence</strong> &mdash; 10% auto-hit, because your team needs all the help it can get</li>
+          <li><strong>Fearless</strong> &mdash; immune to scary people</li>
+          <li><strong>Charmer</strong> &mdash; be pretty at people</li>
+          <li><strong>Lovely Creature</strong> &mdash; be pretty at people, plus make the Snitch harder to catch</li>
+          <li><strong>Sixth Sense</strong> &mdash; catch other people being sneaky</li>
+          <li><strong>Terrible Presence</strong> &mdash; everyone sucks at aiming now</li>
+          <li><strong>Chaser's Interception</strong> &mdash; a scam under most circumstances. against teams that prioritise action economy and put minimal hands on the quaffle... there's nothing to intercept in the first place; that said, if your carry has run out of worthwhile abilities to take, it's not the worst filler</li>
+
+        </ul>
+        </div>
+
+        <div class="position-heading">Keeper</div>
+                <div class="stat-chips">
+          <span class="stat-chip"><strong>ACC</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>EVA</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>STR</strong> &mdash; only dump into here if u have too many to spare</span>
+        </div>
+        <p>Basically a 4th Chaser who also happens to be the only one that can guard the hoops. <strong>Everything in the Chaser section</strong> applies, just don't forget the hoops exist every once in a while.</p>
+        <div class="abilities-box">
+        <p class="label">Viable Abilities</p>
+
+        <p class="group-label">The One and Only</p>
+        <ul>
+          <li><strong>Keeper's Catch</strong> &mdash; low proc rate, but if you're playing Keeper you really shouldn't leave home without it</li>
+        </ul>
+        </div>
+
+        <div class="position-heading">Seeker</div>
+        <div class="stat-chips">
+          <span class="stat-chip"><strong>ACC</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>WIS</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>EVA</strong> &mdash; ideally max out too</span>
+        </div>
+        <p>Basically a 5th Chaser, except you're holding the highest leverage win condition on the field.  Most rounds you're either searching for or going after the Snitch, but during chase phase you're free to run regular Chaser shenanigans in the meantime — scoring, fouling, save duty, whatever floats your broom.</p>
+
+        <p>All three stats matter and there's no easy answer for which to max first: low ACC means you can't catch the stupid snitch, low WIS means you can't find the stupid snitch, and low EVA means you won't survive long enough to do either.</p>
+        
+        <p>And unlike your average Chaser who might go an entire match without anyone caring about their existence, congratulations! You're everyone's favorite target practice. Expect to be someone's priority hit list in the first two rounds, guaranteed. Because that's just part of the Seeker lifestyle.</p>
+
+        <p>All Chaser abilities apply.</p>
+
+        <div class="abilities-box">
+        <p class="label">Viable Abilities</p>
+        <p class="group-label">Seeker-Specific</p>
+        <ul>
+          <li><strong>Keen Eye</strong> &mdash; the snitch isn't going to find itself, y'know</li>
+          <li><strong>Impartial</strong> &mdash; immune to that Lovely Creature DC boost nonsense</li>
+          <li><strong>Blindvision</strong> &mdash; halves any debuff foul applied to you. an absolute unit of an ability</li>
+          <li><strong>Statistically Relevant +2 WIS</strong> &mdash; some would argue Comprehend Languages is the better pick but the math says otherwise if you need a WIS bump</li>
+        </ul>
+        </div>
+        <div class="position-heading">Beater</div>
+        <div class="stat-chips">
+          <span class="stat-chip"><strong>ACC</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>STR</strong> &mdash; max out</span>
+          <span class="stat-chip"><strong>EVA</strong> &mdash; ideally max out too</span>
+        </div>
+        <p>Unlike every other role, STR isn't a scam here! OMG! With 27 STR you can dish out 2025 damage and instantly bury even our resident HP record holder (which is Koko Riddle with her 20 STA/2000 HP, but please don't do that, having 10 EVA is just asking for trouble).</p>
+
+        <p>You need all three stats. Defender actions need EVA too so do not neglect your EVA, and STR determines how hard you hit while ACC determines if you hit at all. </p>
+          
+        <p>Everyone seems to be going Durmstrang-style lately, stacking ACC/EVA while letting STA slide, which probably means STR is quietly losing its place in the arms race. Keep it around 18 after Obnoxiously Strong and broom bonuses and prioritise the other two. Jorah Moussa might go down as the site's first and last 25+ STR Beater.</p>
+
+        <p class="label">Ability Priority</p>
+        <p><strong>Obnoxiously Strong</strong> &gt; <strong>Fearless</strong> &gt; <strong>Rebound</strong> &gt; Broken Broomshaft. </p>
+          
+        <p>Also grab the Chaser core stuff since The Muggle Condition's +3 ACC is too good to pass up, and with the 2025 new patch, dual-wielding is less of a gamble now that one Beater can go ham with two bats while the other handles the dirty work, which also makes Foulplay worth considering.</p>
+
+        <p>Pick anything from the Chaser Misc list, but skip the team-buff abilities (Calming Presence, Sixth Sense, Lovely Creature) &mdash; Beaters already have enough must-haves, let your Chasers handle the support stuff.</p>
+
+        <div class="addendum">
+          <div class="addendum-label">Addendum</div>
+          <p>Broken Broomshaft is more underrated than people give it credit for (past-me included). It's currently the only ability on the site that can meaningfully pressure a Savior chaser, because once it triggers, whoever gets saved can't immediately return to their broom — they're stuck, and later in the match the team is forced to either run a Two-Headed Dragon or transfer that player onto a teammate's broom, either way tying up actions and locking the Savior out of save duty in the meantime. </p>
+          <p>　</p>
+          <p>Whether it's worth picking up comes down to one question: does the opposing team have a Savior chaser?</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Chapter II: Duelling Build -->
+    <section class="chapter hidden" id="chapter-2">
+      <div class="chapter-eyebrow">Chapter II</div>
+      <h2>Duelling Build</h2>
+      <p class="chapter-placeholder">don't have the know-how for this one yet, so it's staying blank for now</p>
+    </section>
+
+    <!-- Chapter III: Broomracing Build -->
+    <section class="chapter hidden" id="chapter-3">
+      <div class="chapter-eyebrow">Chapter III</div>
+      <h2>Broomracing Build</h2>
+      <p class="chapter-placeholder">don't have the know-how for this one yet, so it's staying blank for now</p>
+    </section>
+
+    <!-- Chapter IV: Frontend Notes for BBCoders -->
+    <section class="chapter hidden" id="chapter-4">
+      <div class="chapter-eyebrow">Chapter IV</div>
+      <h2>Frontend Notes for BBCoders</h2>
+      <div class="notes">
+        <p><a href="../bbcode-fixer/">Marginalia</a> is a BBCode structure checker I built, give it a try! Just keep in mind it's plain JavaScript running in your browser, so refreshing the page wipes everything you've typed.</p>
+      </div>
+    </section>
+
+    <div class="page-num">&mdash; V &mdash;</div>
+
+  </div>
+</div>
+
+<script>
+function showChapter(n, el) {
+  document.querySelectorAll('.toc-entry').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.chapter').forEach(c => c.classList.add('hidden'));
+  document.getElementById('chapter-' + n).classList.remove('hidden');
+  (el || document.getElementById('toc-' + n)).classList.add('active');
+}
+</script>
+</body>
+</html>
