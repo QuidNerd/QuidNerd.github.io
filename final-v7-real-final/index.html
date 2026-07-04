@@ -118,6 +118,15 @@ nav { max-width: 460px; margin: 0 auto; }
 .addendum-label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
 .addendum p { font-style: normal; color: var(--ink-dim); font-size: 0.98rem; line-height: 1.7; margin: 0; }
 
+.bean-clock { border: 1px solid var(--border-light); background: rgba(58,50,38,0.02); padding: 26px; margin: 18px 0; text-align: center; }
+.bean-clock-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
+.bean-clock-time { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 2.6rem; color: var(--ink); letter-spacing: 1px; }
+.bean-clock-cest { font-size: 0.9rem; color: var(--ink-faint); margin-top: 4px; }
+.bean-clock-row { display: flex; justify-content: center; gap: 40px; margin-top: 24px; padding-top: 22px; border-top: 1px dotted var(--border-light); flex-wrap: wrap; }
+.bean-clock-col { min-width: 140px; }
+.bean-clock-value { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 1.6rem; color: var(--accent); }
+.bean-clock-sub { font-size: 0.85rem; color: var(--ink-dim); margin-top: 2px; }
+
 .page-num { text-align:center; margin-top: 40px; color: var(--ink-faint); font-size: 1rem; }
 
 @media(max-width:560px) {
@@ -174,6 +183,11 @@ nav { max-width: 460px; margin: 0 auto; }
       <button class="toc-entry" id="toc-4" onclick="showChapter(4, this)">
         <span class="num">IV.</span>
         <span class="title">Frontend Notes for BBCoders</span>
+        <span class="leader"></span>
+      </button>
+      <button class="toc-entry" id="toc-5" onclick="showChapter(5, this)">
+        <span class="num">V.</span>
+        <span class="title">The Bean Clock</span>
         <span class="leader"></span>
       </button>
     </nav>
@@ -337,6 +351,32 @@ nav { max-width: 460px; margin: 0 auto; }
       </div>
     </section>
 
+    <!-- Chapter V: The Bean Clock -->
+    <section class="chapter hidden" id="chapter-5">
+      <div class="chapter-eyebrow">Chapter V</div>
+      <h2>The Bean Clock</h2>
+      <div class="notes">
+        <p>Every Flavour Beans locations refresh every 6 hours, on the dot: 02:00, 08:00, 14:00, and 20:00 EST (08:00, 14:00, 20:00, and 02:00 CEST).</p>
+        <div class="bean-clock">
+          <div class="bean-clock-label">Right Now</div>
+          <div class="bean-clock-time" id="bean-now-est">--:--</div>
+          <div class="bean-clock-cest" id="bean-now-cest">CEST --:--</div>
+          <div class="bean-clock-row">
+            <div class="bean-clock-col">
+              <div class="bean-clock-label">Last Spawn</div>
+              <div class="bean-clock-value" id="bean-last-time">--:--</div>
+              <div class="bean-clock-sub" id="bean-last-ago">-- ago</div>
+            </div>
+            <div class="bean-clock-col">
+              <div class="bean-clock-label">Next Spawn</div>
+              <div class="bean-clock-value" id="bean-next-time">--:--</div>
+              <div class="bean-clock-sub" id="bean-next-in">in --</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="page-num">&mdash; V &mdash;</div>
 
   </div>
@@ -346,9 +386,56 @@ nav { max-width: 460px; margin: 0 auto; }
 function showChapter(n, el) {
   document.querySelectorAll('.toc-entry').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.chapter').forEach(c => c.classList.add('hidden'));
-  document.getElementById('chapter-' + n).classList.remove('hidden');
+  const chapter = document.getElementById('chapter-' + n);
+  chapter.classList.remove('hidden');
   (el || document.getElementById('toc-' + n)).classList.add('active');
+  chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// ==================== BEAN CLOCK ====================
+// Fixed offsets matching this schedule's convention: CEST = UTC+2, EST (as used here) = UTC-4
+const BEAN_EST_OFFSET = -4;
+const BEAN_CEST_OFFSET = 2;
+const BEAN_SPAWN_HOURS_EST = [2, 8, 14, 20];
+
+function beanPad(n) { return String(n).padStart(2, '0'); }
+function beanOffsetNow(offsetHours) { return new Date(Date.now() + offsetHours * 3600000); }
+function beanFmt(d) { return beanPad(d.getUTCHours()) + ':' + beanPad(d.getUTCMinutes()); }
+
+function beanFmtDuration(ms) {
+  const totalMin = Math.round(ms / 60000);
+  const h = Math.floor(totalMin / 60), m = totalMin % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+function updateBeanClock() {
+  if (!document.getElementById('bean-now-est')) return;
+  const estNow = beanOffsetNow(BEAN_EST_OFFSET);
+  const cestNow = beanOffsetNow(BEAN_CEST_OFFSET);
+  document.getElementById('bean-now-est').textContent = beanFmt(estNow) + ' EST';
+  document.getElementById('bean-now-cest').textContent = beanFmt(cestNow) + ' CEST';
+
+  const y = estNow.getUTCFullYear(), mo = estNow.getUTCMonth(), da = estNow.getUTCDate();
+  const estNowMs = estNow.getTime();
+  const candidates = [];
+  for (let dOff = -1; dOff <= 1; dOff++) {
+    BEAN_SPAWN_HOURS_EST.forEach(h => candidates.push(Date.UTC(y, mo, da + dOff, h, 0, 0)));
+  }
+  candidates.sort((a, b) => a - b);
+  let last = null, next = null;
+  candidates.forEach(c => {
+    if (c <= estNowMs) last = c;
+    if (c > estNowMs && next === null) next = c;
+  });
+
+  document.getElementById('bean-last-time').textContent = beanFmt(new Date(last)) + ' EST';
+  document.getElementById('bean-last-ago').textContent = beanFmtDuration(estNowMs - last) + ' ago';
+  document.getElementById('bean-next-time').textContent = beanFmt(new Date(next)) + ' EST';
+  document.getElementById('bean-next-in').textContent = 'in ' + beanFmtDuration(next - estNowMs);
+}
+
+updateBeanClock();
+setInterval(updateBeanClock, 1000);
 </script>
 </body>
 </html>
