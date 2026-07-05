@@ -109,6 +109,21 @@ nav { max-width: 460px; margin: 0 auto; }
 }
 .stat-chip strong { color: var(--accent); }
 
+.build-compare { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--border-light); margin: 16px 0; }
+.build-compare .bc-cell {
+  padding: 10px 12px; border-bottom: 1px dotted var(--border-light); border-right: 1px dotted var(--border-light);
+  font-size: 0.92rem; color: var(--ink);
+}
+.build-compare .bc-cell:nth-child(3n) { border-right: none; }
+.build-compare .bc-cell:nth-last-child(-n+3) { border-bottom: none; }
+.build-compare .bc-head {
+  font-weight: 600; color: var(--ink); background: rgba(58,50,38,0.04);
+  border-bottom: 1px solid var(--border-dark) !important; text-align: center; font-size: 0.85rem;
+}
+.build-compare .bc-cell.label { font-weight: 600; }
+.build-compare .bc-cell.accent { color: var(--accent); font-weight: 600; }
+.build-compare .bc-sub { display: block; font-size: 0.75rem; color: var(--ink-dim); font-weight: 400; margin-top: 2px; }
+
 .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0px; margin: 22px 0; }
 .font-grid.single { grid-template-columns: 1fr; max-width: 260px; margin-left: auto; margin-right: auto; }
 .font-swatch { text-align: center; padding: 14px 8px; }
@@ -182,6 +197,8 @@ nav { max-width: 460px; margin: 0 auto; }
   .page { padding: 40px 24px; }
   .toc-entry .title { white-space: normal; }
   .toc-entry .leader { display: none; }
+  .build-compare .bc-cell { padding: 8px 6px; font-size: 0.82rem; }
+  .build-compare .bc-sub { font-size: 0.68rem; }
 }
 @media(max-width:480px) {
   .font-grid { display: none; }
@@ -262,11 +279,11 @@ nav { max-width: 460px; margin: 0 auto; }
         </div>
         <p>Max out ACC and EVA, then pick one of two directions for the third stat. </p>
           
-        <p>STA is the safer bet and more versatile than people give it credit for — not just for Savior Chasers but for team carries too, since a high ACC makes you the second most prioritised target after your Savior Chaser. With saving rolls sitting around 23 these days, 15+ STA means you pass those without breaking a sweat, and even if you drop into negative HP a Savior can rez you at 1 HP. The only way to shut that down entirely is for the enemy to deal 175% of your max HP in a single round, which basically requires both Beaters landing cracked STR rolls or a nat 20 during Dopplebeater for the crit. </p>
+        <p>STA is the safe and boring choice, but it works for anyone likely to draw fire (aka Savior Chasers & team carries with high ACC). With saving rolls sitting around 23 these days, 15+ STA means you pass those without breaking a sweat, and even if you drop into negative HP a Savior can rez you at 1 HP. The only way to shut that down is for the enemy to deal 175% of your max HP in a single round, but that requires both Beaters landing cracked STR rolls or a nat 20 during Dopplebeater for the crit. </p>
 
         <p>The other option is WIS, which opens up a sneakier build where you cheat more freely and can moonlight as your team's third Seeker if needed. Pick one and commit, splitting them just makes you mediocre at both.</p>
 
-        <p>STR is a scam under most circumstances. What are you going to do with it, Body Blow? Contested Quaffle Grab? High enough ACC means you will unlikely to be in such situation, so only consider it if you've genuinely run out of places to put stat points after maxing everything else.</p>
+        <p>STR is a scam under most circumstances. What are you going to do with it, Body Blow? Contested Quaffle Grab? High enough ACC means you will unlikely to be in such situation, so only consider it if you've run out of places to put stat points after maxing everything else.</p>
 
         <div class="abilities-box">
         <p class="label">Viable Abilities</p>
@@ -275,8 +292,8 @@ nav { max-width: 460px; margin: 0 auto; }
         <ul>
           <li><strong>The Muggle Condition</strong> &mdash; muggleborns get blessed with that sweet ACC boost</li>
 
-          <li><strong>Statistically Relevant +2 ACC</strong> &mdash; break the ACC cap and make opposing teams start having nightmares about you</li>
-          <li><strong>Statistically Relevant +2 ACC</strong> &mdash; yes u can take this twice</li>
+          <li><strong>Statistically Relevant +2 ACC I</strong> &mdash; break the ACC cap and make opposing teams start having nightmares about you</li>
+          <li><strong>Statistically Relevant +2 ACC II</strong> &mdash; yes u can take this twice</li>
           <li><strong>Evasive Maneuvers I</strong> &mdash; don't die</li>
           <li><strong>Evasive Maneuvers II</strong> &mdash; seriously, don't die</li>
         </ul>
@@ -397,10 +414,25 @@ nav { max-width: 460px; margin: 0 auto; }
         <div class="addendum">
           <div class="addendum-label">Addendum</div>
           <p>Did the math on this back in Summer 2025, slightly outdated but still a useful reference. </p>
-          <p>Comparing WIS 15/ARC 10 against WIS 10/ARC 15 after a 5-point year-up.</p>
-          <p>Going all into WIS (WIS 15/ARC 10): Confringo lands 95% of the time but damage stays flat across the board. Flipendo at 250, Incendio Duo at 210 (270 with DoT), Confringo at 300 with 90 chip.</p>
-          <p>Going all into ARC (WIS 10/ARC 15): Flipendo jumps to 325, Incendio Duo to 285 (345 with DoT), Confringo at 70% for 375 with 130 chip.</p>
-          <p>ARC pulls ahead for pure DPS. WIS above 10 only makes sense if your dice luck is genuinely terrible and you're committed to being a Confringo main, otherwise keep WIS at 8-10, push ARC to 14 or 16, and stack EVA/ACC as high as possible.</p>
+          <p>Comparing WIS 15/ARC 10 against WIS 10/ARC 15 after a 5-point year-up:</p>
+          <div class="build-compare">
+            <div class="bc-cell bc-head"></div>
+            <div class="bc-cell bc-head">WIS 15 / ARC 10</div>
+            <div class="bc-cell bc-head">WIS 10 / ARC 15</div>
+
+            <div class="bc-cell label">Flipendo</div>
+            <div class="bc-cell">250</div>
+            <div class="bc-cell accent">325</div>
+
+            <div class="bc-cell label">Incendio Duo</div>
+            <div class="bc-cell">210<span class="bc-sub">270 with DoT</span></div>
+            <div class="bc-cell accent">285<span class="bc-sub">345 with DoT</span></div>
+
+            <div class="bc-cell label">Confringo</div>
+            <div class="bc-cell">300<span class="bc-sub">95% hit, 90 chip</span></div>
+            <div class="bc-cell accent">375<span class="bc-sub">70% hit, 130 chip</span></div>
+          </div>
+          <p>ARC pulls ahead for pure DPS. WIS above 10 only makes sense if your dice luck is criminally bad or you're committed to being a Confringo main, otherwise keep WIS at 8-10, push ARC to 14 or 16, and stack EVA/ACC as high as possible.</p>
         </div>
 
         <p class="label">Suggested starting allocation</p>
