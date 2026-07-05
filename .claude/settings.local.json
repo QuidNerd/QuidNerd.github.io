@@ -16,7 +16,10 @@
       "Bash(rm -f /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/.claude/serve.py)",
       "Bash(grep -n \"<body>\\\\|<header>\\\\|</header>\\\\|class=\\\\\"container\\\\\"\\\\|<!-- ===== \\\\|</div>\\\\s*$\" /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/quidmodding/index.html)",
       "Bash(python3)",
-      "Bash(git mv *)"
+      "Bash(git mv *)",
+      "Bash(file /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/final-v7-real-final/*.ttf /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/final-v7-real-final/*.otf)",
+      "Bash(python3 -c ' *)",
+      "Bash(grep -n 'op-val\">\\\\${p}%' /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/final-v7-real-final/index.html)"
     ]
   }
 }
