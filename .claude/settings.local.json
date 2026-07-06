@@ -19,7 +19,22 @@
       "Bash(git mv *)",
       "Bash(file /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/final-v7-real-final/*.ttf /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/final-v7-real-final/*.otf)",
       "Bash(python3 -c ' *)",
-      "Bash(grep -n 'op-val\">\\\\${p}%' /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/final-v7-real-final/index.html)"
+      "Bash(grep -n 'op-val\">\\\\${p}%' /Users/jessicazhg/Documents/github.io/QuidNerd.github.io/final-v7-real-final/index.html)",
+      "Bash(npx --version)",
+      "Bash(command -v node)",
+      "Bash(command -v php)",
+      "Bash(command -v ruby)",
+      "Bash(nohup python3 -m http.server 8090 > /tmp/pyserver.log 2>&1 & echo started)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8090/favicon.svg)",
+      "Bash(pkill -f \"http.server 8090\")",
+      "Bash(nohup python3 -m http.server 8090)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8090/quidmodding/)",
+      "Bash(pkill -f \"http.server 8080\")",
+      "Bash(nohup python3 -m http.server 8080)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8080/favicon.svg)",
+      "Bash(pkill -f \"http.server 8095\")",
+      "Bash(nohup python3 -m http.server 8095)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8095/favicon.svg)"
     ]
   }
 }
