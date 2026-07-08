@@ -34,7 +34,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8080/favicon.svg)",
       "Bash(pkill -f \"http.server 8095\")",
       "Bash(nohup python3 -m http.server 8095)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8095/favicon.svg)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8095/favicon.svg)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8095/final-v7-real-final/index.html)"
     ]
   }
 }

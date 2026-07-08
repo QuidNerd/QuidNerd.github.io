@@ -251,11 +251,16 @@ nav { max-width: 460px; margin: 0 auto; }
       </button>
       <button class="toc-entry" id="toc-4" onclick="showChapter(4, this)">
         <span class="num">IV.</span>
-        <span class="title">Frontend Notes for BBCoders</span>
+        <span class="title">Summoner's Court Build</span>
         <span class="leader"></span>
       </button>
       <button class="toc-entry" id="toc-5" onclick="showChapter(5, this)">
         <span class="num">V.</span>
+        <span class="title">Frontend Notes for BBCoders</span>
+        <span class="leader"></span>
+      </button>
+      <button class="toc-entry" id="toc-6" onclick="showChapter(6, this)">
+        <span class="num">VI.</span>
         <span class="title">The Bean Clock</span>
         <span class="leader"></span>
       </button>
@@ -499,9 +504,16 @@ nav { max-width: 460px; margin: 0 auto; }
       <p class="chapter-placeholder">one day i will start using more than one (1) braincell and it will be OVER FOR ALL OF U</p>
     </section>
 
-    <!-- Chapter IV: Frontend Notes for BBCoders -->
+    <!-- Chapter IV: Summoner's Court Build -->
     <section class="chapter hidden" id="chapter-4">
       <div class="chapter-eyebrow">Chapter IV</div>
+      <h2>Summoner's Court Build</h2>
+      <p class="chapter-placeholder">i have not read a single line of rules for this lmfao but based on the rolls i'm seeing, it's giving heavy WIS ACC EVA energy. but countering Expelliarmus needs STR</p>
+    </section>
+
+    <!-- Chapter V: Frontend Notes for BBCoders -->
+    <section class="chapter hidden" id="chapter-5">
+      <div class="chapter-eyebrow">Chapter V</div>
       <h2>Frontend Notes for BBCoders</h2>
       <div class="notes">
         <p><a href="../bbcode-fixer/">Marginalia</a> is a BBCode structure checker I built, give it a try! Just keep in mind it's plain JavaScript running in your browser, so refreshing the page wipes everything you've typed.</p>
@@ -647,16 +659,16 @@ nav { max-width: 460px; margin: 0 auto; }
       </div>
     </section>
 
-    <!-- Chapter V: The Bean Clock -->
-    <section class="chapter hidden" id="chapter-5">
-      <div class="chapter-eyebrow">Chapter V</div>
+    <!-- Chapter VI: The Bean Clock -->
+    <section class="chapter hidden" id="chapter-6">
+      <div class="chapter-eyebrow">Chapter VI</div>
       <h2>The Bean Clock</h2>
       <div class="notes">
-        <p>Every Flavour Beans locations refresh every 6 hours, on the dot: 00:00, 06:00, 12:00, and 18:00 EST (06:00, 12:00, 18:00, and 00:00 CEST).</p>
+        <p>Every Flavour Beans locations refresh every 6 hours, on the dot: 00:00, 06:00, 12:00, and 18:00 in whatever timezone the site owner operates in (EST/EDT, auto-adjusted for DST) &mdash; shown below alongside the French time equivalent.</p>
         <div class="bean-clock">
           <div class="bean-clock-label">Right Now</div>
           <div class="bean-clock-time" id="bean-now-est">--:--</div>
-          <div class="bean-clock-cest" id="bean-now-cest">CEST --:--</div>
+          <div class="bean-clock-cest" id="bean-now-cest">France --:--</div>
           <div class="bean-clock-row">
             <div class="bean-clock-col">
               <div class="bean-clock-label">Last Spawn</div>
@@ -673,7 +685,7 @@ nav { max-width: 460px; margin: 0 auto; }
       </div>
     </section>
 
-    <div class="page-num">&mdash; V &mdash;</div>
+    <div class="page-num">&mdash; VI &mdash;</div>
 
   </div>
 </div>
@@ -702,14 +714,36 @@ function showChapter(n, el) {
 })();
 
 // ==================== BEAN CLOCK ====================
-// Fixed offsets matching this schedule's convention: CEST = UTC+2, EST (as used here) = UTC-4
-const BEAN_EST_OFFSET = -4;
-const BEAN_CEST_OFFSET = 2;
-const BEAN_SPAWN_HOURS_EST = [0, 6, 12, 18];
+// Spawn grid is anchored to Toronto's wall-clock time (00/06/12/18), which
+// auto-shifts between EST and EDT with real-world DST -- no hardcoded offset.
+const BEAN_SPAWN_HOURS_LOCAL = [0, 6, 12, 18];
 
 function beanPad(n) { return String(n).padStart(2, '0'); }
-function beanOffsetNow(offsetHours) { return new Date(Date.now() + offsetHours * 3600000); }
-function beanFmt(d) { return beanPad(d.getUTCHours()) + ':' + beanPad(d.getUTCMinutes()); }
+
+// Returns { y, mo, da, h, mi, s, wallMs, offsetH } describing `date` as rendered in `timeZone`.
+// y/mo/da/h/mi/s are reusable as UTC fields to do wall-clock arithmetic safely.
+// offsetH is the zone's current UTC offset in whole hours (derived, not read from ICU
+// abbreviations -- those are unreliable for European zones in "short" format).
+function beanZoneParts(date, timeZone) {
+  const dtf = new Intl.DateTimeFormat('en-US', {
+    timeZone, hour12: false,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  });
+  const map = {};
+  dtf.formatToParts(date).forEach(p => { map[p.type] = p.value; });
+  const y = Number(map.year), mo = Number(map.month) - 1, da = Number(map.day);
+  const h = map.hour === '24' ? 0 : Number(map.hour);
+  const mi = Number(map.minute), s = Number(map.second);
+  const wallMs = Date.UTC(y, mo, da, h, mi, s);
+  const offsetH = Math.round((wallMs - date.getTime()) / 3600000);
+  return { y, mo, da, h, mi, s, wallMs, offsetH };
+}
+
+function beanZoneLabel(timeZone, offsetH) {
+  if (timeZone === 'America/Toronto') return offsetH === -4 ? 'EDT' : 'EST';
+  return '';
+}
 
 function beanFmtDuration(ms) {
   const totalMin = Math.round(ms / 60000);
@@ -719,28 +753,34 @@ function beanFmtDuration(ms) {
 
 function updateBeanClock() {
   if (!document.getElementById('bean-now-est')) return;
-  const estNow = beanOffsetNow(BEAN_EST_OFFSET);
-  const cestNow = beanOffsetNow(BEAN_CEST_OFFSET);
-  document.getElementById('bean-now-est').textContent = beanFmt(estNow) + ' EST';
-  document.getElementById('bean-now-cest').textContent = beanFmt(cestNow) + ' CEST';
+  const now = new Date();
+  const toronto = beanZoneParts(now, 'America/Toronto');
+  const paris = beanZoneParts(now, 'Europe/Paris');
+  const torontoLabel = beanZoneLabel('America/Toronto', toronto.offsetH);
 
-  const y = estNow.getUTCFullYear(), mo = estNow.getUTCMonth(), da = estNow.getUTCDate();
-  const estNowMs = estNow.getTime();
+  document.getElementById('bean-now-est').textContent =
+    beanPad(toronto.h) + ':' + beanPad(toronto.mi) + ' ' + torontoLabel;
+  document.getElementById('bean-now-cest').textContent =
+    'France ' + beanPad(paris.h) + ':' + beanPad(paris.mi);
+
   const candidates = [];
   for (let dOff = -1; dOff <= 1; dOff++) {
-    BEAN_SPAWN_HOURS_EST.forEach(h => candidates.push(Date.UTC(y, mo, da + dOff, h, 0, 0)));
+    BEAN_SPAWN_HOURS_LOCAL.forEach(h => candidates.push(Date.UTC(toronto.y, toronto.mo, toronto.da + dOff, h, 0, 0)));
   }
   candidates.sort((a, b) => a - b);
   let last = null, next = null;
   candidates.forEach(c => {
-    if (c <= estNowMs) last = c;
-    if (c > estNowMs && next === null) next = c;
+    if (c <= toronto.wallMs) last = c;
+    if (c > toronto.wallMs && next === null) next = c;
   });
 
-  document.getElementById('bean-last-time').textContent = beanFmt(new Date(last)) + ' EST';
-  document.getElementById('bean-last-ago').textContent = beanFmtDuration(estNowMs - last) + ' ago';
-  document.getElementById('bean-next-time').textContent = beanFmt(new Date(next)) + ' EST';
-  document.getElementById('bean-next-in').textContent = 'in ' + beanFmtDuration(next - estNowMs);
+  const lastD = new Date(last), nextD = new Date(next);
+  document.getElementById('bean-last-time').textContent =
+    beanPad(lastD.getUTCHours()) + ':' + beanPad(lastD.getUTCMinutes()) + ' ' + torontoLabel;
+  document.getElementById('bean-last-ago').textContent = beanFmtDuration(toronto.wallMs - last) + ' ago';
+  document.getElementById('bean-next-time').textContent =
+    beanPad(nextD.getUTCHours()) + ':' + beanPad(nextD.getUTCMinutes()) + ' ' + torontoLabel;
+  document.getElementById('bean-next-in').textContent = 'in ' + beanFmtDuration(next - toronto.wallMs);
 }
 
 updateBeanClock();
