@@ -181,6 +181,18 @@ nav { max-width: 460px; margin: 0 auto; }
 .addendum-label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
 .addendum p { font-style: normal; color: var(--ink-dim); font-size: 0.98rem; line-height: 1.7; margin: 0; }
 
+.quote-block { margin: 14px 0; padding: 2px 0 2px 20px; border-left: 3px solid var(--accent); }
+.quote-block + .quote-block { margin-top: 18px; }
+.quote-block blockquote {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1rem;
+  color: var(--ink); line-height: 1.5; margin: 0;
+}
+.quote-block .quote-attr {
+  display: block; margin-top: 6px; font-size: 0.8rem; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--accent); font-style: normal;
+}
+.quote-block .quote-attr::before { content: "\2014\00a0"; }
+
 .bean-clock { border: 1px solid var(--border-light); background: rgba(58,50,38,0.02); padding: 26px; margin: 18px 0; text-align: center; }
 .bean-clock-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
 .bean-clock-time { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 2.6rem; color: var(--ink); letter-spacing: 1px; }
@@ -506,22 +518,39 @@ nav { max-width: 460px; margin: 0 auto; }
       <div class="notes">
         <div class="addendum">
           <div class="addendum-label">Famous Quotes</div>
-          <p>"my favorite strat is fly 6 fly 6 fly 6 fly 6" &mdash; Wyatt Starkey</p>
-          <p>　</p>
-          <p>"duelling is easy, Quidditch I can figure out, but broomracing? madness" &mdash; Dealla Prince (2022), who then went on to become the backbone of Badass Broom Birb's strategy from 2024-2026, so yeah, anything can happen out here</p>
+
+          <div class="quote-block">
+            <blockquote>duelling is easy, Quidditch I can figure out, but broomracing? madness</blockquote>
+            <span class="quote-attr">Dealla Prince, 2022</span>
+          </div>
+          <p>who then went on to become the backbone of Badass Broom Birb's strategy from 2024&ndash;2026, so yeah, anything can happen out here.</p>
+          <div class="quote-block">
+            <blockquote>my favorite strat is fly 6 fly 6 fly 6 fly 6</blockquote>
+            <span class="quote-attr">Wyatt Starkey, 2026</span>
+          </div>
+        
         </div>
 
         <div class="addendum">
           <div class="addendum-label">Pro Tips</div>
-          <p>"5&ndash;6 STA is good enough." &mdash; Dee, i think, i forgor where i saw this tho</p>
-          <p>　</p>
-          <p>"Broom racing uses all stats. But most of the obstacles are ACC based." &mdash; Zach &amp; Verity</p>
+
+          <div class="quote-block">
+            <blockquote>5&ndash;6 STA is good enough</blockquote>
+            <span class="quote-attr">Dee, i think, i forgor where i saw this tho</span>
+          </div>
+
+          <div class="quote-block">
+            <blockquote>Broom racing uses all stats, but most of the obstacles are ACC based</blockquote>
+            <span class="quote-attr">Zach &amp; Verity</span>
+          </div>
         </div>
 
         <div class="addendum">
           <div class="addendum-label">From My Notes</div>
-          <p>"maybe cap STA/STR/WIS/ARC at 7 and dump everything else (wins, year-ups, whatever) into EVA &amp; ACC? Because while all stats are equal in racing, some are more equal than others."</p>
-          <p>　</p>
+
+          <div class="quote-block">
+            <blockquote>maybe cap STA/STR/WIS/ARC at 6 or 7 and dump ur wins & year-ups into EVA &amp; ACC? Because while all stats are equal in racing, some are more equal than others.</blockquote>
+          </div>
           <p>Update: EVA now edges out ACC in priority if you're aiming for the "finisher" build on your team &mdash; like Wyatt in Slyth BR 2025&ndash;2026.</p>
         </div>
       </div>
