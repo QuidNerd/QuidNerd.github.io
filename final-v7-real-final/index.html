@@ -193,6 +193,14 @@ nav { max-width: 460px; margin: 0 auto; }
 }
 .quote-block .quote-attr::before { content: "\2014\00a0"; }
 
+.disclaimer-chip-wrap { text-align: center; margin: 10px 0 34px; }
+.disclaimer-chip {
+  display: inline-block; max-width: 420px;
+  border: 1px solid var(--border-light); background: rgba(58,50,38,0.03);
+  padding: 8px 18px; font-size: 0.85rem; color: var(--ink-dim); line-height: 1.6;
+}
+.disclaimer-chip strong { color: var(--accent); }
+
 .bean-clock { border: 1px solid var(--border-light); background: rgba(58,50,38,0.02); padding: 26px; margin: 18px 0; text-align: center; }
 .bean-clock-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 6px; }
 .bean-clock-time { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: 2.6rem; color: var(--ink); letter-spacing: 1px; }
@@ -279,6 +287,10 @@ nav { max-width: 460px; margin: 0 auto; }
     </nav>
 
     <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
+
+    <div id="build-disclaimer" class="disclaimer-chip-wrap">
+      <span class="disclaimer-chip"><strong>Heads up:</strong> I'm a min-maxer to my core, so if you came here looking for character-driven builds, buddy, you took a wrong turn somewhere.</span>
+    </div>
 
     <!-- Chapter I: Quidditch Build -->
     <section class="chapter" id="chapter-1">
@@ -716,7 +728,7 @@ nav { max-width: 460px; margin: 0 auto; }
       <div class="chapter-eyebrow">Chapter VI</div>
       <h2>The Bean Clock</h2>
       <div class="notes">
-        <p>Every Flavour Beans locations refresh every 6 hours, on the dot: 00:00, 06:00, 12:00, and 18:00 in whatever timezone the site owner operates in (EST/EDT, auto-adjusted for DST) &mdash; shown below alongside the French time equivalent.</p>
+        <p>Every Flavour Beans locations refresh every 6 hours, on the dot: 00:00, 06:00, 12:00, and 18:00 in whatever timezone the site owner operates in (EST/EDT, auto-adjusted for DST), shown below alongside the French time equivalent.</p>
         <div class="bean-clock">
           <div class="bean-clock-label">Right Now</div>
           <div class="bean-clock-time" id="bean-now-est">--:--</div>
@@ -749,6 +761,7 @@ function showChapter(n, el) {
   const chapter = document.getElementById('chapter-' + n);
   chapter.classList.remove('hidden');
   (el || document.getElementById('toc-' + n)).classList.add('active');
+  document.getElementById('build-disclaimer').classList.toggle('hidden', n >= 3);
   chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
