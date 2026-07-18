@@ -10,8 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="neo.css">
 <style>
-/* index-only overrides — shared chrome lives in neo.css.
-   This page IS the navigation, so it has no top bar. */
 
 body {
   display: flex; flex-direction: column;
@@ -23,8 +21,6 @@ body {
 .frame { max-width: 560px; }
 .page { padding: 36px 32px 32px; }
 
-
-/* INTERACTIVE — the whole row is a link, hence the shadow + press */
 .item {
   display: flex; align-items: center; gap: 14px;
   cursor: pointer;
@@ -58,11 +54,8 @@ body {
 .desc { display: block; font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 .arrow { font-weight: 700; font-size: 1.4rem; flex: none; }
 
-/* ============================================================
-   HERO — the sign-off is now the front door. It carries the page
-   identity (h1) AND the manifesto, so the first thing you meet is
-   the attitude rather than a polite masthead.
-   ============================================================ */
+/* the sign-off is now the front door >:) it carries the page identity (h1) AND the manifesto, so the first thing yall meet
+is the attitude rather than a polite masthead, mwehehehe */
 .hero {
   position: relative;
   background: var(--black); color: var(--card);
@@ -97,14 +90,11 @@ body {
   padding: 4px 34px; transform: rotate(34deg); z-index: 3;
 }
 
-/* the kicker is a setup line — it runs straight into the h1 as its punchline */
 .hero-kicker {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.62rem;
   letter-spacing: 3px; text-transform: uppercase;
   color: var(--cyan); margin-bottom: 6px;
 }
-/* Overrides the shared h1 twice over: on black the yellow drop shadow would
-   vanish, and yellow belongs to "serifs can" below rather than the title. */
 .hero h1 {
   font-size: clamp(3.2rem, 17vw, 5.4rem);
   line-height: 0.82; letter-spacing: -3px;
@@ -140,7 +130,7 @@ body {
   line-height: 1.6; color: var(--card); margin-bottom: 10px;
 }
 .hero-line s { color: #8a8a8a; }
-.hero-line .hl { background: var(--yellow); color: var(--black); padding: 0 4px; font-weight: 700; }
+.hero-line .hl { background: var(--yellow); color: var(--black); padding: 0 4px; font-weight: 800; }
 
 .hero-scream {
   font-family: var(--font-mono); font-weight: 700;
@@ -165,7 +155,6 @@ body {
 }
 @keyframes blink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0; } }
 
-/* ---------- the list, demoted to second billing ---------- */
 .list-head { margin-bottom: 18px; }
 .list-title {
   font-family: var(--font-display); font-weight: 700;
@@ -197,11 +186,11 @@ body {
     <span class="hero-sticker">no refunds</span>
     <p class="hero-kicker">couldn't think of a name so you're getting:</p>
     <h1>Stuff</h1>
-    <p class="hero-line">v1 of this site was <s>a leather-bound serif fever dream</s> an entire <span class="hl">BOOK</span>, with chapters & page numbers & little swirly things, omfg</p>
+    <p class="hero-line">v1 of this site was <s>a leather-bound serif fever dream</s> an entire <span class="hl">BOOK</span>, with chapters & page numbers & little swirly things, i built a victorian codex for five links, omfg</p>
     <p class="hero-shout"><span class="w1">serifs can</span><br><em>fuck off</em></p>
     <p class="hero-scream">&#9632;&#9632;&#9632; thick borders &middot; hard shadows &middot; no rounded corners &#9632;&#9632;&#9632;</p>
-    <p class="hero-line">i will never recover &amp; i do not want to</p>
-    <span class="hero-stamp">neo brutalism 4 ever</span><span class="hero-blink">&#9679; rec</span>
+    <p class="hero-line">this change is permanent, there will be no rollback >:)</p>
+    <span class="hero-stamp">neo brutalism 4 ever</span><span class="hero-blink">　&#9679; rec</span>
   </header>
 
   <main class="page">
