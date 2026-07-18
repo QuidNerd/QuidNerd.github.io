@@ -1,0 +1,528 @@
+/* ============================================================
+   NEO-BRUTALIST DESIGN SYSTEM — shared across every page
+
+   Two rules govern everything here.
+
+   1. AFFORDANCE — offset shadow + press + pointer cursor means
+      the user can click it. Flat means it is information.
+      Colour is decoration and appears on both; the SHADOW is
+      the signal, so never put one on a static block.
+
+   2. DEPTH — three tones, from back to front:
+        --bg      the desk    (page sits on it)
+        --paper   the page    (sections sit on it)
+        --card    the surface (live content: inputs, output)
+      A thing that is one step brighter than its parent is a
+      working surface. Never nest two surfaces of equal tone —
+      that is what makes a layout read as undifferentiated mush.
+   ============================================================ */
+
+:root {
+  /* --- depth ladder --- */
+  --bg: #e8e2d4;
+  --paper: #f7f4ec;
+  --card: #ffffff;
+  --black: #000000;
+
+  /* --- accents --- */
+  --yellow: #ffd93d;
+  --pink: #ff6b9d;
+  --cyan: #4ecdc4;
+  --lime: #b8e986;
+  --orange: #ff9a3c;
+  --red: #ff5252;
+
+  --shadow: 6px 6px 0 var(--black);
+  --shadow-sm: 4px 4px 0 var(--black);
+  --shadow-lg: 10px 10px 0 var(--black);
+  --bw: 3px;
+
+  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+
+  /* --- legacy aliases (older component CSS + JS inline styles) --- */
+  --body-bg: var(--bg);
+  --page-bg: var(--paper);
+  --border-dark: var(--black);
+  --border-light: var(--black);
+  --ink: var(--black);
+  --ink-dim: #4a4a4a;
+  --ink-faint: #6e6e6e;
+  --accent: var(--black);
+  --accent-bright: #d81b60;
+  --red-bright: #c62828;
+  --surface: var(--card);
+  --surface2: var(--yellow);
+  --surface-border: var(--black);
+  --accent-hover: var(--accent-bright);
+  --accent2: var(--yellow);
+  --gold: var(--black);
+  --gold-bright: var(--accent-bright);
+  --text: var(--black);
+  --text-light: var(--black);
+  --dim: var(--ink-dim);
+  --green: #2e7d32;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg);
+  background-image:
+    linear-gradient(var(--black) 1px, transparent 1px),
+    linear-gradient(90deg, var(--black) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+  color: var(--black);
+  min-height: 100vh;
+  padding: 0 16px 60px;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background: var(--bg);
+  opacity: 0.93;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ============================================================
+   TOP BAR — the site's navigation. Sticky, so you can always
+   leave. Current page is marked, not linked.
+   ============================================================ */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 14px;
+  max-width: 900px; margin: 0 auto 26px;
+  background: var(--black);
+  border: var(--bw) solid var(--black);
+  padding: 8px 10px;
+}
+.topbar-home {
+  flex: none;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.9rem; letter-spacing: -0.5px; text-transform: uppercase;
+  color: var(--black); text-decoration: none; cursor: pointer;
+  background: var(--yellow);
+  border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 rgba(255,255,255,0.9);
+  padding: 5px 10px;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+}
+.topbar-home:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 rgba(255,255,255,0.9); }
+
+.topbar-links {
+  display: flex; gap: 8px; align-items: center;
+  overflow-x: auto; scrollbar-width: none;
+  margin-left: auto;
+}
+.topbar-links::-webkit-scrollbar { display: none; }
+.topbar-links a, .topbar-links .here {
+  flex: none;
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase;
+  white-space: nowrap; padding: 6px 10px;
+  border: 2px solid var(--card);
+  text-decoration: none;
+}
+.topbar-links a {
+  color: var(--card); background: transparent; cursor: pointer;
+  transition: background 0.08s ease, color 0.08s ease;
+}
+.topbar-links a:hover, .topbar-links a:focus-visible {
+  background: var(--card); color: var(--black); outline: none;
+}
+/* current page: stated, not clickable. Ordered first so "you are
+   here" stays visible when the bar scrolls on a narrow screen. */
+.topbar-links .here {
+  order: -1;
+  color: var(--black); background: var(--pink);
+  border-color: var(--pink); cursor: default;
+}
+
+/* ============================================================
+   PAGE SHELL + MASTHEAD
+   One measure for every page (the home index overrides it).
+   ============================================================ */
+.frame { max-width: 780px; margin: 0 auto; border: none; padding: 0; box-shadow: none; }
+
+.page {
+  background: var(--paper);
+  border: 4px solid var(--black);
+  box-shadow: var(--shadow-lg);
+  padding: 34px 30px 30px;
+}
+
+/* the top bar is sticky, so anything scrolled to must duck under it */
+[id] { scroll-margin-top: 88px; }
+
+.fleuron { display: none; }          /* book-era ornament, retired */
+.page-num { display: none; }         /* book-era folio, retired */
+.rule-orn { display: none; }         /* book-era divider, retired */
+
+.masthead { margin-bottom: 30px; }
+
+.eyebrow {
+  display: inline-block;
+  background: var(--cyan);
+  border: var(--bw) solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  font-family: var(--font-mono);
+  font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 11px; margin-bottom: 16px;
+  transform: rotate(-2deg);
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 12vw, 4.6rem);
+  line-height: 0.88; letter-spacing: -2.5px;
+  text-transform: uppercase; color: var(--black);
+  text-align: left; margin: 0;
+  overflow-wrap: anywhere;
+  text-shadow: 6px 6px 0 var(--yellow), 6px 6px 0 var(--black);
+  -webkit-text-stroke: 1.5px var(--black);
+}
+
+/* plain text, not a full-bleed bar — it is a caption, not a banner */
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.9rem; line-height: 1.5; color: var(--ink-dim);
+  background: none; border: none; box-shadow: none;
+  padding: 0; margin: 14px 0 0;
+  text-align: left;
+}
+
+/* one hairline under the masthead is all the division needed */
+.rule { width: 100%; height: 2px; background: var(--black); margin: 0 0 30px; opacity: 0.15; }
+.rule.wide { margin: 30px 0; }
+
+/* ============================================================
+   BLOCK — the structural unit. A titled section on the page.
+   Replaces "Chapter N" eyebrows + full-width ornamental rules.
+   ============================================================ */
+.block { margin-bottom: 42px; }
+.block:last-child { margin-bottom: 0; }
+
+.block-head { display: flex; align-items: stretch; gap: 0; margin-bottom: 16px; }
+
+/* Section headings are inverted slabs. Loudest thing after the H1,
+   so the eye lands on structure before it lands on content. */
+.block-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.05rem, 3.6vw, 1.35rem);
+  letter-spacing: -0.5px; text-transform: uppercase;
+  color: var(--card); background: var(--black);
+  border: var(--bw) solid var(--black);
+  box-shadow: 5px 5px 0 var(--yellow);
+  padding: 9px 16px; margin: 0;
+  display: inline-flex; align-items: center;
+}
+/* numbered step, welded to the left of the slab */
+.block-step {
+  flex: none; font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.9rem; color: var(--black);
+  background: var(--pink);
+  border: var(--bw) solid var(--black); border-right: none;
+  box-shadow: 5px 5px 0 var(--yellow);
+  width: 42px; display: grid; place-items: center;
+}
+.block-step + .block-title { border-left-width: 0; }
+
+.block-note {
+  font-family: var(--font-mono); font-size: 0.78rem;
+  color: var(--ink-dim); margin: 0 0 16px; line-height: 1.6;
+  max-width: 62ch;
+}
+
+/* ============================================================
+   SURFACE — a live working area. One tone brighter than .page,
+   optionally tinted to say what it is for.
+   ============================================================ */
+.surface {
+  background: var(--card);
+  border: var(--bw) solid var(--black);
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.14);
+  padding: 18px;
+}
+.surface-tight { padding: 0; }
+.surface-input  { background: #fff7cc; }   /* you type here */
+.surface-output { background: var(--card); }
+.surface-good   { background: var(--lime); }
+.surface-bad    { background: #ffd6d6; }
+
+/* A surface can wear a label so its job is stated, not inferred.
+   Use .surface-headed on the box, then .surface-head + .surface-body. */
+.surface-headed { padding: 0; }
+.surface-head {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--black); color: var(--card);
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase;
+  padding: 8px 12px;
+}
+.surface-head .head-mark { color: var(--yellow); font-size: 0.85rem; }
+.surface-input > .surface-head { background: var(--black); }
+.surface-input > .surface-head .head-mark { color: var(--yellow); }
+.surface-body { padding: 16px; }
+
+/* ============================================================
+   TABS — for pages that genuinely swap content (Rule Book,
+   Junk Drawer). Not a table of contents; a control.
+   ============================================================ */
+.tabs {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+.tab {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.85rem; letter-spacing: -0.2px; text-transform: uppercase;
+  color: var(--black); background: var(--card);
+  border: var(--bw) solid var(--black);
+  box-shadow: var(--shadow-sm);
+  padding: 9px 14px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+}
+.tab:hover { background: var(--yellow); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--black); }
+.tab:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
+.tab.active {
+  background: var(--pink);
+  transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black);
+}
+.tab .leader, .tab .num { display: none; }
+
+/* ============================================================
+   LEGACY TOC — old book contents list. Any page still using it
+   gets the tab treatment so nothing looks broken.
+   ============================================================ */
+.contents-label { display: none; }
+.toc-entry {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  text-decoration: none; color: var(--black);
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1rem; text-transform: uppercase;
+  background: var(--card);
+  border: var(--bw) solid var(--black);
+  box-shadow: var(--shadow-sm);
+  padding: 12px 14px; margin-bottom: 10px;
+  cursor: pointer; text-align: left;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.toc-entry:hover { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--black); }
+.toc-entry .num {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem;
+  background: var(--yellow); border: 2px solid var(--black);
+  width: 30px; height: 30px; flex: none; display: grid; place-items: center;
+}
+.toc-entry .title { flex: 1; min-width: 0; }
+.toc-entry .leader { display: none; }
+.toc-entry::after { content: "\2192"; font-weight: 700; }
+.toc-entry.active { background: var(--pink); }
+
+/* section labels that survive from the old markup */
+.field-group-label, .rate-label {
+  font-family: var(--font-mono);
+  font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink-dim); text-align: left;
+  border: none; padding: 0; margin: 0 0 10px;
+}
+.chapter-eyebrow { display: none; }
+/* pages still using raw <h2>s get the same inverted slab as .block-title */
+.chapter-title, .chapter h2 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.05rem, 3.6vw, 1.35rem);
+  letter-spacing: -0.5px; text-transform: uppercase;
+  color: var(--card); background: var(--black);
+  border: var(--bw) solid var(--black);
+  box-shadow: 5px 5px 0 var(--yellow);
+  padding: 9px 16px; margin: 0 0 18px;
+  display: inline-block;
+}
+.chapter .desc, .intro {
+  font-family: var(--font-mono); font-size: 0.8rem;
+  line-height: 1.6; color: var(--ink-dim);
+  background: none; border: none; box-shadow: none;
+  padding: 0; margin: 0 0 16px; max-width: 62ch; text-align: left;
+}
+
+/* ---------- plates (static containers) ---------- */
+.plate { border: var(--bw) solid var(--black); background: var(--card); padding: 0; margin-bottom: 18px; }
+.plate-inner { border: none; padding: 16px 18px; }
+
+.result { border: var(--bw) solid var(--black); background: var(--lime); padding: 0; }
+.result-inner { border: none; padding: 18px; }
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+input, select, textarea {
+  font-family: var(--font-mono); font-size: 0.9rem;
+  color: var(--black); background: var(--card);
+  border: var(--bw) solid var(--black);
+  box-shadow: var(--shadow-sm);
+  border-radius: 0; padding: 9px 11px;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; background: var(--yellow);
+  box-shadow: 2px 2px 0 var(--black);
+}
+input::placeholder, textarea::placeholder { color: var(--ink-faint); }
+
+/* Dropdowns: kill the native chrome and draw our own chunky caret,
+   otherwise the OS widget is the one soft thing on the whole page. */
+select {
+  cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.78rem; letter-spacing: 0.5px; text-transform: uppercase;
+  background-color: var(--yellow);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--black) 50%),
+    linear-gradient(135deg, var(--black) 50%, transparent 50%);
+  background-position: calc(100% - 19px) calc(50% + 1px), calc(100% - 12px) calc(50% + 1px);
+  background-size: 7px 7px, 7px 7px;
+  background-repeat: no-repeat;
+  padding: 10px 36px 10px 12px;
+}
+select:hover { background-color: var(--cyan); }
+select:focus {
+  background-color: var(--pink);
+  box-shadow: 2px 2px 0 var(--black);
+}
+select option { background: var(--card); color: var(--black); font-weight: 700; }
+
+/* ============================================================
+   NEO-SELECT — the custom dropdown from neo-select.js.
+   The real <select> stays in the DOM but hidden; these draw the
+   closed button and the open menu, which the OS popup would not
+   let us style.
+   ============================================================ */
+.neo-select { position: relative; display: inline-block; }
+.neo-select > select {
+  position: absolute; opacity: 0; pointer-events: none;
+  width: 100%; height: 100%; left: 0; top: 0; margin: 0;
+}
+.neo-select-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.78rem; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--black); background: var(--yellow);
+  border: var(--bw) solid var(--black);
+  box-shadow: var(--shadow-sm);
+  padding: 10px 12px; cursor: pointer; text-align: left;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+}
+.neo-select-btn:hover { background: var(--cyan); }
+.neo-select-btn:focus-visible { outline: none; background: var(--cyan); }
+.neo-select-label { flex: 1; }
+.neo-select-caret {
+  flex: none; width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--black);
+  transition: transform 0.12s ease;
+}
+/* pressed-in while the menu is open */
+.neo-select.open .neo-select-btn {
+  background: var(--pink);
+  transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--black);
+}
+.neo-select.open .neo-select-caret { transform: rotate(180deg); }
+
+.neo-select-list {
+  position: absolute; z-index: 80; top: calc(100% + 6px); left: 0;
+  min-width: 100%; max-height: 280px; overflow-y: auto;
+  background: var(--card);
+  border: var(--bw) solid var(--black);
+  box-shadow: var(--shadow);
+  padding: 0;
+}
+.neo-select-option {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.75rem; letter-spacing: 0.5px; text-transform: uppercase;
+  white-space: nowrap; padding: 9px 14px; cursor: pointer;
+  border-bottom: 2px solid var(--black);
+  background: var(--card); color: var(--black);
+}
+.neo-select-option:last-child { border-bottom: none; }
+.neo-select-option:hover { background: var(--yellow); }
+.neo-select-option.is-selected { background: var(--pink); }
+.neo-select-option.is-selected::after { content: "  \2190"; font-weight: 700; }
+.neo-select-option.is-disabled { color: var(--ink-faint); cursor: default; background: var(--bg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-select-btn, .neo-select-caret { transition: none; }
+}
+
+button, .roll-btn, .gate-btn {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--black); background: var(--yellow);
+  border: var(--bw) solid var(--black);
+  box-shadow: var(--shadow-sm);
+  border-radius: 0; padding: 10px 18px; cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+}
+button:hover, .roll-btn:hover, .gate-btn:hover {
+  background: var(--pink); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--black);
+}
+button:active, .roll-btn:active, .gate-btn:active {
+  transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  max-width: 900px; margin: 26px auto 0;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  font-family: var(--font-mono); font-size: 0.75rem;
+  color: var(--ink-dim);
+  border-top: var(--bw) dashed var(--black);
+  padding-top: 16px;
+}
+.site-footer .footer-star {
+  font-size: 1.1rem; color: var(--black);
+  animation: spin 6s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.site-footer a {
+  color: var(--black); font-weight: 700; text-transform: uppercase;
+  text-decoration: none; background: var(--yellow);
+  border: 2px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  padding: 5px 9px; margin-left: auto; cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+}
+.site-footer a:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
+
+.hidden { display: none !important; }
+a { color: var(--black); }
+
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--black); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-bright); }
+
+@media (max-width: 620px) {
+  body { padding: 0 10px 40px; }
+  .topbar { gap: 10px; padding: 7px 8px; margin-bottom: 18px; }
+  .topbar-home { font-size: 0.78rem; padding: 5px 8px; }
+  .topbar-links { gap: 6px; }
+  .topbar-links a, .topbar-links .here { font-size: 0.64rem; padding: 5px 8px; }
+  .page { padding: 22px 16px 20px; box-shadow: var(--shadow); }
+  h1 { letter-spacing: -1px; text-shadow: 3px 3px 0 var(--yellow), 3px 3px 0 var(--black); }
+  .block { margin-bottom: 30px; }
+  .surface { padding: 14px; }
+  .site-footer a { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab, .toc-entry, .topbar-links a, button, .roll-btn, .gate-btn, .site-footer a { transition: none; }
+  .site-footer .footer-star { animation: none; }
+}

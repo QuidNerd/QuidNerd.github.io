@@ -1,3 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-<text x="50" y="76" text-anchor="middle" font-size="80" fill="#3f6b52">&#10086;</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Stuff">
+  <!-- Neo-brutalist mark: full-bleed black field, no rounded corners, and the
+       same sparkle used in the top bar and footer. Yellow-on-black mirrors
+       the hero. Deliberately one shape and two colours — thick borders and
+       offset shadows turn to mush at 16px. -->
+  <rect width="32" height="32" fill="#000000"/>
+  <path d="M16 2 Q17.7 14.3 30 16 Q17.7 17.7 16 30 Q14.3 17.7 2 16 Q14.3 14.3 16 2 Z"
+        fill="#ffd93d"/>
 </svg>

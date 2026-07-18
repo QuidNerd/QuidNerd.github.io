@@ -3,165 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tactica — :)</title>
-<link rel="icon" href="../favicon.svg?v=3" type="image/svg+xml">
+<title>Dirty Tricks</title>
+<link rel="icon" href="../favicon.svg?v=4" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../neo.css">
 <style>
-:root {
-  --body-bg: #e3d7b6;
-  --page-bg: #ece2c8;
-  --border-dark: #3a3226;
-  --border-light: #b9ab8a;
-  --ink: #2a2418;
-  --ink-dim: #6b6050;
-  --ink-faint: #9c9484;
-  --accent: #3f6b52;
-  --accent-bright: #4f8a68;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'EB Garamond', Georgia, serif;
-  background: var(--body-bg);
-  background-image:
-    radial-gradient(circle at 15% 10%, rgba(63,107,82,0.06), transparent 45%),
-    radial-gradient(circle at 85% 90%, rgba(58,50,38,0.05), transparent 45%);
-  color: var(--ink); min-height: 100vh;
-  padding: 40px 16px 70px;
-}
+/* page-specific — shared chrome lives in ../neo.css */
 
-.frame { max-width: 820px; margin: 0 auto; border: 1.5px solid var(--border-dark); padding: 5px; box-shadow: 0 14px 40px rgba(42,36,24,0.25); }
-.page { border: 1px solid var(--border-light); background: var(--page-bg); padding: 50px 54px; }
-
-.fleuron { text-align:center; color: var(--accent); font-size: 1.4rem; margin-bottom: 8px; }
-.eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; }
-h1 {
-  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 700; font-size: clamp(1.9rem, 10vw, 3.4rem); color: var(--ink);
-  letter-spacing: clamp(0px, 1vw, 2px); text-align:center; margin: 10px 0 8px; text-transform: uppercase;
-  overflow-wrap: anywhere;
-}
-.subtitle {
-  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.3rem; color: var(--ink-dim);
-  text-align:center; margin-bottom: 20px;
-}
-.site-nav { display:flex; justify-content:center; gap:20px; margin-bottom: 30px; flex-wrap: wrap; }
-.site-nav a {
-  font-family: 'EB Garamond', Georgia, serif; font-size: 0.9rem; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--accent); text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s;
-}
-.site-nav a:hover { color: var(--accent-bright); }
-.site-nav-select {
-  display: none; width: 100%; max-width: 300px; margin: 0 auto 30px;
-  font-family: 'EB Garamond', Georgia, serif; font-size: 0.92rem; letter-spacing: 0.5px; text-transform: uppercase;
-  color: var(--accent); background: var(--page-bg); border: 1px solid var(--border-light);
-  padding: 10px 14px; text-align: center; text-align-last: center; cursor: pointer;
-}
-.site-nav-select:focus { outline: none; border-color: var(--accent); }
-
-.rule { width: 90px; height: 1px; background: var(--border-light); margin: 0 auto 32px; }
-.rule-orn { display:flex; align-items:center; gap:16px; margin: 34px 0; }
-.rule-orn-line { flex:1; height:1px; background: var(--border-light); }
-.rule-orn-mark { color: var(--accent); font-size: 1rem; }
-
-.intro { text-align:center; font-style: italic; color: var(--ink-dim); font-size: 1.05rem; margin-bottom: 8px; line-height: 1.7; }
-
-/* rendered BBCode */
-.bb-body { font-size: 1.05rem; line-height: 1.75; color: var(--ink); }
+/* rendered BBCode — all STATIC, only the reference links are controls */
+.bb-body { font-size: 0.98rem; line-height: 1.7; color: var(--black); }
 .bb-quote {
-  padding: 14px 18px; margin: 12px 0;
-  background: rgba(63,107,82,0.066); color: var(--ink); font-style: normal;
+  padding: 14px 16px; margin: 12px 0;
+  background: var(--card); border: var(--bw) solid var(--black);
 }
 .bb-quote > .bb-quote {
-  display: block; border-left: none; border: 1px solid var(--accent);
-  background: rgba(63,107,82,0.09); color: var(--accent); font-weight: 500;
-  font-size: 0.9rem; font-style: normal; padding: 10px 14px; margin: 10px 0 0;
+  display: block; background: var(--cyan);
+  font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.7;
+  padding: 12px 14px; margin: 12px 0 0; box-shadow: none;
 }
-.bb-quote > .bb-quote b { color: var(--accent); font-weight: 700; }
+.bb-quote > .bb-quote b { font-weight: 700; }
 
-.play-list { display:flex; flex-direction:column; gap: 30px; }
-.play-entry { border: 1px solid var(--border-light); padding: 22px 24px; }
-.play-eyebrow { text-align:center; color: var(--ink-dim); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+.play-list { display: flex; flex-direction: column; gap: 26px; }
+.play-entry {
+  background: var(--card); border: var(--bw) solid var(--black); padding: 20px 20px 18px;
+}
+.play-eyebrow {
+  display: inline-block; font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+  background: var(--yellow); border: 2px solid var(--black);
+  padding: 3px 8px; margin-bottom: 10px;
+}
 .play-title-text {
-  display:block; text-align:center; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600;
-  font-size: 1.5rem; color: var(--ink); margin-bottom: 16px;
+  display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.3rem, 5vw, 1.7rem); text-transform: uppercase;
+  letter-spacing: -1px; color: var(--black); margin-bottom: 14px;
 }
-.play-empty { text-align:center; color: var(--ink-faint); font-style: italic; padding: 20px 0; }
+.play-empty {
+  font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase;
+  border: var(--bw) dashed var(--black); padding: 20px; text-align: center;
+}
 
-.play-refs { margin-top: 16px; padding-top: 14px; border-top: 1px dotted var(--border-light); text-align:center; }
-.play-refs-label { color: var(--ink-dim); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
-.play-refs-links { display:flex; justify-content:center; gap: 14px; flex-wrap: wrap; }
+.play-refs { margin-top: 16px; padding-top: 14px; border-top: var(--bw) dashed var(--black); }
+.play-refs-label {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+}
+.play-refs-links { display: flex; gap: 8px; flex-wrap: wrap; }
 .play-refs a {
-  color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font-size: 0.88rem;
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; color: var(--black); text-decoration: none;
+  background: var(--lime); border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black); padding: 5px 9px;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
-.play-refs a:hover { color: var(--accent-bright); }
+.play-refs a:hover {
+  background: var(--pink);
+  transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black);
+}
 
-.page-num { text-align:center; margin-top: 40px; color: var(--ink-faint); font-size: 1rem; }
-
-.gate { text-align:center; }
-.gate-eyebrow { color: var(--ink-dim); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+/* password gate */
+.gate {
+  text-align: left; border: var(--bw) dashed var(--black);
+  padding: 24px 22px; max-width: 380px;
+}
+.gate-eyebrow {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.75rem;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px;
+}
 .gate input {
-  font-family: 'EB Garamond', Georgia, serif; font-size: 1rem; text-align:center; letter-spacing: 3px;
-  background: #f5efdc; border: 1px solid var(--border-light); border-radius:0;
-  padding: 10px 14px; width: 220px;
+  font-family: var(--font-mono); font-size: 1rem; letter-spacing: 4px;
+  width: 100%; padding: 12px 14px; box-shadow: var(--shadow-sm);
 }
-.gate input:focus { outline:none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(63,107,82,0.12); }
-.gate-btn {
-  display:block; margin: 14px auto 0; padding: 10px 26px; background: var(--accent); color:#f5efdc;
-  border: 1px solid var(--border-dark); cursor:pointer; font-family:'Cormorant Garamond',Georgia,serif;
-  font-size: 1rem; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+.gate-btn { display: block; margin: 14px 0 0; width: 100%; }
+.gate-error {
+  font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;
+  color: var(--red-bright); font-weight: 700; margin-top: 12px; min-height: 1.2em;
 }
-.gate-btn:hover { background: var(--accent-bright); }
-.gate-error { color: #a94444; font-size: 0.85rem; font-style: italic; margin-top: 10px; min-height: 1.2em; }
 #protected-content { display: none; }
 
-@media(max-width:560px) {
-  .site-nav { display: none; }
-  .site-nav-select { display: block; }
-  .page { padding: 40px 24px; }
-  .play-entry { padding: 18px 16px; }
-}
 </style>
 </head>
 <body>
+<header class="topbar">
+  <a class="topbar-home" href="../">✦ Stuff</a>
+  <nav class="topbar-links">
+    <a href="../quidmodding/">Rule Book</a>
+    <a href="../gringotts/">Coin Math</a>
+    <a href="../bbcode-fixer/">Tag Check</a>
+    <span class="here">Dirty Tricks</span>
+    <a href="../final-v7-real-final/">Junk Drawer</a>
+  </nav>
+</header>
 <div class="frame">
   <div class="page">
 
-    <div class="fleuron">&#10086;</div>
-    <div class="eyebrow">The War Room</div>
-    <h1>Tactica</h1>
-    <p class="subtitle">ahem ahem ahem</p>
-    <div class="site-nav">
-      <a href="../">Home</a>
-      <a href="../quidmodding/">Codex</a>
-      <a href="../gringotts/">Ledger</a>
-      <a href="../bbcode-fixer/">Marginalia</a>
-      <a href="../final-v7-real-final/">Vademecum</a>
+    <div class="masthead">
+      <div class="eyebrow">Password required</div>
+      <h1>Dirty Tricks</h1>
+      <p class="subtitle">Plays that are technically legal. Ahem.</p>
     </div>
-    <select class="site-nav-select" onchange="if(this.value) location.href=this.value;">
-      <option value="" selected disabled>Navigate&hellip;</option>
-      <option value="../">Home</option>
-      <option value="../quidmodding/">Codex</option>
-      <option value="../gringotts/">Ledger</option>
-      <option value="../bbcode-fixer/">Marginalia</option>
-      <option value="../final-v7-real-final/">Vademecum</option>
-    </select>
-    <div class="rule"></div>
 
     <div class="gate" id="gate">
-      <div class="gate-eyebrow">A Word, Please</div>
+      <div class="gate-eyebrow">A word, please</div>
       <input type="password" id="gate-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" maxlength="20">
       <button class="gate-btn" id="gate-submit">Enter</button>
       <div class="gate-error" id="gate-error"></div>
     </div>
 
     <div id="protected-content">
-      <p class="intro">you'll get the idea of what this place is meant for once you scroll down and read a few.</p>
-
-      <div class="rule-orn"><span class="rule-orn-line"></span><span class="rule-orn-mark">&#10086;</span><span class="rule-orn-line"></span></div>
-
-      <div class="play-list" id="play-list"></div>
-
-      <div class="page-num">&mdash; IV &mdash;</div>
+      <section class="block">
+        <div class="block-head"><h2 class="block-title">The plays</h2></div>
+        <p class="block-note">You'll get the idea of what this place is for once you read a few.</p>
+        <div class="play-list" id="play-list"></div>
+      </section>
     </div>
 
   </div>
@@ -306,5 +262,10 @@ document.getElementById('gate-input').addEventListener('keydown', e => { if (e.k
 
 if (localStorage.getItem(LOCK_KEY) === 'true') unlock();
 </script>
+<footer class="site-footer">
+  <span class="footer-star">✦</span>
+  <span>built instead of doing something productive</span>
+  <a href="../">Back to the pile</a>
+</footer>
 </body>
 </html>

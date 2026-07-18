@@ -1,0 +1,6 @@
+# Claude Code local config — machine-specific paths and permission rules,
+# no use to anyone else and this repo is public.
+.claude/
+
+# macOS
+.DS_Store
