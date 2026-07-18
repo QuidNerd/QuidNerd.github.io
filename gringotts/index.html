@@ -10,30 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
 <style>
-/* page-specific — shared chrome lives in ../neo.css (page width there too) */
+/* page-specific — shared chrome lives in ../neo.css (page width there too).
+   Colour roles on this page: yellow = you type here, black = the answer.
+   No step numbers here: these are two independent calculators rather than a
+   sequence, so numbering them would imply an order that does not exist. */
 
-/* exchange rates — an equivalence table. The columns line up so the two
-   rows can be compared at a glance instead of parsed word by word. */
-.rates { padding: 14px 16px; }
-.rate-row {
-  display: grid; align-items: center;
-  grid-template-columns: auto auto 1fr auto 1fr;
-  gap: 8px 10px; font-family: var(--font-mono);
-}
-.rate-row + .rate-row { margin-top: 10px; padding-top: 10px; border-top: 2px dashed var(--black); }
-.rate-row .coin {
-  font-weight: 700; font-size: 0.8rem; text-transform: uppercase; white-space: nowrap;
-  background: var(--yellow); border: 2px solid var(--black); padding: 4px 9px;
-}
-.rate-row .eq { font-weight: 700; font-size: 0.9rem; text-align: center; }
-.rate-row .amt {
-  font-weight: 700; font-size: 0.8rem; white-space: nowrap;
-  background: var(--cyan); border: 2px solid var(--black); padding: 4px 9px;
-  text-align: center;
-}
-
-/* base-rate callout */
-.rate-note { border: 2px dashed var(--black); padding: 10px 12px; margin: 0 0 16px; }
+/* reference callout — each calculator carries the rates it actually uses */
+.rate-note { border: 2px dashed var(--black); padding: 10px 12px; margin: 0 0 18px; background: var(--card); }
 .rate-note .line1 { font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; }
 .rate-note .line1 b { background: var(--yellow); border: 2px solid var(--black); padding: 1px 6px; }
 .rate-note .line2 { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 6px; line-height: 1.5; }
@@ -60,20 +43,24 @@
 .result-tag {
   display: inline-block; font-family: var(--font-mono); font-weight: 700;
   font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
-  background: var(--black); color: var(--lime);
-  padding: 3px 8px; margin-bottom: 10px;
+  background: var(--yellow); color: var(--black);
+  padding: 3px 8px; margin-bottom: 12px;
 }
 .result .headline {
   font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(1.4rem, 6vw, 2.1rem); line-height: 1.05;
-  text-transform: uppercase; letter-spacing: -1px; color: var(--black);
+  font-size: clamp(1.5rem, 6.5vw, 2.3rem); line-height: 1.05;
+  text-transform: uppercase; letter-spacing: -1px; color: var(--yellow);
 }
 .result .sub-line {
   font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.7;
-  margin-top: 12px; border-top: 2px solid var(--black); padding-top: 10px;
+  color: #b9b9b9; margin-top: 14px;
+  border-top: 2px solid #3a3a3a; padding-top: 11px;
 }
-.result .date-line { font-family: var(--font-mono); font-size: 0.82rem; margin-top: 10px; text-transform: uppercase; }
-.result .date-line b { background: var(--card); border: 2px solid var(--black); padding: 1px 6px; }
+.result .date-line {
+  font-family: var(--font-mono); font-size: 0.82rem; margin-top: 12px;
+  text-transform: uppercase; color: var(--card);
+}
+.result .date-line b { background: var(--yellow); color: var(--black); padding: 1px 6px; }
 
 @media (max-width: 620px) {
   /* stack the equation so nothing gets squeezed */
@@ -106,28 +93,16 @@
       <p class="subtitle">how many potato peelings your money is worth, and how long until you can afford the thing you want</p>
     </div>
 
-    <div class="block">
-      <div class="block-head"><h2 class="block-title">Exchange rates</h2></div>
-      <div class="surface rates">
-        <div class="rate-row">
-          <span class="coin">1 Galleon</span>
-          <span class="eq">=</span><span class="amt">17 Sickles</span>
-          <span class="eq">=</span><span class="amt">493 Knuts</span>
-        </div>
-        <div class="rate-row">
-          <span class="coin">1 Sickle</span>
-          <span class="eq">=</span><span class="amt">29 Knuts</span>
-          <span></span><span></span>
-        </div>
-      </div>
-    </div>
-
     <section class="block" id="chapter-1">
       <div class="block-head">
-        <span class="block-step">1</span>
         <h2 class="block-title">Potato peeling converter</h2>
       </div>
-      <p class="block-note">1 knut = 1 potato peeling. Type what you have.</p>
+      <p class="block-note">1 knut = 1 potato peeling.</p>
+
+      <div class="rate-note">
+        <div class="line1">1 Galleon = <b>17 Sickles</b> = <b>493 Knuts</b></div>
+        <div class="line2">1 Sickle = 29 Knuts.</div>
+      </div>
 
       <div class="surface surface-input surface-headed">
         <div class="surface-head"><span class="head-mark">&#9654;</span> Type what you have</div>
@@ -151,7 +126,6 @@
 
     <section class="block" id="chapter-2">
       <div class="block-head">
-        <span class="block-step">2</span>
         <h2 class="block-title">Stipend savings planner</h2>
       </div>
       <p class="block-note">Set a goal and find out exactly when you'll reach it.</p>
@@ -162,7 +136,7 @@
       </div>
 
       <div class="surface surface-input surface-headed">
-        <div class="surface-head"><span class="head-mark">&#9654;</span> Fill these in</div>
+        <div class="surface-head"><span class="head-mark">&#9654;</span> Fill in your goal</div>
         <div class="surface-body">
         <div class="subgroup">
           <div class="field-group-label">Your goal</div>
@@ -211,7 +185,10 @@
 <footer class="site-footer">
   <span class="footer-star">✦</span>
   <span>built instead of doing something productive</span>
-  <a href="../">Back to the pile</a>
+  <span class="footer-links">
+    <a href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">pls fund puff brooms</a>
+    <a href="https://hogwarts.io/viewtopic.php?t=21853" target="_blank" rel="noopener">koldov brooms need u too</a>
+  </span>
 </footer>
 
 <script>

@@ -20,10 +20,10 @@ body {
 .frame { max-width: 560px; }
 
 /* FEATURED GRID — one primary destination, four compact secondary tools. */
-.page-b { padding: 22px 20px 20px; }
+.page-b { padding: 24px; }
 .b-head {
   display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; margin-bottom: 14px;
+  gap: 16px; margin-bottom: 16px;
 }
 .b-head-copy { min-width: 0; }
 .b-title {
@@ -32,15 +32,15 @@ body {
   text-transform: uppercase; letter-spacing: -0.5px;
 }
 .b-note {
-  font-family: var(--font-mono); font-size: 0.64rem;
+  font-family: var(--font-mono); font-size: 0.75rem;
   line-height: 1.45; color: var(--ink-dim); margin-top: 6px;
 }
 .b-count {
   flex: none; background: var(--black); color: var(--card);
   border: var(--bw) solid var(--black); box-shadow: 4px 4px 0 var(--yellow);
-  font-family: var(--font-mono); font-size: 0.64rem; font-weight: 700;
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
   letter-spacing: 1px; text-transform: uppercase;
-  padding: 7px 9px;
+  padding: 8px 10px;
 }
 .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .b-item {
@@ -48,7 +48,7 @@ body {
   color: var(--black); text-decoration: none;
   border: var(--bw) solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
-  padding: 12px 11px 10px;
+  padding: 16px 12px;
   min-height: 102px;
   display: flex; flex-direction: column; justify-content: space-between;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
@@ -72,18 +72,18 @@ body {
 .nav-label {
   display: block;
   font-family: var(--font-display); font-weight: 700;
-  font-size: 0.97rem; line-height: 0.95;
+  font-size: 1rem; line-height: 0.95;
   text-transform: uppercase; letter-spacing: -0.5px;
   margin-top: 12px;
 }
 .nav-desc {
   display: block;
-  font-family: var(--font-mono); font-size: 0.55rem;
+  font-family: var(--font-mono); font-size: 0.66rem;
   line-height: 1.35; text-transform: uppercase; letter-spacing: 0.8px;
   margin-top: 5px;
 }
 .nav-arrow { font-weight: 700; font-size: 1rem; }
-.b-item:first-child .nav-label { font-size: 1.25rem; }
+.b-item:first-child .nav-label { font-size: 1.33rem; }
 .b-item:first-child .nav-desc { max-width: 37ch; }
 
 /* the sign-off is now the front door >:) it carries the page identity (h1) AND the manifesto, so the first thing yall meet

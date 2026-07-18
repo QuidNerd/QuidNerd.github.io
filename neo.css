@@ -8,7 +8,16 @@
       Colour is decoration and appears on both; the SHADOW is
       the signal, so never put one on a static block.
 
-   2. DEPTH — three tones, from back to front:
+   2. COLOUR CARRIES ONE MEANING EACH. Structure is black and white;
+      colour is reserved for a role, never for decoration:
+        yellow      you act here (inputs and their controls)
+        green/red   a verdict about what you did
+        black fill  the answer / the output
+      If a page needs a fifth colour, the layout is doing too little.
+      Tool pages that ignored this (Coin Math, Tag Check) turned into a
+      rainbow where nothing led the eye.
+
+   3. DEPTH — three tones, from back to front:
         --bg      the desk    (page sits on it)
         --paper   the page    (sections sit on it)
         --card    the surface (live content: inputs, output)
@@ -225,7 +234,7 @@ h1 {
 .block-step {
   flex: none; font-family: var(--font-mono); font-weight: 700;
   font-size: 0.9rem; color: var(--black);
-  background: var(--pink);
+  background: var(--card);
   border: var(--bw) solid var(--black); border-right: none;
   box-shadow: 5px 5px 0 var(--yellow);
   width: 42px; display: grid; place-items: center;
@@ -248,7 +257,7 @@ h1 {
   padding: 18px;
 }
 .surface-tight { padding: 0; }
-.surface-input  { background: #fff7cc; }   /* you type here */
+.surface-input  { background: #fff6c2; }   /* you act here — the only strong fill */
 .surface-output { background: var(--card); }
 .surface-good   { background: var(--lime); }
 .surface-bad    { background: #ffd6d6; }
@@ -257,7 +266,7 @@ h1 {
    Use .surface-headed on the box, then .surface-head + .surface-body. */
 .surface-headed { padding: 0; }
 .surface-head {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   background: var(--black); color: var(--card);
   font-family: var(--font-mono); font-weight: 700;
   font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase;
@@ -353,7 +362,12 @@ h1 {
 .plate { border: var(--bw) solid var(--black); background: var(--card); padding: 0; margin-bottom: 18px; }
 .plate-inner { border: none; padding: 16px 18px; }
 
-.result { border: var(--bw) solid var(--black); background: var(--lime); padding: 0; }
+.result {
+  border: var(--bw) solid var(--black);
+  background: var(--black); color: var(--card);
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.18);
+  padding: 0;
+}
 .result-inner { border: none; padding: 18px; }
 
 /* ============================================================
@@ -491,11 +505,12 @@ button:active, .roll-btn:active, .gate-btn:active {
   display: inline-block;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.footer-links { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
 .site-footer a {
   color: var(--black); font-weight: 700; text-transform: uppercase;
   text-decoration: none; background: var(--yellow);
   border: 2px solid var(--black); box-shadow: 3px 3px 0 var(--black);
-  padding: 5px 9px; margin-left: auto; cursor: pointer;
+  padding: 5px 9px; cursor: pointer; white-space: nowrap;
   transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
 }
 .site-footer a:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
@@ -518,7 +533,7 @@ a { color: var(--black); }
   h1 { letter-spacing: -1px; text-shadow: 3px 3px 0 var(--yellow), 3px 3px 0 var(--black); }
   .block { margin-bottom: 30px; }
   .surface { padding: 14px; }
-  .site-footer a { margin-left: 0; }
+  .footer-links { margin-left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

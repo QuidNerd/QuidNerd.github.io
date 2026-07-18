@@ -20,6 +20,37 @@
 @font-face { font-family: 'Consolas'; src: url('Consolas.TTF') format('truetype'); font-display: swap; }
 
 
+/* Nudge: the tab row can read as a set of labels rather than controls,
+   so a hand-drawn arrow points back up at it. */
+.tab-hint {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin: -14px 0 30px 14px;
+}
+.tab-hint-arrow {
+  flex: none; width: 46px; height: 34px; color: var(--black);
+  animation: hint-bob 2.6s ease-in-out infinite;
+}
+@keyframes hint-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-4px) rotate(-3deg); }
+}
+.tab-hint-label {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  background: var(--cyan); color: var(--black);
+  border: var(--bw) solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  padding: 7px 11px; margin-top: 6px;
+  transform: rotate(-2deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tab-hint-arrow { animation: none; }
+}
+@media (max-width: 480px) {
+  .tab-hint { margin-left: 4px; gap: 6px; }
+  .tab-hint-label { font-size: 0.62rem; padding: 6px 9px; }
+}
+
 /* the notes are long-form, so give the prose a comfortable measure */
 .notes p, .notes li { max-width: 68ch; }
 
@@ -273,7 +304,7 @@
   padding-top: 22px; border-top: var(--bw) dashed var(--black); flex-wrap: wrap;
 }
 .bean-clock-col {
-  min-width: 140px; background: var(--lime);
+  min-width: 240px; background: var(--cyan);
   border: 2px solid var(--black); padding: 10px;
 }
 .bean-clock-value { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; }
@@ -317,6 +348,16 @@
       <button class="tab" id="toc-4" onclick="showChapter(4, this)">Summoner's court build</button>
       <button class="tab" id="toc-5" onclick="showChapter(5, this)">Frontend notes</button>
       <button class="tab" id="toc-6" onclick="showChapter(6, this)">The bean clock</button>
+    </div>
+
+    <div class="tab-hint" aria-hidden="true">
+      <svg class="tab-hint-arrow" viewBox="0 0 64 48" fill="none"
+           stroke="currentColor" stroke-width="3.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M57 44 C 44 42, 22 38, 11 9"/>
+        <path d="M4 18 L 11 9 L 20 16"/>
+      </svg>
+      <span class="tab-hint-label">psst... these tabs are clickable</span>
     </div>
 
 
@@ -892,7 +933,10 @@ setInterval(updateBeanClock, 1000);
 <footer class="site-footer">
   <span class="footer-star">✦</span>
   <span>built instead of doing something productive</span>
-  <a href="../">Back to the pile</a>
+  <span class="footer-links">
+    <a href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">pls fund puff brooms</a>
+    <a href="https://hogwarts.io/viewtopic.php?t=21853" target="_blank" rel="noopener">koldov brooms need u too</a>
+  </span>
 </footer>
 </body>
 </html>

@@ -10,6 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
 <style>
+/* Colour roles on this page: yellow = you type here, green/red = the verdict,
+   and the depth colours below are functional (they encode nesting level).
+   Everything else is black on white so those three actually mean something. */
 :root {
   --depth0: #1b7f3b;
   --depth1: #d81b60;
@@ -19,7 +22,7 @@
   --depth5: #00838f;
 }
 
-/* ---- zone 1: input ---- */
+/* ---- zone 1: input (the only strong fill on the page) ---- */
 #bb-input {
   display: block; width: 100%; min-height: 190px; resize: vertical;
   font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6;
@@ -32,7 +35,7 @@
   font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
   letter-spacing: 1px; text-transform: uppercase;
   color: var(--black); text-decoration: none; cursor: pointer;
-  background: var(--cyan); border: 2px solid var(--black);
+  background: var(--card); border: 2px solid var(--black);
   box-shadow: 3px 3px 0 var(--black); padding: 7px 11px;
   transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
 }
@@ -70,14 +73,18 @@
 
 #arrow-svg { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5; overflow: visible; }
 
-/* ---- zone 3: verdict (tone set by JS: surface-good / surface-bad) ---- */
-.issues-count {
-  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
-  text-transform: uppercase; letter-spacing: -0.5px;
-  background: var(--red-bright); color: #fff;
-  border: var(--bw) solid var(--black);
-  display: inline-block; padding: 6px 12px; margin-bottom: 14px;
+/* ---- zone 3: verdict. White card, coloured status BAR (class set by JS).
+   Colour is confined to the stripe so it reads as a state, not a mood. ---- */
+.verdict { background: var(--card); }
+.verdict-bar {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.75rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 10px 14px; border-bottom: var(--bw) solid var(--black);
 }
+.verdict-good .verdict-bar { background: var(--lime); }
+.verdict-bad  .verdict-bar { background: var(--red); }
+.verdict:not(.verdict-bad) .verdict-bar { border-bottom: none; }
+.verdict-body { padding: 14px; }
 .issue-item {
   font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5;
   padding: 10px 12px; margin-bottom: 8px; cursor: pointer;
@@ -88,10 +95,7 @@
 .issue-item:last-child { margin-bottom: 0; }
 .issue-item:hover { background: var(--yellow); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
 .issue-item b { font-family: var(--font-mono); color: var(--red-bright); }
-.issues-ok {
-  font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
-  text-transform: uppercase; letter-spacing: 1px;
-}
+
 
 @media (max-width: 620px) {
   #code-output { font-size: 0.72rem; }
@@ -125,11 +129,14 @@
         <span class="block-step">1</span>
         <h2 class="block-title">Paste your code</h2>
       </div>
-      <div class="surface surface-input">
+      <div class="surface surface-input surface-headed">
+        <div class="surface-head"><span class="head-mark">&#9654;</span> Step 1 &mdash; paste it here</div>
+        <div class="surface-body">
         <textarea id="bb-input" placeholder="[table]&#10;[tr]&#10;[td]Cell 1[/td]&#10;[/tr]&#10;[/table]" spellcheck="false"></textarea>
         <div class="toolbar">
           <a id="load-example">Load broken example</a>
           <a id="clear-input">Clear</a>
+        </div>
         </div>
       </div>
     </section>
@@ -140,7 +147,8 @@
         <h2 class="block-title">How it nests</h2>
       </div>
       <p class="block-note">Matching tags share a colour by depth, click any tag to trace its pair.</p>
-      <div class="surface surface-output surface-tight">
+      <div class="surface surface-output surface-headed">
+        <div class="surface-head"><span class="head-mark">&#9654;</span> Step 2 &mdash; read the colours</div>
         <div id="code-wrap">
           <div id="code-output"><div class="code-placeholder">Nothing yet &mdash; paste some BBCode above.</div></div>
           <svg id="arrow-svg"></svg>
@@ -153,7 +161,10 @@
         <span class="block-step">3</span>
         <h2 class="block-title">Verdict</h2>
       </div>
-      <div id="issues-panel" class="surface surface-good"><div class="issues-ok">Nothing to check yet</div></div>
+      <div class="surface surface-headed">
+        <div class="surface-head"><span class="head-mark">&#9654;</span> Step 3 &mdash; what&rsquo;s broken</div>
+        <div id="issues-panel" class="verdict"><div class="verdict-bar">Nothing to check yet</div></div>
+      </div>
     </section>
 
   </div>
@@ -267,12 +278,13 @@ function buildLines(text, tags, tagMeta) {
 function renderIssues(issues, tags) {
   const el = document.getElementById('issues-panel');
   if (!issues.length) {
-    el.className = 'surface surface-good';
-    el.innerHTML = `<div class="issues-ok">&#10003; No structural issues found &mdash; every tag is properly paired.</div>`;
+    el.className = 'verdict verdict-good';
+    el.innerHTML = `<div class="verdict-bar">&#10003; All tags properly paired</div>`;
     return;
   }
-  el.className = 'surface surface-bad';
-  el.innerHTML = `<div class="issues-count">${issues.length} issue${issues.length === 1 ? '' : 's'} found</div>` +
+  el.className = 'verdict verdict-bad';
+  el.innerHTML = `<div class="verdict-bar">${issues.length} issue${issues.length === 1 ? '' : 's'} found</div>` +
+    '<div class="verdict-body">' +
     issues.map(iss => {
       const tag = tags[iss.tagIndex];
       let msg = '';
@@ -280,7 +292,7 @@ function renderIssues(issues, tags) {
       else if (iss.type === 'unexpected') msg = `<b>[/${tag.name}]</b> on line ${tag.line} has no matching opening tag`;
       else msg = `<b>[${tag.name}]</b> on line ${tag.line} closes out of order &mdash; check nesting nearby`;
       return `<div class="issue-item" data-tag-id="${iss.tagIndex}">${msg}</div>`;
-    }).join('');
+    }).join('') + '</div>';
 }
 
 let activePair = null;
@@ -355,8 +367,8 @@ function runAnalysis() {
   if (!text.trim()) {
     document.getElementById('code-output').innerHTML = '<div class="code-placeholder">Paste BBCode above to see it analyzed here.</div>';
     const ip = document.getElementById('issues-panel');
-    ip.className = 'surface surface-good';
-    ip.innerHTML = '<div class="issues-ok">Nothing to check yet</div>';
+    ip.className = 'verdict';
+    ip.innerHTML = '<div class="verdict-bar">Nothing to check yet</div>';
     return;
   }
   const { tags, tagMeta, issues } = analyze(text);
@@ -395,7 +407,10 @@ document.getElementById('clear-input').addEventListener('click', () => {
 <footer class="site-footer">
   <span class="footer-star">✦</span>
   <span>built instead of doing something productive</span>
-  <a href="../">Back to the pile</a>
+  <span class="footer-links">
+    <a href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">pls fund puff brooms</a>
+    <a href="https://hogwarts.io/viewtopic.php?t=21853" target="_blank" rel="noopener">koldov brooms need u too</a>
+  </span>
 </footer>
 </body>
 </html>
