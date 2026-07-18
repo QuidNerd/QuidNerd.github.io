@@ -43,16 +43,6 @@
   font-size: 0.8rem; font-weight: 700;
 }
 .notes { max-width: none; }
-
-/* ------------------------------------------------------------
-   HEADING LADDER inside a chapter. Four levels, four shapes —
-   the old book gave levels 2 and 4 the same yellow chip, which
-   is why the notes read as one undifferentiated pile.
-     h2               black slab   (chapter)
-     .position-heading yellow slab  (major topic)
-     .label           cyan tab     (group of things)
-     .group-label     marker line  (sub-group)
-   ------------------------------------------------------------ */
 .position-heading {
   font-family: var(--font-display); font-weight: 700;
   font-size: clamp(1.3rem, 5vw, 1.75rem); text-transform: uppercase;
@@ -77,12 +67,6 @@
   background: var(--cyan); border: 2px solid var(--black); padding: 5px 10px;
 }
 
-/* ------------------------------------------------------------
-   Allocation tiles. The stat name and its number used to be
-   bold mono at the same size, so they fought each other and
-   you had to read every chip. Now the name is a small muted cap
-   and the NUMBER is the thing you see.
-   ------------------------------------------------------------ */
 .stat-chips.alloc { gap: 10px; margin: 0 0 22px; }
 .stat-chips.alloc .stat-chip {
   display: flex; flex-direction: column; align-items: stretch;
@@ -834,7 +818,7 @@ function showChapter(n, el) {
 
 // ==================== BEAN CLOCK ====================
 // Spawn grid is anchored to Toronto's wall-clock time (00/06/12/18), which
-// auto-shifts between EST and EDT with real-world DST -- no hardcoded offset.
+// auto-shifts between EST and EDT with real-world DST. no hardcoded offset.
 const BEAN_SPAWN_HOURS_LOCAL = [0, 6, 12, 18];
 
 function beanPad(n) { return String(n).padStart(2, '0'); }

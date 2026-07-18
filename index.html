@@ -17,42 +17,74 @@ body {
   min-height: 100vh; padding: 54px 16px 40px;
 }
 .frame, .site-footer { width: 100%; max-width: 560px; }
-.stack { display: grid; gap: 14px; }
 .frame { max-width: 560px; }
-.page { padding: 36px 32px 32px; }
 
-.item {
-  display: flex; align-items: center; gap: 14px;
-  cursor: pointer;
-  text-decoration: none; color: var(--black);
-  background: var(--card);
+/* FEATURED GRID — one primary destination, four compact secondary tools. */
+.page-b { padding: 22px 20px 20px; }
+.b-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; margin-bottom: 14px;
+}
+.b-head-copy { min-width: 0; }
+.b-title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.15rem; line-height: 1;
+  text-transform: uppercase; letter-spacing: -0.5px;
+}
+.b-note {
+  font-family: var(--font-mono); font-size: 0.64rem;
+  line-height: 1.45; color: var(--ink-dim); margin-top: 6px;
+}
+.b-count {
+  flex: none; background: var(--black); color: var(--card);
+  border: var(--bw) solid var(--black); box-shadow: 4px 4px 0 var(--yellow);
+  font-family: var(--font-mono); font-size: 0.64rem; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 7px 9px;
+}
+.b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.b-item {
+  position: relative; min-width: 0;
+  color: var(--black); text-decoration: none;
   border: var(--bw) solid var(--black);
-  box-shadow: var(--shadow);
-  padding: 14px 16px;
+  box-shadow: 4px 4px 0 var(--black);
+  padding: 12px 11px 10px;
+  min-height: 102px;
+  display: flex; flex-direction: column; justify-content: space-between;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
-.item:nth-child(1) { background: var(--pink); }
-.item:nth-child(2) { background: var(--lime); }
-.item:nth-child(3) { background: var(--cyan); }
-.item:nth-child(4) { background: var(--orange); }
-.item:nth-child(5) { background: var(--yellow); }
-.item:hover, .item:focus-visible {
-  transform: translate(4px, 4px);
-  box-shadow: 2px 2px 0 var(--black);
+.b-item:nth-child(1) { background: var(--pink); grid-column: 1 / -1; min-height: 90px; }
+.b-item:nth-child(2) { background: var(--lime); }
+.b-item:nth-child(3) { background: var(--cyan); }
+.b-item:nth-child(4) { background: var(--orange); }
+.b-item:nth-child(5) { background: var(--yellow); }
+.b-item:hover, .b-item:focus-visible {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--black);
   outline: none;
 }
-.item:active { transform: translate(6px, 6px); box-shadow: 0 0 0 var(--black); }
-
-.num {
-  font-family: var(--font-mono); font-weight: 700; font-size: 1rem;
-  background: var(--card); border: var(--bw) solid var(--black);
-  width: 38px; height: 38px; flex: none;
-  display: grid; place-items: center;
+.b-item:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
+.b-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.b-num {
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+  background: var(--card); border: 2px solid var(--black); padding: 2px 5px;
 }
-.text { flex: 1; min-width: 0; }
-.label { display: block; font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: -0.5px; }
-.desc { display: block; font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-.arrow { font-weight: 700; font-size: 1.4rem; flex: none; }
+.nav-label {
+  display: block;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 0.97rem; line-height: 0.95;
+  text-transform: uppercase; letter-spacing: -0.5px;
+  margin-top: 12px;
+}
+.nav-desc {
+  display: block;
+  font-family: var(--font-mono); font-size: 0.55rem;
+  line-height: 1.35; text-transform: uppercase; letter-spacing: 0.8px;
+  margin-top: 5px;
+}
+.nav-arrow { font-weight: 700; font-size: 1rem; }
+.b-item:first-child .nav-label { font-size: 1.25rem; }
+.b-item:first-child .nav-desc { max-width: 37ch; }
 
 /* the sign-off is now the front door >:) it carries the page identity (h1) AND the manifesto, so the first thing yall meet
 is the attitude rather than a polite masthead, mwehehehe */
@@ -155,27 +187,23 @@ is the attitude rather than a polite masthead, mwehehehe */
 }
 @keyframes blink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0; } }
 
-.list-head { margin-bottom: 18px; }
-.list-title {
-  font-family: var(--font-display); font-weight: 700;
-  font-size: 1.25rem; letter-spacing: -0.5px; text-transform: uppercase;
-  color: var(--card); background: var(--black);
-  border: var(--bw) solid var(--black);
-  box-shadow: 5px 5px 0 var(--yellow);
-  display: block; width: fit-content; padding: 8px 15px; margin-bottom: 14px;
-}
-.list-note {
-  font-family: var(--font-mono); font-size: 0.75rem;
-  line-height: 1.6; color: var(--ink-dim);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .hero-shout em, .hero-blink { animation: none; }
+  .b-item { transition: none; }
 }
 
 @media (max-width: 480px) {
-  .item { gap: 10px; padding: 12px; box-shadow: var(--shadow-sm); }
-  .label { font-size: 1rem; }
+  body { padding-inline: 10px; }
+  .b-grid { gap: 8px; }
+  .b-item { min-height: 96px; padding: 10px 9px 9px; }
+  .b-item .nav-label { font-size: 0.88rem; }
+  .b-item:first-child .nav-label { font-size: 1.15rem; }
+}
+
+@media (max-width: 360px) {
+  .b-head { gap: 10px; }
+  .b-grid { grid-template-columns: 1fr; }
+  .b-item:nth-child(1) { grid-column: auto; }
 }
 </style>
 </head>
@@ -193,52 +221,35 @@ is the attitude rather than a polite masthead, mwehehehe */
     <span class="hero-stamp">neo brutalism 4 ever</span><span class="hero-blink">　&#9679; rec</span>
   </header>
 
-  <main class="page">
-    <div class="list-head">
-      <h2 class="list-title">The list</h2>
-      <p class="list-note">notes &amp; tools i built for Hio. nothing here is serious :D shoot me an owl if you notice anything broken.</p>
+  <main class="page page-b">
+    <div class="b-head">
+      <div class="b-head-copy">
+        <h2 class="b-title">The list</h2>
+        <p class="b-note">stuff i built for Hio. nothing here is serious :D</p>
+      </div>
+      <span class="b-count">5 things</span>
     </div>
 
-    <nav class="stack">
-      <a class="item" href="quidmodding/">
-        <span class="num">01</span>
-        <span class="text">
-          <span class="label">Rule Book</span>
-          <span class="desc">actions, rosters, team database</span>
-        </span>
-        <span class="arrow">&rarr;</span>
+    <nav class="b-grid" aria-label="Stuff links">
+      <a class="b-item" href="quidmodding/">
+        <span class="b-top"><span class="b-num">01</span><span class="nav-arrow">↗</span></span>
+        <span><span class="nav-label">Rule Book</span><span class="nav-desc">actions, rosters, team database</span></span>
       </a>
-      <a class="item" href="gringotts/">
-        <span class="num">02</span>
-        <span class="text">
-          <span class="label">Coin Math</span>
-          <span class="desc">currency converter + stipend planner</span>
-        </span>
-        <span class="arrow">&rarr;</span>
+      <a class="b-item" href="gringotts/">
+        <span class="b-top"><span class="b-num">02</span><span class="nav-arrow">↗</span></span>
+        <span><span class="nav-label">Coin Math</span><span class="nav-desc">converter + planner</span></span>
       </a>
-      <a class="item" href="bbcode-fixer/">
-        <span class="num">03</span>
-        <span class="text">
-          <span class="label">Tag Check</span>
-          <span class="desc">bbcode structure checker</span>
-        </span>
-        <span class="arrow">&rarr;</span>
+      <a class="b-item" href="bbcode-fixer/">
+        <span class="b-top"><span class="b-num">03</span><span class="nav-arrow">↗</span></span>
+        <span><span class="nav-label">Tag Check</span><span class="nav-desc">bbcode checker</span></span>
       </a>
-      <a class="item" href="playbook/">
-        <span class="num">04</span>
-        <span class="text">
-          <span class="label">Dirty Tricks</span>
-          <span class="desc">plays :)</span>
-        </span>
-        <span class="arrow">&rarr;</span>
+      <a class="b-item" href="playbook/">
+        <span class="b-top"><span class="b-num">04</span><span class="nav-arrow">↗</span></span>
+        <span><span class="nav-label">Dirty Tricks</span><span class="nav-desc">plays :)</span></span>
       </a>
-      <a class="item" href="final-v7-real-final/">
-        <span class="num">05</span>
-        <span class="text">
-          <span class="label">Junk Drawer</span>
-          <span class="desc">builds, notes, whatever else</span>
-        </span>
-        <span class="arrow">&rarr;</span>
+      <a class="b-item" href="final-v7-real-final/">
+        <span class="b-top"><span class="b-num">05</span><span class="nav-arrow">↗</span></span>
+        <span><span class="nav-label">Junk Drawer</span><span class="nav-desc">builds + whatever</span></span>
       </a>
     </nav>
   </main>
