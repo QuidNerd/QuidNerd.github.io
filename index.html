@@ -11,19 +11,27 @@
 <link rel="stylesheet" href="neo.css">
 <style>
 
+/* The hero leans, throws a stacked 20px shadow and hangs a sticker past its
+   right edge. All three are decorative overhang, but they widen the layout and
+   trip a horizontal scrollbar on narrow screens. Clip it instead.
+   `clip` over `hidden` because it does NOT create a scroll container — the
+   `hidden` line is just the fallback for older Safari. Safe here either way:
+   this page has no sticky top bar to break. */
+html { overflow-x: hidden; overflow-x: clip; }
+
 body {
   display: flex; flex-direction: column;
   align-items: center; justify-content: flex-start;
   min-height: 100vh; padding: 54px 16px 40px;
 }
-.frame, .site-footer { width: 100%; max-width: 640px; }
-.frame { max-width: 640px; }
+.frame, .site-footer { width: 100%; max-width: 680px; }
+.frame { max-width: 680px; }
 
 /* FEATURED GRID — one primary destination, four compact secondary tools. */
-.page-b { padding: 24px; }
+.page-b { }
 .b-head {
   display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; margin-bottom: 16px;
+  gap: 16px; margin-bottom: 24px;
 }
 .b-head-copy { min-width: 0; }
 .b-title {
@@ -32,23 +40,23 @@ body {
   text-transform: uppercase; letter-spacing: -0.5px;
 }
 .b-note {
-  font-family: var(--font-mono); font-size: 0.75rem;
+  font-family: var(--font-mono); font-size: 0.80rem;
   line-height: 1.45; color: var(--ink-dim); margin-top: 6px;
 }
 .b-count {
   flex: none; background: var(--black); color: var(--card);
   border: var(--bw) solid var(--black); box-shadow: 4px 4px 0 var(--yellow);
-  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+  font-family: var(--font-mono); font-size: 0.80rem; font-weight: 700;
   letter-spacing: 1px; text-transform: uppercase;
   padding: 8px 10px;
 }
-.b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .b-item {
   position: relative; min-width: 0;
   color: var(--black); text-decoration: none;
   border: var(--bw) solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
-  padding: 16px 12px;
+  padding: 20px 16px;
   min-height: 102px;
   display: flex; flex-direction: column; justify-content: space-between;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
@@ -66,24 +74,24 @@ body {
 .b-item:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--black); }
 .b-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .b-num {
-  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
   background: var(--card); border: 2px solid var(--black); padding: 2px 5px;
 }
 .nav-label {
   display: block;
   font-family: var(--font-display); font-weight: 700;
-  font-size: 1rem; line-height: 0.95;
+  font-size: 1.2rem; line-height: 0.95;
   text-transform: uppercase; letter-spacing: -0.5px;
   margin-top: 12px;
 }
 .nav-desc {
   display: block;
-  font-family: var(--font-mono); font-size: 0.66rem;
+  font-family: var(--font-mono); font-size: 0.70rem;
   line-height: 1.35; text-transform: uppercase; letter-spacing: 0.8px;
   margin-top: 5px;
 }
 .nav-arrow { font-weight: 700; font-size: 1rem; }
-.b-item:first-child .nav-label { font-size: 1.33rem; }
+.b-item:first-child .nav-label { font-size: 1.5rem; }
 .b-item:first-child .nav-desc { max-width: 37ch; }
 
 /* the sign-off is now the front door >:) it carries the page identity (h1) AND the manifesto, so the first thing yall meet
@@ -107,7 +115,7 @@ is the attitude rather than a polite masthead, mwehehehe */
 
 .hero-tag {
   position: absolute; top: -15px; left: 12px;
-  font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem;
   letter-spacing: 2px; text-transform: uppercase;
   background: var(--cyan); color: var(--black);
   border: 2px solid var(--black); padding: 3px 8px;
@@ -115,7 +123,7 @@ is the attitude rather than a polite masthead, mwehehehe */
 }
 .hero-sticker {
   position: absolute; top: 8px; right: -26px;
-  font-family: var(--font-mono); font-weight: 700; font-size: 0.66rem;
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
   letter-spacing: 1px; text-transform: uppercase;
   background: var(--orange); color: var(--black);
   border: 2px solid var(--black);
@@ -133,7 +141,7 @@ is the attitude rather than a polite masthead, mwehehehe */
   color: var(--card);
   text-shadow: 6px 6px 0 var(--cyan);
   -webkit-text-stroke: 0;
-  margin: 0 0 14px;
+  margin: 0 0 18px;
 }
 
 .hero-shout {
@@ -173,7 +181,7 @@ is the attitude rather than a polite masthead, mwehehehe */
 .hero-stamp {
   display: inline-block; margin-top: 16px;
   font-family: var(--font-display); font-weight: 700;
-  font-size: 0.9rem; letter-spacing: -0.3px; text-transform: uppercase;
+  font-size: 1rem; letter-spacing: -0.3px; text-transform: uppercase;
   color: var(--black); background: var(--lime);
   border: 3px solid var(--card);
   box-shadow: 5px 5px 0 var(--pink);
@@ -198,15 +206,27 @@ is the attitude rather than a polite masthead, mwehehehe */
   .b-item { transition: none; }
 }
 
-@media (max-width: 480px) {
-  body { padding-inline: 10px; }
-  .b-grid { gap: 8px; }
-  .b-item { min-height: 96px; padding: 10px 9px 9px; }
-  .b-item .nav-label { font-size: 0.88rem; }
-  .b-item:first-child .nav-label { font-size: 1.15rem; }
+@media (max-width: 620px) {
+  .b-head { margin-bottom: 16px; }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 480px) {
+  body { padding-inline: 10px; }
+  /* pull the overhang in so the clip removes as little as possible */
+  .hero { box-shadow: 7px 7px 0 var(--pink), 13px 13px 0 var(--cyan); }
+  .hero-sticker { right: -16px; padding: 4px 24px; font-size: 0.55rem; }
+  .b-grid { gap: 8px; }
+  .b-item { min-height: 96px; padding: 16px 12px; }
+  .b-item .nav-label { font-size: 0.88rem; }
+  .b-item:first-child .nav-label { font-size: 1.15rem; }
+  .nav-desc { font-size: 0.6rem; }
+}
+
+@media (max-width: 400px) {
+  .nav-desc { font-size: 0.55rem; }
+}
+
+@media (max-width: 380px) {
   .b-head { gap: 10px; }
   .b-grid { grid-template-columns: 1fr; }
   .b-item:nth-child(1) { grid-column: auto; }

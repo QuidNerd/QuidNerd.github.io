@@ -19,7 +19,7 @@
   background: var(--card); border: var(--bw) solid var(--black);
 }
 .bb-quote > .bb-quote {
-  display: block; background: var(--cyan);
+  display: block; background: var(--yellow);
   font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.7;
   padding: 12px 14px; margin: 12px 0 0; box-shadow: none;
 }
@@ -27,12 +27,12 @@
 
 .play-list { display: flex; flex-direction: column; gap: 26px; }
 .play-entry {
-  background: var(--card); border: var(--bw) solid var(--black); padding: 20px 20px 18px;
+  border: var(--bw) solid var(--black); padding: 20px 20px 18px;
 }
 .play-eyebrow {
   display: inline-block; font-family: var(--font-mono); font-weight: 700;
   font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
-  background: var(--yellow); border: 2px solid var(--black);
+  background: var(--cyan); border: 2px solid var(--black);
   padding: 3px 8px; margin-bottom: 10px;
 }
 .play-title-text {
@@ -54,7 +54,7 @@
 .play-refs a {
   font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
   text-transform: uppercase; color: var(--black); text-decoration: none;
-  background: var(--lime); border: 2px solid var(--black);
+  background: var(--yellow); border: 2px solid var(--black);
   box-shadow: 3px 3px 0 var(--black); padding: 5px 9px;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
@@ -128,8 +128,7 @@ const PLAYS = [
   {
     title: "Keeper Truancy",
     body: `[quote]Your keeper is allergic to keeping. Recommended for keepers with high accuracy and an aggressive playstyle, deployed under a strategist who wants to squeeze every last drop out of the action economy. Given the round limit of five quaffle grabs, hoarding the quaffle [i]technically[/i] counts as defense too — if the opposing team does not have the ball, they cannot score.
-[quote][b]Keeper:[/b] Quaffle Grab & Score[/quote]
-[/quote]`,
+[quote][b]Keeper:[/b] Quaffle Grab & Score[/quote][/quote]`,
     refs: [
       { label: "GvsH fall 2025", url: "https://hogwarts.io/viewtopic.php?t=41706" },
       { label: "SvsH winter 2026", url: "https://hogwarts.io/viewtopic.php?t=44042" },
