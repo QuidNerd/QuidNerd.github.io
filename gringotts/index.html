@@ -77,6 +77,7 @@
   .field-row { gap: 8px; }
   .field input { width: 84px; font-size: 0.95rem; }
   .field.wide input { width: 100%; min-width: 150px; }
+  .field .caret-hint::after { transform: translate(8px, -50%);}
 }
 </style>
 </head>
@@ -97,18 +98,18 @@
     <div class="masthead">
       <div class="eyebrow">Galleons in, answers out</div>
       <h1>Coin Math</h1>
-      <p class="subtitle">how many potato peelings your money is worth, and how long until you can afford the thing you want</p>
+      <p class="subtitle">how many potato peelings your money is worth, and how long until you can afford the thing you want. converts wizard money for you so you don't have to think</p>
     </div>
 
     <section class="block" id="chapter-1">
       <div class="block-head">
         <h2 class="block-title">Potato peeling converter</h2>
       </div>
-      <p class="block-note">1 knut = 1 potato peeling.</p>
+      <p class="block-note">Because multiplying by 493 was apparently too much.</p>
 
       <div class="rate-note">
         <div class="line1">1 Galleon = <b>17 Sickles</b> = <b>493 Knuts</b></div>
-        <div class="line2">1 Sickle = 29 Knuts.</div>
+        <div class="line2">1 Sickle = 29 Knuts, 1 knut = 1 potato peeling.</div>
       </div>
 
       <div class="surface surface-input surface-headed">

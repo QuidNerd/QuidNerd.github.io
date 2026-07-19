@@ -246,10 +246,7 @@ h1 {
   color: var(--ink-dim); margin: 0 0 16px; line-height: 1.6;
 }
 
-/* ============================================================
-   SURFACE — a live working area. One tone brighter than .page,
-   optionally tinted to say what it is for.
-   ============================================================ */
+
 .surface {
   background: var(--card);
   border: var(--bw) solid var(--black);
@@ -257,13 +254,11 @@ h1 {
   padding: 18px;
 }
 .surface-tight { padding: 0; }
-.surface-input  { background: #fff6c2; }   /* you act here — the only strong fill */
+.surface-input  { background: #fbe795; }   
 .surface-output { background: var(--card); }
 .surface-good   { background: var(--lime); }
 .surface-bad    { background: #ffd6d6; }
 
-/* A surface can wear a label so its job is stated, not inferred.
-   Use .surface-headed on the box, then .surface-head + .surface-body. */
 .surface-headed { padding: 0; }
 .surface-head {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -277,10 +272,7 @@ h1 {
 .surface-input > .surface-head .head-mark { color: var(--yellow); }
 .surface-body { padding: 16px; }
 
-/* ============================================================
-   TABS — for pages that genuinely swap content (Rule Book,
-   Junk Drawer). Not a table of contents; a control.
-   ============================================================ */
+
 .tabs {
   display: flex; gap: 8px; flex-wrap: wrap;
   margin-bottom: 26px;
