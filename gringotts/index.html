@@ -32,6 +32,13 @@
   font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700;
   width: 112px; text-align: center; padding: 9px 8px;
 }
+/* The value is centred and one character wide at rest, so the caret sits just
+   right of it — where a real cursor would land. Only the leading field of each
+   group carries one; a whole row of them reads as a light show, not a hint. */
+.field .caret-hint::after {
+  left: calc(50% + 0.46em - 6px); top: 50%; transform: translateY(-50%);
+  height: 1.2em;
+}
 .field.wide input { width: 190px; font-size: 0.9rem; }
 
 .rule-dotted { width: 100%; border-top: 2px dashed var(--black); margin: 18px 0; }
@@ -108,7 +115,7 @@
         <div class="surface-head"><span class="head-mark">&#9654;</span> Type what you have</div>
         <div class="surface-body">
         <div class="field-row">
-          <div class="field"><label>Galleons</label><input type="number" id="pp-galleons" min="0" value="0" oninput="calcPeelings()"></div>
+          <div class="field"><label>Galleons</label><span class="caret-hint"><input type="number" id="pp-galleons" min="0" value="0" oninput="calcPeelings()"></span></div>
           <div class="field"><label>Sickles</label><input type="number" id="pp-sickles" min="0" value="0" oninput="calcPeelings()"></div>
           <div class="field"><label>Knuts</label><input type="number" id="pp-knuts" min="0" value="0" oninput="calcPeelings()"></div>
         </div>
@@ -141,7 +148,7 @@
         <div class="subgroup">
           <div class="field-group-label">Your goal</div>
           <div class="field-row">
-            <div class="field"><label>Galleons</label><input type="number" id="ds-galleons" min="0" value="0" oninput="calcDays()"></div>
+            <div class="field"><label>Galleons</label><span class="caret-hint"><input type="number" id="ds-galleons" min="0" value="0" oninput="calcDays()"></span></div>
             <div class="field"><label>Sickles</label><input type="number" id="ds-sickles" min="0" value="0" oninput="calcDays()"></div>
             <div class="field"><label>Knuts</label><input type="number" id="ds-knuts" min="0" value="0" oninput="calcDays()"></div>
           </div>
@@ -258,6 +265,17 @@ function calcDays() {
   document.getElementById('ds-breakdown').textContent =
     `Goal: ${goalKnuts.toLocaleString()} Knuts  |  Already owned: ${ownedKnuts.toLocaleString()} Knuts  |  Remaining: ${remainingKnuts.toLocaleString()} Knuts  |  Earning ${dailySickles} Sickles/day (10 base${staffBonus ? ' + ' + staffBonus + ' staff' : ''}) = ${dailyKnuts.toLocaleString()} Knuts/day  |  ~${weeks} weeks`;
 }
+
+
+// the caret hint is a one-shot nudge: the moment a field is touched it goes
+// away for good, so it never competes with real content
+document.querySelectorAll('.caret-hint').forEach(function (wrap) {
+  var el = wrap.querySelector('input, textarea');
+  if (!el) return;
+  var drop = function () { wrap.classList.remove('caret-hint'); };
+  el.addEventListener('focus', drop, { once: true });
+  el.addEventListener('input', drop, { once: true });
+});
 
 document.getElementById('ds-startdate').value = todayISO();
 calcPeelings();

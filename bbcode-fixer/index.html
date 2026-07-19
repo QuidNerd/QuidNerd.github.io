@@ -29,6 +29,10 @@
   background: var(--card); padding: 14px 16px;
 }
 #bb-input:focus { background: var(--card); }
+/* sits exactly where the first character will land: 3px border + 16px
+   padding across, and the first line box down. A real cursor renders on top
+   of the placeholder, so overlapping it is correct rather than a collision. */
+.caret-hint::after { left: 19px; top: 20px; height: 1.15em; }
 
 .toolbar { display: flex; gap: 10px; margin: 14px 0 0; flex-wrap: wrap; }
 .toolbar a {
@@ -121,7 +125,7 @@
     <div class="masthead">
       <div class="eyebrow">Find the broken tag</div>
       <h1>Tag Check</h1>
-      <p class="subtitle">paste your BBCode, see how it nests, and find out which tag you forgot to close</p>
+      <p class="subtitle">paste your BBCode, see how it nests, and find out which tag you forgor to close</p>
     </div>
 
     <section class="block">
@@ -132,7 +136,7 @@
       <div class="surface surface-input surface-headed">
         <div class="surface-head"><span class="head-mark">&#9654;</span> Step 1 &mdash; paste it here</div>
         <div class="surface-body">
-        <textarea id="bb-input" placeholder="[table]&#10;[tr]&#10;[td]Cell 1[/td]&#10;[/tr]&#10;[/table]" spellcheck="false"></textarea>
+        <span class="caret-hint"><textarea id="bb-input" placeholder="[table]&#10;[tr]&#10;[td]Cell 1[/td]&#10;[/tr]&#10;[/table]" spellcheck="false"></textarea></span>
         <div class="toolbar">
           <a id="load-example">Load broken example</a>
           <a id="clear-input">Clear</a>
@@ -385,6 +389,17 @@ let debounceTimer;
 document.getElementById('bb-input').addEventListener('input', () => {
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(runAnalysis, 250);
+});
+
+
+// the caret hint is a one-shot nudge: the moment a field is touched it goes
+// away for good, so it never competes with real content
+document.querySelectorAll('.caret-hint').forEach(function (wrap) {
+  var el = wrap.querySelector('input, textarea');
+  if (!el) return;
+  var drop = function () { wrap.classList.remove('caret-hint'); };
+  el.addEventListener('focus', drop, { once: true });
+  el.addEventListener('input', drop, { once: true });
 });
 
 const EXAMPLE = `[table]

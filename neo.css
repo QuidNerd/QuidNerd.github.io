@@ -386,8 +386,7 @@ input:focus, select:focus, textarea:focus {
 }
 input::placeholder, textarea::placeholder { color: var(--ink-faint); }
 
-/* Dropdowns: kill the native chrome and draw our own chunky caret,
-   otherwise the OS widget is the one soft thing on the whole page. */
+/* Dropdowns: kill the native chrome and draw own chunky caret */
 select {
   cursor: pointer;
   appearance: none; -webkit-appearance: none;
@@ -470,6 +469,20 @@ select option { background: var(--card); color: var(--black); font-weight: 700; 
 
 @media (prefers-reduced-motion: reduce) {
   .neo-select-btn, .neo-select-caret { transition: none; }
+}
+
+/* CARET --- A blinking I-beam parked in an untouched field. */
+.caret-hint { position: relative; display: block; }
+.caret-hint::after {
+  content: ""; position: absolute; z-index: 2; pointer-events: none;
+  width: 2px; background: var(--black);
+  animation: caret-blink 1.05s steps(1) infinite;
+}
+@keyframes caret-blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+/* CSS fallback if the script never runs */
+.caret-hint:focus-within::after { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .caret-hint::after { animation: none; opacity: 0.65; }
 }
 
 button, .roll-btn, .gate-btn {
