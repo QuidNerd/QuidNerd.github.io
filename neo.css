@@ -523,6 +523,28 @@ button:active, .roll-btn:active, .gate-btn:active {
 .hidden { display: none !important; }
 a { color: var(--black); }
 
+/* ---------- TEXT SELECTION ----------
+   Plain inverted: black fill, white text. Sets BOTH properties, because a
+   background-only rule would leave light text light on the dark surfaces.
+   Note: ::-moz-selection needs its own rule — one invalid selector in a list
+   invalidates the whole list, so these cannot be combined. */
+::selection { background: var(--black); color: var(--card); }
+::-moz-selection { background: var(--black); color: var(--card); }
+
+/* On surfaces that are already black, flip it the other way so selecting
+   still registers instead of matching the background. */
+.topbar::selection, .topbar ::selection,
+.surface-head::selection, .surface-head ::selection,
+.block-title::selection, .chapter-title::selection, .chapter h2::selection,
+.result::selection, .result ::selection
+{ background: var(--card); color: var(--black); }
+
+.topbar::-moz-selection, .topbar ::-moz-selection,
+.surface-head::-moz-selection, .surface-head ::-moz-selection,
+.block-title::-moz-selection, .chapter-title::-moz-selection, .chapter h2::-moz-selection,
+.result::-moz-selection, .result ::-moz-selection
+{ background: var(--card); color: var(--black); }
+
 ::-webkit-scrollbar { width: 12px; height: 12px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--black); }

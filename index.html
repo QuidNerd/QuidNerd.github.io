@@ -187,6 +187,12 @@ is the attitude rather than a polite masthead, mwehehehe */
 }
 @keyframes blink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0; } }
 
+/* this page's own black surfaces flip to white-fill selection */
+.hero::selection, .hero ::selection,
+.list-title::selection, .b-count::selection { background: var(--card); color: var(--black); }
+.hero::-moz-selection, .hero ::-moz-selection,
+.list-title::-moz-selection, .b-count::-moz-selection { background: var(--card); color: var(--black); }
+
 @media (prefers-reduced-motion: reduce) {
   .hero-shout em, .hero-blink { animation: none; }
   .b-item { transition: none; }

@@ -114,6 +114,12 @@
   padding: 4px 6px;
 }
 
+/* black bars on this page flip their selection like the shared ones do */
+.abilities-box > .label:first-child::selection,
+.stat-chips.alloc .stat-chip strong::selection { background: var(--card); color: var(--black); }
+.abilities-box > .label:first-child::-moz-selection,
+.stat-chips.alloc .stat-chip strong::-moz-selection { background: var(--card); color: var(--black); }
+
 /* build comparison table */
 .build-compare {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
