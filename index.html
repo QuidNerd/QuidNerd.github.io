@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="neo.css">
+<script src="neo-motion.js" defer></script>
 <style>
 
 /* The hero leans, throws a stacked 20px shadow and hangs a sticker past its
@@ -76,6 +77,10 @@ body {
 .b-num {
   font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
   background: var(--card); border: 2px solid var(--black); padding: 2px 5px;
+  transition: background 0.08s ease, color 0.08s ease;
+}
+.b-item:hover .b-num, .b-item:focus-visible .b-num {
+  background: var(--black); color: var(--card);
 }
 .nav-label {
   display: block;

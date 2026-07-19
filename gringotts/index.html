@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
+<script src="../neo-motion.js" defer></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css (width, selection, etc).
    Colour roles on this page: yellow = you type here, black = the answer.
@@ -181,7 +182,7 @@
       <div class="result">
         <div class="result-inner">
           <div class="result-tag">You'll get there in</div>
-          <div class="headline" id="ds-result">0 days</div>
+          <div class="headline" id="ds-result">Set a goal above 0</div>
           <div class="date-line" id="ds-targetdate"></div>
           <div class="sub-line" id="ds-breakdown"></div>
         </div>
@@ -212,7 +213,8 @@ function calcPeelings() {
   const s = parseFloat(document.getElementById('pp-sickles').value) || 0;
   const k = parseFloat(document.getElementById('pp-knuts').value) || 0;
   const total = toKnuts(g, s, k);
-  document.getElementById('pp-result').textContent = total.toLocaleString() + ' potato peeling' + (total === 1 ? '' : 's');
+  neoTick(document.getElementById('pp-result'), total,
+    n => n.toLocaleString() + ' potato peeling' + (n === 1 ? '' : 's'));
   document.getElementById('pp-breakdown').textContent =
     `${g} Galleon${g===1?'':'s'} + ${s} Sickle${s===1?'':'s'} + ${k} Knut${k===1?'':'s'} = ${total.toLocaleString()} Knuts`;
 }
@@ -239,14 +241,14 @@ function calcDays() {
   const dailyKnuts = dailySickles * KNUTS_PER_SICKLE;
 
   if (goalKnuts <= 0) {
-    document.getElementById('ds-result').textContent = 'Set a goal above 0';
+    neoTickText(document.getElementById('ds-result'), 'Set a goal above 0');
     document.getElementById('ds-targetdate').textContent = '';
     document.getElementById('ds-breakdown').textContent = '';
     return;
   }
 
   if (remainingKnuts <= 0) {
-    document.getElementById('ds-result').textContent = 'Goal already met!';
+    neoTickText(document.getElementById('ds-result'), 'Goal already met!');
     document.getElementById('ds-targetdate').textContent = '';
     document.getElementById('ds-breakdown').textContent =
       `Goal: ${goalKnuts.toLocaleString()} Knuts  |  Already owned: ${ownedKnuts.toLocaleString()} Knuts`;
@@ -261,7 +263,8 @@ function calcDays() {
   targetDate.setDate(targetDate.getDate() + days);
   const targetDateStr = targetDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-  document.getElementById('ds-result').textContent = days.toLocaleString() + ' day' + (days === 1 ? '' : 's');
+  neoTick(document.getElementById('ds-result'), days,
+    n => n.toLocaleString() + ' day' + (n === 1 ? '' : 's'));
   document.getElementById('ds-targetdate').innerHTML = `you'll reach your goal on <b>${targetDateStr}</b>`;
   document.getElementById('ds-breakdown').textContent =
     `Goal: ${goalKnuts.toLocaleString()} Knuts  |  Already owned: ${ownedKnuts.toLocaleString()} Knuts  |  Remaining: ${remainingKnuts.toLocaleString()} Knuts  |  Earning ${dailySickles} Sickles/day (10 base${staffBonus ? ' + ' + staffBonus + ' staff' : ''}) = ${dailyKnuts.toLocaleString()} Knuts/day  |  ~${weeks} weeks`;

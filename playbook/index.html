@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
+<script src="../neo-motion.js" defer></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css */
 
@@ -249,6 +250,7 @@ function tryUnlock() {
     unlock();
   } else {
     document.getElementById('gate-error').textContent = "wrong. try again.";
+    neoJolt(document.getElementById('gate'));
     input.value = '';
     input.focus();
   }

@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
+<script src="../neo-motion.js" defer></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css
    (page-level dropdowns get upgraded by ../neo-select.js) */
@@ -699,6 +700,7 @@ function showPanel(p, el) {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   ['action','player','db'].forEach(x => document.getElementById(x+'-panel').classList.add('hidden'));
   document.getElementById(p+'-panel').classList.remove('hidden');
+  neoShutter(document.getElementById(p+'-panel'));
   (el || document.getElementById('toc-'+p)).classList.add('active');
   if (p==='player') { populateFilters(); filterPlayers(); }
   if (p==='db') { populateDbSelects(); renderDbTable(); }

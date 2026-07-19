@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
+<script src="../neo-motion.js" defer></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css */
 @font-face { font-family: 'Zapfino'; src: url('Zapfino.ttf') format('truetype'); font-display: swap; }
@@ -846,6 +847,7 @@ function showChapter(n, el) {
   document.querySelectorAll('.chapter').forEach(c => c.classList.add('hidden'));
   const chapter = document.getElementById('chapter-' + n);
   chapter.classList.remove('hidden');
+  neoShutter(chapter);
   (el || document.getElementById('toc-' + n)).classList.add('active');
   chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

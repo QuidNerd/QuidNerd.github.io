@@ -520,6 +520,65 @@ button:active, .roll-btn:active, .gate-btn:active {
 }
 .site-footer a:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
 
+/* ============================================================
+   MOTION — driven by neo-motion.js
+
+   Rule for this section, matching the two above it: motion is
+   PHYSICAL, never decorative. Nothing fades, nothing glides.
+   Things land, wipe, and refuse. Every duration here is under
+   250ms, because a brutalist surface has no give in it — a slow
+   ease reads as rubber, and none of this is rubber.
+   ============================================================ */
+
+/* ARRIVE — a computed answer lands like a rubber stamp. Overshoots
+   past its size, then settles. The overshoot is the whole point:
+   it gives the result mass, so it reads as something that was
+   produced rather than text that quietly changed. */
+.neo-arrive { animation: neo-arrive 0.22s cubic-bezier(0.2, 1.6, 0.4, 1); }
+@keyframes neo-arrive {
+  0%   { transform: scale(1.35) rotate(-4deg); opacity: 0; }
+  60%  { transform: scale(0.96) rotate(0.8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* SHUTTER — a panel replaces another by wiping across, not by
+   cross-fading. steps(6) keeps the reveal edge hard; a smooth
+   clip would look like a dissolve, which is the one thing a
+   page built out of solid blocks should never do. */
+.neo-shutter { animation: neo-shutter 0.20s steps(6, end); }
+@keyframes neo-shutter {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+/* JOLT — refusal. steps(2) means no easing at all, so it reads as
+   a machine bouncing you rather than a UI politely disagreeing. */
+.neo-jolt { animation: neo-jolt 0.18s steps(2, end) 3; }
+@keyframes neo-jolt {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
+
+/* HAZARD — the loading state, and the only looping motion on the
+   site. Caution stripes rather than a spinner: a spinner is a
+   borrowed gesture from soft UI, stripes are just paint. */
+.neo-hazard {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 8px;
+  border-bottom: 2px solid var(--black);
+  background: repeating-linear-gradient(45deg,
+    var(--yellow) 0 12px, var(--black) 12px 24px);
+  background-size: 34px 34px;
+  animation: neo-hazard 0.6s linear infinite;
+}
+.neo-hazard.is-done { animation: none; opacity: 0; transition: opacity 0.18s steps(3, end); }
+@keyframes neo-hazard { to { background-position: 34px 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-arrive, .neo-shutter, .neo-jolt, .neo-hazard { animation: none; }
+}
+
 .hidden { display: none !important; }
 a { color: var(--black); }
 
