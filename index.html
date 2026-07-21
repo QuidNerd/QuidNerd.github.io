@@ -30,27 +30,31 @@ body {
 
 /* FEATURED GRID — one primary destination, four compact secondary tools. */
 .page-b { }
-.b-head {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px; margin-bottom: 24px;
-}
-.b-head-copy { min-width: 0; }
+/* The section head is a type-scale moment: an oversized title with one
+   word cut hollow (stroke, no fill), and the count + note folded into a
+   mono meta strip hung off a baseline rule. Loud, then quiet. */
+.b-head { margin-bottom: 24px; }
 .b-title {
   font-family: var(--font-display); font-weight: 700;
-  font-size: 1.15rem; line-height: 1;
-  text-transform: uppercase; letter-spacing: -0.5px;
+  font-size: clamp(2.4rem, 11vw, 3.4rem);
+  line-height: 0.8; letter-spacing: -3px;
+  text-transform: uppercase; margin: 0;
 }
-.b-note {
-  font-family: var(--font-mono); font-size: 0.80rem;
-  line-height: 1.45; color: var(--ink-dim); margin-top: 6px;
+.b-title em {
+  font-style: normal;
+  -webkit-text-stroke: 2px var(--black);
+  color: transparent;
 }
-.b-count {
-  flex: none; background: var(--black); color: var(--card);
-  border: var(--bw) solid var(--black); box-shadow: 4px 4px 0 var(--yellow);
-  font-family: var(--font-mono); font-size: 0.80rem; font-weight: 700;
-  letter-spacing: 1px; text-transform: uppercase;
-  padding: 8px 10px;
+.b-meta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 10px 16px; flex-wrap: wrap;
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--ink-dim);
+  border-top: 2px solid var(--black);
+  margin-top: 10px; padding-top: 7px;
 }
+.b-meta .count { color: var(--black); }
 .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .b-item {
   position: relative; min-width: 0;
@@ -251,16 +255,13 @@ is the attitude rather than a polite masthead, mwehehehe */
     <p class="hero-shout"><span class="w1">serifs can</span><br><em>fuck off</em></p>
     <p class="hero-scream" style="padding-top: 12px;">&#9632;&#9632;&#9632; thick borders &middot; hard shadows &middot; no rounded corners &middot; saturated colors &#9632;&#9632;&#9632;</p>
     <p class="hero-line">this change is permanent, there will be no rollback >:)</p>
-    <span class="hero-stamp">neo brutalism 4 ever</span><span class="hero-blink">　&#9679; rec</span>
+    <span class="hero-stamp">neubrutalism 4 ever</span><span class="hero-blink">　&#9679; rec</span>
   </header>
 
   <main class="page page-b">
     <div class="b-head">
-      <div class="b-head-copy">
-        <h2 class="b-title">The list</h2>
-        <p class="b-note">stuff i built for Hio. nothing here is serious :D</p>
-      </div>
-      <span class="b-count">5 things</span>
+      <h2 class="b-title">The <em>List</em></h2>
+      <p class="b-meta"><span class="count">5 things</span><span>stuff i built for hio · nothing serious :D</span></p>
     </div>
 
     <nav class="b-grid" aria-label="Stuff links">
