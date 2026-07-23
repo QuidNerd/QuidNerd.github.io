@@ -55,6 +55,28 @@
 /* the notes are long-form, so give the prose a comfortable measure */
 .notes p, .notes li { max-width: 68ch; }
 
+/* SPOILER — a redaction bar. Text is there but blacked out; click (or
+   Enter/Space when focused) reveals it. box-decoration-break paints the
+   bar on every wrapped line instead of one box around the block, so a
+   multi-line spoiler reads as several redaction strips. The reveal is a
+   hard steps() cut, not a fade — same rule as the rest of the motion. */
+.spoiler {
+  cursor: pointer; user-select: none;
+  background: var(--black); color: transparent;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  padding: 0 3px; box-shadow: 1px 1px 0 var(--black);
+  transition: background 0.12s steps(2, end), color 0.12s steps(2, end);
+}
+/* keep it blacked out even under a drag-select, until it is revealed */
+.spoiler::selection { background: var(--black); color: transparent; }
+.spoiler:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+.spoiler.is-open {
+  cursor: text; user-select: text;
+  background: var(--yellow); color: var(--black); /* stays marked as once-hidden */
+}
+.spoiler.is-open::selection { background: var(--black); color: var(--card); }
+@media (prefers-reduced-motion: reduce) { .spoiler { transition: none; } }
+
 /* switching chapters scrolls here — clear the sticky bar plus a gap */
 .chapter { scroll-margin-top: 96px; }
 /* first topic sits right under the chapter title, so no break above it */
@@ -423,10 +445,10 @@
         <ul>
           <li><strong>Calming Presence</strong> &mdash; 10% auto-hit, because your team needs all the help it can get</li>
           <li><strong>Fearless</strong> &mdash; immune to scary people</li>
-          <li><strong>Charmer</strong> &mdash; be pretty at people</li>
+          <li><strong>Charmer</strong> &mdash; be pretty at people, -1 ACC to everyone on the opposing team who forgot to get Sixth Sense</li>
           <li><strong>Lovely Creature</strong> &mdash; be pretty at people, plus make the Snitch harder to catch</li>
-          <li><strong>Sixth Sense</strong> &mdash; catch other people being sneaky</li>
-          <li><strong>Terrible Presence</strong> &mdash; everyone sucks at aiming now</li>
+          <li><strong>Sixth Sense</strong> &mdash; your opponents now need to try harder to cheat on your team</li>
+          <li><strong>Terrible Presence</strong> &mdash; everyone sucks at aiming now, Beaters without Fearless are also doing reduced damage</li>
           <li><strong>Chaser's Interception</strong> &mdash; a scam under most circumstances. against teams that prioritise action economy and put minimal hands on the quaffle... there's nothing to intercept in the first place; that said, if your carry has run out of worthwhile abilities to take, it's not the worst filler</li>
 
         </ul>
@@ -501,11 +523,11 @@
           <span class="stat-chip"><strong>STR</strong> &mdash; max out</span>
           <span class="stat-chip"><strong>EVA</strong> &mdash; ideally max out too</span>
         </div>
-        <p>Unlike every other role, STR isn't a scam here! OMG! With 27 STR you can dish out 2025 damage and instantly bury even our resident HP record holder (which is Koko Riddle with her 20 STA/2000 HP, but please don't do that, having 10 EVA is just asking for trouble).</p>
+        <p>Unlike every other role, STR isn't a scam here! OMG! With 27 STR you can dish out 2025 damage and one-shot our resident HP record holder (which is Koko Riddle with her 20 STA/2000 HP, but please don't do that, having 10 EVA is just asking for trouble) —<span class="spoiler" role="button" tabindex="0" aria-label="Spoiler, click to reveal"> assuming, of course, the opponent for some reason hasn't assigned save duty, since anyone running that can pull off a 1 HP rescue as long as the target clears the STA roll. I alrdy covered why that's hard to prevent in the Chaser section.</span></p>
 
         <p>You need all three stats. Defender actions need EVA too so do not neglect your EVA, and STR determines how hard you hit while ACC determines if you hit at all. </p>
           
-        <p>Everyone seems to be going Durmstrang-style lately, stacking ACC/EVA while letting STA slide, which probably means STR is quietly losing its place in the arms race. Keep it around 18 after Obnoxiously Strong and broom bonuses and prioritise the other two. Jorah Moussa might go down as the site's first and last 25+ STR Beater.</p>
+        <p>Everyone seems to be going Durmstrang-style lately, stacking ACC/EVA while letting STA slide, which probably means STR is quietly losing its place in the arms race. Keep it around 18 after Obnoxiously Strong and broom bonuses and prioritise the other two. Jorah might go down as the site's first and last 27 STR Beater.</p>
 
         <p class="label">Ability Priority</p>
         <p><strong>Obnoxiously Strong</strong> &gt; <strong>Fearless</strong> &gt; <strong>Rebound</strong> &gt; Broken Broomshaft. </p>
@@ -841,6 +863,24 @@
 </div>
 
 <script>
+// Spoilers: reveal on click, or Enter/Space when focused. Once open they
+// stay open — this is a "click to read", not a peek. Delegated so it covers
+// spoilers in any chapter without per-element wiring.
+function openSpoiler(el) {
+  if (el.classList.contains('is-open')) return;
+  el.classList.add('is-open');
+  el.setAttribute('aria-label', 'Spoiler revealed');
+}
+document.addEventListener('click', e => {
+  const sp = e.target.closest('.spoiler');
+  if (sp) openSpoiler(sp);
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const sp = e.target.closest && e.target.closest('.spoiler:not(.is-open)');
+  if (sp) { e.preventDefault(); openSpoiler(sp); }
+});
+
 function showChapter(n, el) {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.chapter').forEach(c => c.classList.add('hidden'));
