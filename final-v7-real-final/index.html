@@ -142,6 +142,10 @@
   padding: 11px 13px; margin: 4px 0 0; text-align: center;
 }
 .ad-body em { font-style: normal; background: var(--yellow); padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+/* the step panels are focused programmatically (to move screen-reader focus
+   into the dialog), not tabbed to — so kill the stray browser focus ring that
+   otherwise draws a box around the whole "no thanks" panel on click. */
+#ad-step1:focus, #ad-step2:focus { outline: none; }
 
 /* switching chapters scrolls here — clear the sticky bar plus a gap */
 .chapter { scroll-margin-top: 96px; }
@@ -1065,7 +1069,7 @@ setInterval(updateBeanClock, 1000);
 
     <div id="ad-step2" tabindex="-1" hidden>
       <p class="ad-head" id="ad-head2">Stop lying.</p>
-      <p class="ad-body">no one's <em>truly</em> broke. your daily Stipend just dropped and it's coming back tomorrow regardless. you're going to look me in the eyes and tell me you can't part with free coins?? i'm so disappointed in you :<</p>
+      <p class="ad-body">no one's <em>truly</em> broke. the daily Stipend hands you at least 10 Sickles for free every single day and you're still saying no?? do you know how little respect that shows for my labour :<</p>
       <p class="ad-countdown" id="ad-countdown" aria-live="polite">Hauling you to the fund in 10…</p>
     </div>
   </div>
@@ -1124,7 +1128,7 @@ setInterval(updateBeanClock, 1000);
     overlay.setAttribute('aria-labelledby', 'ad-head2');
     step2.focus();
 
-    var n = 7;
+    var n = 10;
     countEl.textContent = 'Hauling you to the fund in ' + n + '…';
     step2iv = setInterval(function () {
       n--;

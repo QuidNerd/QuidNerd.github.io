@@ -143,9 +143,31 @@
     setTimeout(dismiss, 4000);
   }
 
+  /* ---------- TOPBAR: SCROLL TO CURRENT ----------
+     The nav sits in a fixed order, so on a narrow screen the current page's
+     chip can start off the right edge — leaving the reader unable to see where
+     they are in the hierarchy. On load, scroll the bar just far enough to bring
+     the current chip fully into view (right-aligned, with a little breathing
+     room). It only scrolls when the chip actually overflows, so on a wide
+     screen where everything fits, nothing moves. Runs once — it does not fight
+     the reader if they scroll the bar themselves afterwards. */
+  function scrollNavToCurrent() {
+    var links = document.querySelector('.topbar-links');
+    var here = links && links.querySelector('.here');
+    if (!here) return;
+    var pad = 12;
+    var overflowRight = here.getBoundingClientRect().right
+                      - links.getBoundingClientRect().right;
+    if (overflowRight > 0) links.scrollLeft += overflowRight + pad;
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountHazard);
+    document.addEventListener('DOMContentLoaded', function () {
+      mountHazard();
+      scrollNavToCurrent();
+    });
   } else {
     mountHazard();
+    scrollNavToCurrent();
   }
 })();

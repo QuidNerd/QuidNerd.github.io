@@ -142,10 +142,11 @@ body::before {
 .topbar-links a:hover, .topbar-links a:focus-visible {
   background: var(--card); color: var(--black); outline: none;
 }
-/* current page: stated, not clickable. Ordered first so "you are
-   here" stays visible when the bar scrolls on a narrow screen. */
+/* current page: stated, not clickable. Kept in its natural slot (not pulled
+   to the front) so every section sits in a fixed position across pages — on a
+   narrow screen that leaves items spilling off the right edge, which is the
+   cue that the bar scrolls. */
 .topbar-links .here {
-  order: -1;
   color: var(--black); background: var(--pink);
   border-color: var(--pink); cursor: default;
 }
