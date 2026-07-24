@@ -1134,9 +1134,9 @@ setInterval(updateBeanClock, 1000);
   }
 
   function goToFund() {
-    var win = window.open(FUND, '_blank', 'noopener');
-    if (win) { close(); }             // new tab opened — leave the junk drawer as it was
-    else { window.location.href = FUND; }   // popup blocked — take the current tab instead
+    // the whole junk drawer just becomes the fund. no pop-ups, no cards.
+    clearInterval(step1iv); clearInterval(step2iv);
+    window.location.href = FUND;
   }
 
   function close() {
