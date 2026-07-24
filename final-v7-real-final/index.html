@@ -1091,8 +1091,18 @@ setInterval(updateBeanClock, 1000);
   var shown = false, skippable = false, lastFocus = null;
   var timer = null, step1iv = null, step2iv = null;
 
+  // the ad only pesters people reading the build guides it actually belongs to:
+  // Quidditch (chapter-1) and Duelling (chapter-2). On any other tab it holds
+  // fire — the guard is above `shown`, so nothing is consumed and it stays
+  // armed for when they switch back to an allowed build.
+  var AD_CHAPTERS = { 'chapter-1': 1, 'chapter-2': 1 };
+  function onAdChapter() {
+    var open = document.querySelector('.chapter:not(.hidden)');
+    return !!(open && AD_CHAPTERS[open.id]);
+  }
+
   function show() {
-    if (shown) return;
+    if (shown || !onAdChapter()) return;
     shown = true;
     try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
     window.removeEventListener('scroll', onScroll);
