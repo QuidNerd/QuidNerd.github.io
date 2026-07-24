@@ -77,6 +77,72 @@
 .spoiler.is-open::selection { background: var(--black); color: var(--card); }
 @media (prefers-reduced-motion: reduce) { .spoiler { transition: none; } }
 
+/* ============================================================
+   PUFF BROOM AD — a deliberately obnoxious pop-up, because the
+   whole page is free labour and the fund thread is real. 
+   ============================================================ */
+.ad-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.55); padding: 20px;
+}
+.ad-overlay.is-open { display: flex; }
+.ad-box {
+  position: relative; width: 100%; max-width: 430px;
+  background: var(--card); border: 4px solid var(--black);
+  box-shadow: 12px 12px 0 var(--pink), 24px 24px 0 var(--cyan);
+  transform: rotate(-1.5deg);
+  padding: 28px 24px 20px;
+}
+.ad-tag {
+  position: absolute; top: -15px; left: 18px;
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.6rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: var(--cyan); color: var(--black);
+  border: 3px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  padding: 4px 9px; transform: rotate(2deg);
+}
+.ad-head {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.9rem; line-height: 0.95; letter-spacing: -1px;
+  text-transform: uppercase; margin: 4px 0 12px;
+}
+.ad-body {
+  font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6;
+  margin: 0 0 18px;
+}
+.ad-cta {
+  display: block; text-align: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--black); background: var(--yellow); text-decoration: none;
+  border: 3px solid var(--black); box-shadow: 5px 5px 0 var(--black);
+  padding: 13px 16px; cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+}
+.ad-cta:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 3px 3px 0 var(--black); }
+.ad-cta:active { transform: translate(5px, 5px); box-shadow: 0 0 0 var(--black); }
+.ad-skip {
+  display: block; margin: 14px auto 0;
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  background: none; border: none; color: var(--ink-dim);
+  cursor: pointer; padding: 4px 6px;
+}
+.ad-skip:disabled { cursor: default; }
+.ad-skip:not(:disabled):hover { color: var(--black); text-decoration: underline; }
+.ad-skip:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+/* step two: the guilt trip. No exit control — a countdown that hauls you to
+   the fund whether you like it or not (Esc is still a silent escape hatch). */
+.ad-countdown {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.82rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--black); background: var(--pink);
+  border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--black);
+  padding: 11px 13px; margin: 4px 0 0; text-align: center;
+}
+.ad-body em { font-style: normal; background: var(--yellow); padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
 /* switching chapters scrolls here — clear the sticky bar plus a gap */
 .chapter { scroll-margin-top: 96px; }
 /* first topic sits right under the chapter title, so no break above it */
@@ -985,5 +1051,114 @@ setInterval(updateBeanClock, 1000);
     <a href="https://hogwarts.io/viewtopic.php?t=21853" target="_blank" rel="noopener">koldov brooms need u too</a>
   </span>
 </footer>
+
+<div class="ad-overlay" id="puff-ad" role="dialog" aria-modal="true" aria-labelledby="ad-head" aria-hidden="true">
+  <div class="ad-box">
+    <span class="ad-tag" id="ad-tag">hello yes this is an pop-up</span>
+
+    <div id="ad-step1">
+      <p class="ad-head" id="ad-head">Pay up, freeloader.</p>
+      <p class="ad-body">you just read all of this for free. my hours of getting bodied in matches, distilled into a guide, handed to you on a silver platter. the least you can do is throw something at the Hufflepuff Broom Fund.</p>
+      <a class="ad-cta" id="ad-cta" href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">Fine, take my Galleons →</a>
+      <button class="ad-skip" id="ad-skip" type="button" disabled>skip in 5</button>
+    </div>
+
+    <div id="ad-step2" tabindex="-1" hidden>
+      <p class="ad-head" id="ad-head2">Stop lying.</p>
+      <p class="ad-body">no one's <em>truly</em> broke. your daily Stipend just dropped and it's coming back tomorrow regardless. you're going to look me in the eyes and tell me you can't part with free coins?? i'm so disappointed in you :<</p>
+      <p class="ad-countdown" id="ad-countdown" aria-live="polite">Hauling you to the fund in 10…</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Puff Broom pop-up ad. Fires once per session, after the reader is halfway down the page.
+(function () {
+  var KEY = 'jd-puff-ad-seen';
+  var FUND = 'https://hogwarts.io/viewtopic.php?t=18994';
+  try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
+
+  var overlay = document.getElementById('puff-ad');
+  var step1 = document.getElementById('ad-step1');
+  var step2 = document.getElementById('ad-step2');
+  var skip = document.getElementById('ad-skip');
+  var cta = document.getElementById('ad-cta');
+  var countEl = document.getElementById('ad-countdown');
+  var shown = false, skippable = false, lastFocus = null;
+  var timer = null, step1iv = null, step2iv = null;
+
+  function show() {
+    if (shown) return;
+    shown = true;
+    try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+    window.removeEventListener('scroll', onScroll);
+    clearTimeout(timer);
+
+    lastFocus = document.activeElement;
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    var n = 5;
+    skip.disabled = true;
+    skip.textContent = 'skip in ' + n;
+    step1iv = setInterval(function () {
+      n--;
+      if (n > 0) { skip.textContent = 'skip in ' + n; }
+      else {
+        clearInterval(step1iv);
+        skippable = true;
+        skip.disabled = false;
+        skip.textContent = "no thanks, i'm broke ✕";
+        skip.focus();
+      }
+    }, 1000);
+
+    setTimeout(function () { cta.focus(); }, 50);
+  }
+
+  // "no thanks, i'm broke" doesn't let you off >:)
+  function guiltTrip() {
+    step1.hidden = true;
+    step2.hidden = false;
+    overlay.setAttribute('aria-labelledby', 'ad-head2');
+    step2.focus();
+
+    var n = 7;
+    countEl.textContent = 'Hauling you to the fund in ' + n + '…';
+    step2iv = setInterval(function () {
+      n--;
+      if (n > 0) { countEl.textContent = 'Hauling you to the fund in ' + n + '…'; }
+      else { clearInterval(step2iv); goToFund(); }
+    }, 1000);
+  }
+
+  function goToFund() {
+    var win = window.open(FUND, '_blank', 'noopener');
+    if (win) { close(); }             // new tab opened — leave the junk drawer as it was
+    else { window.location.href = FUND; }   // popup blocked — take the current tab instead
+  }
+
+  function close() {
+    clearInterval(step1iv); clearInterval(step2iv);
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  skip.addEventListener('click', function () { if (skippable) guiltTrip(); });
+  cta.addEventListener('click', function () { close(); });   // they paid — let the link open, close the ad
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && shown) close(); });
+
+  // trigger: halfway down, or a 30s fallback if they linger up top
+  function onScroll() {
+    var reached = window.scrollY + window.innerHeight;
+    if (reached / document.documentElement.scrollHeight > 0.5) show();
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  timer = setTimeout(show, 30000);
+})();
+</script>
 </body>
 </html>
