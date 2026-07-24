@@ -933,9 +933,7 @@
 </div>
 
 <script>
-// Spoilers: reveal on click, or Enter/Space when focused. Once open they
-// stay open — this is a "click to read", not a peek. Delegated so it covers
-// spoilers in any chapter without per-element wiring.
+// Spoilers: reveal on click, or Enter/Space when focused.
 function openSpoiler(el) {
   if (el.classList.contains('is-open')) return;
   el.classList.add('is-open');
@@ -1058,9 +1056,9 @@ setInterval(updateBeanClock, 1000);
 
 <div class="ad-overlay" id="puff-ad" role="dialog" aria-modal="true" aria-labelledby="ad-head" aria-hidden="true">
   <div class="ad-box">
-    <span class="ad-tag" id="ad-tag">hello yes this is an pop-up</span>
+    <span class="ad-tag" id="ad-tag">hello yes this is a pop-up</span>
 
-    <div id="ad-step1">
+    <div id="ad-step1" tabindex="-1">
       <p class="ad-head" id="ad-head">Pay up, freeloader.</p>
       <p class="ad-body">you just read all of this for free. my hours of getting bodied in matches, distilled into a guide, handed to you on a silver platter. the least you can do is throw something at the Hufflepuff Broom Fund.</p>
       <a class="ad-cta" id="ad-cta" href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">Fine, take my Galleons →</a>
@@ -1128,7 +1126,7 @@ setInterval(updateBeanClock, 1000);
       }
     }, 1000);
 
-    setTimeout(function () { cta.focus(); }, 50);
+    setTimeout(function () { step1.focus(); }, 50);
   }
 
   // "no thanks, i'm broke" doesn't let you off >:)
