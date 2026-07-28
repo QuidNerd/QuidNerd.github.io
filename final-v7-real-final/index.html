@@ -16,6 +16,7 @@
 @font-face { font-family: 'Snell Roundhand'; src: url('Snell_Roundhand.otf') format('opentype'); font-display: swap; }
 @font-face { font-family: 'American Typewriter'; src: url('American_Typewriter.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Georgia'; src: url('Georgia.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Charter'; src: url('CharterBT.otf') format('opentype'); font-display: swap; }
 @font-face { font-family: 'Lucida Handwriting'; src: url('LucidaHandwriting.TTF') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Segoe Script'; src: url('Segoe_Script.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Consolas'; src: url('Consolas.TTF') format('truetype'); font-display: swap; }
@@ -763,13 +764,16 @@
         <p><a href="../bbcode-fixer/">Tag Check</a> is a BBCode structure checker I built, give it a try! Just keep in mind it's plain JavaScript running in your browser, so refreshing the page wipes everything you've typed.</p>
 
         <div class="position-heading">Fonts</div>
-        <p>Apple devices (macOS/iOS) have their own font system, because of course they do, but as of a December 2025 update the regular font has been unified to Georgia across the board. RIP Iowan Old Style &mdash; genuinely thrilled to see it go, one less thing to account for when coding across systems.</p>
+        <p>Apple devices (macOS/iOS) have their own font system, because of course they do, but as of a <s>December 2025</s> July 2026 update the regular font has been unified to <span style="font-family: 'Georgia', serif;"><s>Georgia</s></span> <span style="font-family: 'Charter', serif;">Bitstream Charter</span> across the board. RIP Iowan Old Style <s>&mdash; genuinely thrilled to see it go, one less thing to account for when coding across systems.</s> and RIP Georgia too, that lasted all of seven months.</p>
         <p>Signature, cursive, and typewriter still run on two separate sets depending on the device though.</p>
 
         <div class="font-grid single">
           <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: Georgia, serif; font-size: 2.2rem;">Regular</div>
-            <div class="font-swatch-name">Georgia</div>
+            <div class="font-swatch-sample" style="font-family: 'Charter', Georgia, serif; font-size: 2.2rem;">Regular</div>
+            <div class="font-swatch-name">
+              <s>Georgia</s>
+              <span style="display: block; text-transform: none; margin-top: 6px; font-size: 0.7rem; line-height: 1.5;"><span style="text-transform: uppercase;">Bitstream Charter</span> (or just <span style="text-transform: uppercase;">Charter</span>)</span>
+            </div>
           </div>
         </div>
 
