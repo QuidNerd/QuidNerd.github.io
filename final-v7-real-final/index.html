@@ -17,6 +17,7 @@
 @font-face { font-family: 'American Typewriter'; src: url('American_Typewriter.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Georgia'; src: url('Georgia.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Charter'; src: url('CharterBT.otf') format('opentype'); font-display: swap; }
+@font-face { font-family: 'Atkinson Hyperlegible Next'; src: url('AtkinsonHyperlegibleNext.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Lucida Handwriting'; src: url('LucidaHandwriting.TTF') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Segoe Script'; src: url('Segoe_Script.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Consolas'; src: url('Consolas.TTF') format('truetype'); font-display: swap; }
@@ -243,6 +244,7 @@
 /* font + colour swatches */
 .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 22px 0; border: var(--bw) solid var(--black); }
 .font-grid.single { grid-template-columns: 1fr; max-width: 280px; margin-left: 0; }
+.font-grid.trio { grid-template-columns: repeat(3, 1fr); }
 .font-swatch { text-align: center; padding: 14px 8px; border: 1px solid var(--black); background: var(--card); }
 .font-swatch-sample {
   font-size: 2.1rem; color: var(--black); margin-bottom: 8px; line-height: 1.2;
@@ -765,15 +767,21 @@
 
         <div class="position-heading">Fonts</div>
         <p>Apple devices (macOS/iOS) have their own font system, because of course they do, but as of a <s>December 2025</s> July 2026 update the regular font has been unified to <span style="font-family: 'Georgia', serif;"><s>Georgia</s></span> <span style="font-family: 'Charter', serif;">Bitstream Charter</span> across the board. RIP Iowan Old Style <s>&mdash; genuinely thrilled to see it go, one less thing to account for when coding across systems.</s> and RIP Georgia too, that lasted all of seven months.</p>
+        <p><s>anyway that's settled now.</s> <strong>ANOTHER update</strong> bc why not: they've stopped choosing for us entirely &mdash; you can now pick the regular font yourself, between <span style="font-family: 'Charter', serif;">Bitstream Charter</span> (the new one), <span style="font-family: 'Georgia', serif;">Georgia</span> (the old one), and <span style="font-family: 'Atkinson Hyperlegible Next', sans-serif;">Atkinson Hyperlegible Next</span> &mdash; an san serif accessibility font built to be as legible as possible, especially for anyone with vision or reading difficulties. so instead of <s>one thing</s> zero things to account for, it is now three. cool. cool cool cool.</p>
         <p>Signature, cursive, and typewriter still run on two separate sets depending on the device though.</p>
 
-        <div class="font-grid single">
+        <div class="font-grid trio">
           <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'Charter', Georgia, serif; font-size: 2.2rem;">Regular</div>
-            <div class="font-swatch-name">
-              <s>Georgia</s>
-              <span style="display: block; text-transform: none; margin-top: 6px; font-size: 0.7rem; line-height: 1.5;"><span style="text-transform: uppercase;">Bitstream Charter</span> (or just <span style="text-transform: uppercase;">Charter</span>)</span>
-            </div>
+            <div class="font-swatch-sample" style="font-family: 'Charter', serif; font-size: 2.2rem;">Regular</div>
+            <div class="font-swatch-name">Bitstream Charter<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">the new one</span></div>
+          </div>
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Georgia', serif; font-size: 2.2rem;">Regular</div>
+            <div class="font-swatch-name">Georgia<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">the old one</span></div>
+          </div>
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Atkinson Hyperlegible Next', sans-serif; font-size: 2rem;">Regular</div>
+            <div class="font-swatch-name">Atkinson Hyperlegible Next<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">most legible</span></div>
           </div>
         </div>
 
