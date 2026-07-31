@@ -241,6 +241,23 @@
 .build-compare .bc-cell.accent { font-weight: 700; background: var(--lime); }
 .build-compare .bc-sub { display: block; font-family: var(--font-mono); font-size: 0.68rem; margin-top: 3px; }
 
+/* real-duellist stat comparison: a wide 7-column table, so it scrolls inside
+   its own wrapper instead of shoving the page sideways on a narrow screen. */
+.duel-compare-wrap { overflow-x: auto; margin: 16px 0 10px; border: var(--bw) solid var(--black); box-shadow: 5px 5px 0 var(--black); }
+.duel-compare { border-collapse: collapse; width: 100%; min-width: 480px; }
+.duel-compare th, .duel-compare td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--black); font-family: var(--font-mono); font-size: 0.82rem; }
+.duel-compare thead th { background: var(--black); color: var(--card); font-size: 0.64rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+.duel-compare tbody tr:last-child td { border-bottom: none; }
+.duel-compare .dc-name { text-align: left; }
+.duel-compare tbody td.dc-name { font-family: var(--font-display); font-weight: 700; font-size: 0.92rem; min-width: 160px; }
+.duel-compare .dc-yr { font-family: var(--font-mono); font-weight: 400; font-size: 0.62rem; color: var(--ink-dim); text-transform: uppercase; margin-left: 5px; }
+.duel-compare .dc-note { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.64rem; line-height: 1.4; color: var(--ink-dim); margin-top: 3px; white-space: normal; }
+.duel-compare tr.dc-group td { background: var(--cyan); text-align: left; font-family: var(--font-display); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.5px; text-transform: uppercase; }
+/* ARC is the whole point of this comparison, so its column is tinted */
+.duel-compare td.dc-arc { background: #fdeeb0; font-weight: 700; }
+.duel-compare thead th.dc-arc { background: #2a2a2a; color: var(--yellow); }
+.duel-compare-cap { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-dim); margin: 0 0 22px; }
+
 /* font + colour swatches */
 .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 22px 0; border: var(--bw) solid var(--black); }
 .font-grid.single { grid-template-columns: 1fr; max-width: 280px; margin-left: 0; }
@@ -637,11 +654,11 @@
 
         <p>STR is to duelists what ARC is to Quidditch players, don't put a single point there! ACC and EVA remain your top two priorities.</p>
 
-        <p>STA sits best somewhere between 8 and 10. Try not to go lower than 8 when you reach year 5 because Confringo will still chip you through the dodge via flying splinters, so having a floor matters.</p>
+        <p>STA sits best somewhere between 8 and 12? Try not to go lower than 8 when you reach year 5 because Confringo will still chip you through the dodge via flying splinters, so having a floor matters.</p>
 
-        <p>The real question is WIS vs ARC, the mainstream take is to prioritise WIS to clear WDCs which is fair given Confringo's WDC is at 17. The alternative is to become a devoted follower of Tatsu, pray before every roll, and trust that good dice luck covers the gap. Jokes aside, ARC is where I'd put my money since it directly scales your damage output while WIS just needs to clear a threshold.</p>
+        <p>WIS vs ARC -> the mainstream take is to prioritise WIS to clear WDCs which is fair given Confringo's WDC is at 17. The alternative is to become a devoted follower of Tatsu, pray before every roll, and trust that good dice luck covers the gap. Jokes aside, I'd personally lean ARC since it directly scales your damage output while WIS really just needs to clear a threshold.</p>
 
-        <p>For Years 1 & 2 WIS 7 is plenty, anything above that is wasted unless you're playing pure support, in which case ignore everything I just said.</p>
+        <p>For Years 1 & 2 WIS 8 is plenty, anything above that is wasted unless you're playing pure support, in which case ignore everything I just said.</p>
 
         <div class="addendum">
           <div class="addendum-label">Addendum</div>
@@ -672,8 +689,8 @@
           <span class="stat-chip"><strong>STA</strong> 6</span>
           <span class="stat-chip"><strong>EVA</strong> 9</span>
           <span class="stat-chip"><strong>STR</strong> 0</span>
-          <span class="stat-chip"><strong>WIS</strong> 6</span>
-          <span class="stat-chip"><strong>ARC</strong> 5</span>
+          <span class="stat-chip"><strong>WIS</strong> 7</span>
+          <span class="stat-chip"><strong>ARC</strong> 4</span>
           <span class="stat-chip"><strong>ACC</strong> 9</span>
         </div>
         <p class="label">Year 2(+5)</p>
@@ -681,8 +698,8 @@
           <span class="stat-chip"><strong>STA</strong> 7</span>
           <span class="stat-chip"><strong>EVA</strong> 10</span>
           <span class="stat-chip"><strong>STR</strong> 0</span>
-          <span class="stat-chip"><strong>WIS</strong> 7</span>
-          <span class="stat-chip"><strong>ARC</strong> 6</span>
+          <span class="stat-chip"><strong>WIS</strong> 8</span>
+          <span class="stat-chip"><strong>ARC</strong> 5</span>
           <span class="stat-chip"><strong>ACC</strong> 10</span>
         </div>
         <p>Will update this further once I successfully steal Ming's super-secret high-tech dueling spreadsheet. Operation ongoing.</p>
@@ -703,6 +720,48 @@
           </div>
 
           <p>okay maybe 10 WIS isn't as safe as i thought bc both Eve & Astrea's endgame stats sit at 15+ WIS / 10 ARC :GuiltySweat: </p>
+        </div>
+
+        <div class="position-heading">Field data</div>
+        <p>i went through a bunch of duellists' Y6/Y7 duel stats and the pattern that i keep seeing is every minmaxer with a good win rate just leaves ARC at 10 lmao. the ARC-heavy crowd are a rare breed, and their win rates feels kinda sad. (Alan/lamb i honestly can't tell how many times he won bc his trunk was already hidden for inactivity by the time I was collecting data, but Hanako's been at this for years and has all of 5 wins to show for it, <s>though tbh i don't think the problem is high ARC / low WIS, it's that the EVA is just way too low</s>)</p>
+
+        <div class="duel-compare-wrap">
+          <table class="duel-compare">
+            <thead>
+              <tr>
+                <th class="dc-name">Duellist</th>
+                <th>STA</th><th>EVA</th><th>STR</th><th>WIS</th><th class="dc-arc">ARC</th><th>ACC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="dc-group"><td colspan="7">High WIS</td></tr>
+              <tr><td class="dc-name">Astrea Soleil Neptune<span class="dc-yr">Y7</span></td><td>8</td><td>20</td><td>2</td><td>16</td><td class="dc-arc">10</td><td>20</td></tr>
+              <tr><td class="dc-name">Bridget Collins<span class="dc-yr">Y7</span></td><td>14</td><td>15</td><td>7</td><td>17</td><td class="dc-arc">10</td><td>17</td></tr>
+              <tr><td class="dc-name">Ruby Cazares<span class="dc-yr">Y7</span></td><td>10</td><td>14</td><td>5</td><td>17</td><td class="dc-arc">12</td><td>17</td></tr>
+              <tr><td class="dc-name">Dmitri Jones<span class="dc-yr">Y7</span></td><td>19</td><td>11</td><td>2</td><td>18</td><td class="dc-arc">11</td><td>15</td></tr>
+              <tr><td class="dc-name">Galton Lansdale<span class="dc-yr">Y7</span></td><td>11</td><td>18</td><td>3</td><td>20</td><td class="dc-arc">5</td><td>17</td></tr>
+              <tr><td class="dc-name">Evelynn Decipio<span class="dc-yr">Y7</span></td><td>10</td><td>18</td><td>2</td><td>18</td><td class="dc-arc">10</td><td>22</td></tr>
+              <tr><td class="dc-name">Cassius Eden<span class="dc-yr">Y7</span></td><td>11</td><td>15</td><td>0</td><td>20</td><td class="dc-arc">10</td><td>15</td></tr>
+              <tr><td class="dc-name">Rose Moon<span class="dc-yr">Y7</span></td><td>12</td><td>15</td><td>5</td><td>15</td><td class="dc-arc">13</td><td>15</td></tr>
+              <tr><td class="dc-name">Lea Hirsch<span class="dc-yr">Y6</span></td><td>9</td><td>17</td><td>0</td><td>14</td><td class="dc-arc">10</td><td>17</td></tr>
+              <tr><td class="dc-name">Aida Mòrsgor-Ama Ellwood<span class="dc-yr">Y6</span></td><td>10</td><td>16</td><td>1</td><td>15</td><td class="dc-arc">11</td><td>20</td></tr>              
+              <tr><td class="dc-name">Allister-Jameson MacAllister<span class="dc-yr">Y6</span></td><td>7</td><td>11</td><td>5</td><td>15</td><td class="dc-arc">10</td><td>15</td></tr>              
+              <tr><td class="dc-name">Pericles Dralt<span class="dc-yr">Y7</span><span class="dc-note">later a broomracer, not a duellist &mdash; but kept the duellist mindset and left ARC at 10</span></td><td>10</td><td>15</td><td>5</td><td>20</td><td class="dc-arc">10</td><td>16</td></tr>
+              <tr><td class="dc-name">Dealla Prince<span class="dc-yr">Y7</span><span class="dc-note">same as above</span></td><td>7</td><td>16</td><td>4</td><td>18</td><td class="dc-arc">10</td><td>22</td></tr>
+
+              <tr class="dc-group"><td colspan="7">High ARC</td></tr>
+              <tr><td class="dc-name">Alan Vanes<span class="dc-yr">Y7</span></td><td>13</td><td>20</td><td>2</td><td>7</td><td class="dc-arc">15</td><td>13</td></tr>
+              <tr><td class="dc-name">Hanako Tone<span class="dc-yr">Y7</span></td><td>12</td><td>6</td><td>3</td><td>10</td><td class="dc-arc">15</td><td>21</td></tr>
+
+              <tr class="dc-group"><td colspan="7">Outliers &mdash; EVA &amp; ACC too low</td></tr>
+              <tr><td class="dc-name">Jack Burnett<span class="dc-yr">Y7</span></td><td>6</td><td>10</td><td>6</td><td>25</td><td class="dc-arc">10</td><td>10</td></tr>
+              <tr><td class="dc-name">Damion White<span class="dc-yr">Y7</span></td><td>19</td><td>11</td><td>9</td><td>11</td><td class="dc-arc">11</td><td>12</td></tr>
+              <tr><td class="dc-name">Meenauh Silmataurea<span class="dc-yr">Y7</span><span class="dc-note">high win rate somehow though, 9+ wins</span></td><td>9</td><td>10</td><td>2</td><td>25</td><td class="dc-arc">13</td><td>13</td></tr>
+
+              <tr class="dc-group"><td colspan="7">Jake</td></tr>
+              <tr><td class="dc-name">Jake Morris<span class="dc-yr">Y7</span><span class="dc-note">sorry Baby Badger gets his own category bc he doesn't fit anywhere above... his EVA and ACC are perfectly fine, but WIS and ARC aren't high either, and still just 5 wins after all these years. i guess stacking EVA alone won't win you games lmao</span></td><td>7</td><td>20</td><td>1</td><td>11</td><td class="dc-arc">6</td><td>15</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
