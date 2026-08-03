@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Claims</title>
+<!-- ghost page: nothing links here on purpose, and this keeps it out of
+     search results. url-only. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../favicon.svg?v=5" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../neo.css">
+<script src="../neo-motion.js" defer></script>
+<style>
+/* page-specific — shared chrome lives in ../neo.css */
+
+/* ============================================================
+   VOICE CLAIMS — one shared <audio>, so starting a clip stops
+   whatever was already playing. Each row is its own transport:
+   play button, the line as its label, and a seekable bar.
+   ============================================================ */
+.vc-speaker {
+  border: var(--bw) solid var(--black);
+  background: var(--card); box-shadow: var(--shadow);
+  margin: 0 0 32px;
+}
+.vc-speaker-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--black); color: var(--card); padding: 12px 16px;
+}
+.vc-speaker-name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 1.15rem; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.vc-speaker-count {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.62rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: var(--yellow); color: var(--black);
+  border: 2px solid var(--black); padding: 3px 8px; white-space: nowrap;
+}
+.vc-list { list-style: none; margin: 0; padding: 0; }
+.vc-track {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 13px 16px; margin: 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.3);
+}
+.vc-track:last-child { border-bottom: none; }
+.vc-track.is-playing { background: var(--yellow); }
+
+.vc-play {
+  flex: none; width: 40px; height: 40px; margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; line-height: 1; color: var(--black);
+  background: var(--cyan); border: var(--bw) solid var(--black);
+  box-shadow: var(--shadow-sm); cursor: pointer;
+  transition: transform 0.08s steps(2, end), box-shadow 0.08s steps(2, end);
+}
+.vc-play:hover { background: var(--pink); }
+.vc-play:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--black); }
+.vc-play:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
+.vc-track.is-playing .vc-play { background: var(--pink); }
+
+.vc-body { flex: 1 1 auto; min-width: 0; }
+.vc-line {
+  font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.6;
+  margin: 0 0 9px; max-width: 68ch; color: var(--black);
+}
+.vc-num { font-weight: 700; }
+
+/* the bar doubles as a scrubber — click anywhere to seek */
+.vc-bar {
+  position: relative; height: 12px; cursor: pointer;
+  background: var(--paper); border: 2px solid var(--black);
+}
+.vc-bar:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+.vc-fill {
+  position: absolute; inset: 0 auto 0 0; width: 0;
+  background: var(--black); pointer-events: none;
+}
+.vc-meta {
+  display: flex; justify-content: space-between; gap: 10px; margin-top: 5px;
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 1px; color: var(--ink-dim);
+}
+
+.vc-empty {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-dim);
+  text-align: center; padding: 30px 14px;
+}
+.vc-empty::before { content: "\2014\00a0\00a0"; }
+.vc-empty::after  { content: "\00a0\00a0\2014"; }
+
+/* one line of housekeeping under the roster */
+.vc-note {
+  font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.7;
+  color: var(--ink-dim); border-top: var(--bw) dashed var(--black);
+  padding-top: 14px; margin-top: 34px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vc-play { transition: none; }
+}
+@media (max-width: 480px) {
+  .vc-track { padding: 11px 10px; gap: 9px; }
+  .vc-play { width: 34px; height: 34px; }
+  .vc-line { font-size: 0.78rem; }
+  .vc-speaker-name { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="topbar-home" href="../">✦ Stuff</a>
+  <nav class="topbar-links">
+    <a href="../quidmodding/">Rule Book</a>
+    <a href="../gringotts/">Coin Math</a>
+    <a href="../bbcode-fixer/">Tag Check</a>
+    <a href="../playbook/">Dirty Tricks</a>
+    <a href="../final-v7-real-final/">Junk Drawer</a>
+  </nav>
+</header>
+<div class="frame">
+  <div class="page">
+
+    <div class="masthead">
+      <div class="eyebrow">mp3s, unsolicited</div>
+      <h1>Voice Claims</h1>
+      <p class="subtitle">how they sound in my head. hit play.</p>
+    </div>
+
+    <div class="vc-speaker">
+      <div class="vc-speaker-head">
+        <span class="vc-speaker-name">Mamori</span>
+        <span class="vc-speaker-count" id="vc-count-mamori">&mdash;</span>
+      </div>
+      <ul class="vc-list" id="vc-list-mamori"></ul>
+      <div class="vc-empty" id="vc-empty-mamori" hidden>no clips yet</div>
+    </div>
+
+    <div class="vc-speaker">
+      <div class="vc-speaker-head">
+        <span class="vc-speaker-name">Ilya</span>
+        <span class="vc-speaker-count" id="vc-count-ilya">soon</span>
+      </div>
+      <ul class="vc-list" id="vc-list-ilya"></ul>
+      <div class="vc-empty" id="vc-empty-ilya" hidden>no clips yet</div>
+    </div>
+
+    <p class="vc-note">one at a time &mdash; starting a clip stops the last one. click the bar to scrub, or focus it and use &larr; &rarr; for 5s jumps.</p>
+
+  </div>
+</div>
+
+<script>
+// ==================== VOICE CLAIMS ====================
+// To add a clip: drop the mp3 in quote/ and add its filename below.
+// The row label is the filename minus the "N. " prefix and ".mp3",
+// so name the file with the line itself.
+// To add a speaker: add a key here, then copy a .vc-speaker block above
+// with matching vc-list-<key>, vc-count-<key> and vc-empty-<key> ids.
+const VOICE_CLAIM_DIR = 'quote/';
+const VOICE_CLAIMS = {
+  mamori: [
+    "1. I did a thing, it makes no sense, so now I'm just gonna talk super fast and dress it all up with a bunch of fancy words until everyone just agrees that it's genius.mp3",
+    "2. If the referee wanted a clean match he should’ve made the penalties worse, anyway, quit moaning and pass me the bloody Quaffle.mp3",
+    "3. I fucking hate Quidditch, every match takes five years off my life and I’m thirteen, so this seems medically irresponsible.mp3"
+  ],
+  ilya: []
+};
+
+(function voiceClaims() {
+  const lists = document.querySelectorAll('.vc-list');
+  if (!lists.length) return;
+
+  // one element for the whole page: starting a clip stops the last one
+  const audio = new Audio();
+  audio.preload = 'none';
+  let currentRow = null;
+
+  function fmt(s) {
+    if (!isFinite(s) || s < 0) return '--:--';
+    const m = Math.floor(s / 60);
+    return m + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  }
+
+  function buildRow(file, i) {
+    const label = file.replace(/\.mp3$/i, '').replace(/^\s*\d+[.)]\s*/, '');
+    const num = String(i + 1).padStart(2, '0');
+    const li = document.createElement('li');
+    li.className = 'vc-track';
+    li.dataset.src = VOICE_CLAIM_DIR + encodeURIComponent(file);
+    li.innerHTML =
+      '<button class="vc-play" type="button" aria-pressed="false">' +
+        '<span class="vc-ico" aria-hidden="true">▶</span>' +
+      '</button>' +
+      '<div class="vc-body">' +
+        '<p class="vc-line"></p>' +
+        '<div class="vc-bar" role="slider" tabindex="0" aria-label="Seek"' +
+             ' aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
+          '<div class="vc-fill"></div>' +
+        '</div>' +
+        '<div class="vc-meta">' +
+          '<span class="vc-num">clip ' + num + '</span>' +
+          '<span class="vc-t"><span class="vc-cur">0:00</span> / <span class="vc-dur">--:--</span></span>' +
+        '</div>' +
+      '</div>';
+    li.querySelector('.vc-line').textContent = label;
+    li.querySelector('.vc-play').setAttribute('aria-label', 'Play: ' + label);
+
+    // metadata-only probe so the duration is on screen before first play
+    const probe = new Audio();
+    probe.preload = 'metadata';
+    probe.addEventListener('loadedmetadata', () => {
+      li.querySelector('.vc-dur').textContent = fmt(probe.duration);
+    });
+    probe.src = li.dataset.src;
+
+    return li;
+  }
+
+  function paint(li, cur, dur) {
+    const pct = dur > 0 ? Math.min(100, (cur / dur) * 100) : 0;
+    li.querySelector('.vc-fill').style.width = pct + '%';
+    li.querySelector('.vc-bar').setAttribute('aria-valuenow', Math.round(pct));
+    li.querySelector('.vc-cur').textContent = fmt(cur);
+    if (dur > 0) li.querySelector('.vc-dur').textContent = fmt(dur);
+  }
+
+  function setIcon(li, playing) {
+    li.classList.toggle('is-playing', playing);
+    li.querySelector('.vc-play').setAttribute('aria-pressed', playing ? 'true' : 'false');
+    li.querySelector('.vc-ico').textContent = playing ? '❚❚' : '▶';
+  }
+
+  function reset(li) {
+    setIcon(li, false);
+    paint(li, 0, 0);
+    li.querySelector('.vc-cur').textContent = '0:00';
+  }
+
+  function toggle(li) {
+    if (currentRow === li) {
+      if (audio.paused) audio.play(); else audio.pause();
+      return;
+    }
+    if (currentRow) reset(currentRow);
+    currentRow = li;
+    audio.src = li.dataset.src;
+    audio.play();
+  }
+
+  function seek(li, ratio) {
+    if (currentRow !== li) {
+      toggle(li);
+      audio.addEventListener('loadedmetadata', function once() {
+        audio.removeEventListener('loadedmetadata', once);
+        audio.currentTime = ratio * audio.duration;
+      });
+      return;
+    }
+    if (isFinite(audio.duration)) audio.currentTime = ratio * audio.duration;
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    if (currentRow) paint(currentRow, audio.currentTime, audio.duration);
+  });
+  audio.addEventListener('play',  () => { if (currentRow) setIcon(currentRow, true); });
+  audio.addEventListener('pause', () => { if (currentRow) setIcon(currentRow, false); });
+  audio.addEventListener('ended', () => { if (currentRow) reset(currentRow); });
+  audio.addEventListener('error', () => {
+    if (!currentRow) return;
+    reset(currentRow);
+    currentRow.querySelector('.vc-dur').textContent = 'missing';
+  });
+
+  lists.forEach(list => {
+    const key = list.id.replace('vc-list-', '');
+    const files = VOICE_CLAIMS[key] || [];
+    files.forEach((f, i) => list.appendChild(buildRow(f, i)));
+
+    const count = document.getElementById('vc-count-' + key);
+    if (count) count.textContent = files.length
+      ? files.length + (files.length === 1 ? ' clip' : ' clips')
+      : 'soon';
+
+    const empty = document.getElementById('vc-empty-' + key);
+    if (empty) empty.hidden = files.length > 0;
+  });
+
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.vc-play');
+    if (btn) { toggle(btn.closest('.vc-track')); return; }
+    const bar = e.target.closest('.vc-bar');
+    if (bar) {
+      const r = bar.getBoundingClientRect();
+      seek(bar.closest('.vc-track'), Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)));
+    }
+  });
+
+  // Enter/Space plays the focused bar, arrows scrub it by 5s
+  document.addEventListener('keydown', e => {
+    const bar = e.target.closest && e.target.closest('.vc-bar');
+    if (!bar) return;
+    const li = bar.closest('.vc-track');
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(li); return; }
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    if (currentRow !== li || !isFinite(audio.duration)) return;
+    const step = e.key === 'ArrowRight' ? 5 : -5;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + step));
+  });
+})();
+</script>
+<footer class="site-footer">
+  <span class="footer-star">✦</span>
+  <span>built instead of doing something productive</span>
+  <span class="footer-links">
+    <a href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">pls fund puff brooms</a>
+    <a href="https://hogwarts.io/viewtopic.php?t=21853" target="_blank" rel="noopener">koldov brooms need u too</a>
+  </span>
+</footer>
+</body>
+</html>
