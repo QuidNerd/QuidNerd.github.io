@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dirty Tricks</title>
+<title>Ammo</title>
 <link rel="icon" href="../favicon.svg?v=5" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,6 +84,114 @@
 }
 #protected-content { display: none; }
 
+/* ---------- the drawer: public precedent file, sits above the gate ---------- */
+.drawer { margin-bottom: 34px; }
+.drawer-handle {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  text-align: left; padding: 0; background: var(--black); color: var(--card);
+  box-shadow: 6px 6px 0 var(--yellow);
+}
+.drawer-handle:hover { background: var(--black); box-shadow: 3px 3px 0 var(--yellow); }
+.drawer-handle:active { box-shadow: 0 0 0 var(--yellow); }
+.drawer-knob {
+  flex: none; width: 54px; align-self: stretch; display: grid; place-items: center;
+  background: var(--yellow); border-right: var(--bw) solid var(--black);
+}
+.drawer-knob i {
+  width: 22px; height: 22px; border-radius: 50%; background: var(--black);
+  box-shadow: inset -4px -4px 0 #444; transition: transform 0.2s ease;
+}
+.drawer-handle:hover .drawer-knob i { transform: scale(1.18); }
+.drawer-label { flex: 1; padding: 12px 0; line-height: 1.15; }
+.drawer-label b {
+  display: block; font-size: clamp(1.05rem, 4vw, 1.35rem);
+  letter-spacing: -0.5px; text-transform: uppercase;
+}
+.drawer-label small {
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--yellow);
+}
+.drawer-count {
+  flex: none; margin-right: 14px; font-family: var(--font-mono); font-size: 0.72rem;
+  padding: 4px 9px; background: var(--card); color: var(--black); border: 2px solid var(--card);
+}
+.drawer-handle[aria-expanded="true"] .drawer-count::after { content: " · open"; }
+
+.drawer-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.28s ease; }
+.drawer-body > div { overflow: hidden; }
+.drawer.open .drawer-body { grid-template-rows: 1fr; }
+.drawer-inner {
+  margin-top: 0; padding: 26px 6px 8px;
+  display: flex; flex-direction: column; gap: 34px;
+}
+.drawer-intro {
+  font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.6; color: var(--ink-dim);
+}
+
+.file { position: relative; margin-top: 14px; }
+.file:nth-child(odd)  { transform: rotate(-0.6deg); }
+.file:nth-child(even) { transform: rotate(0.5deg); }
+.file-tab {
+  display: inline-block; position: relative; top: 3px; z-index: 1;
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: var(--cyan); border: var(--bw) solid var(--black); border-bottom: none;
+  padding: 5px 12px 4px;
+}
+.file-card {
+  position: relative; background: var(--card);
+  border: var(--bw) solid var(--black); padding: 20px 20px 18px;
+}
+.file-num {
+  position: absolute; right: 14px; top: -6px; font-family: var(--font-display); font-weight: 700;
+  font-size: 4.4rem; line-height: 1; letter-spacing: -4px;
+  color: transparent; -webkit-text-stroke: 2px var(--black); opacity: 0.16; pointer-events: none;
+}
+.file-match {
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+}
+.file-title {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  font-size: clamp(1.2rem, 4.6vw, 1.55rem); letter-spacing: -1px; line-height: 1.05;
+  margin-bottom: 14px; max-width: 88%;
+}
+.file-ruling {
+  background: var(--black); color: var(--card); padding: 12px 14px;
+  font-size: 0.92rem; line-height: 1.55;
+}
+.file-ruling::before {
+  content: "What happened"; display: block; margin-bottom: 5px;
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--yellow);
+}
+.file-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.file-actions a, .file-actions button {
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0;
+  text-transform: uppercase; color: var(--black); text-decoration: none;
+  background: var(--yellow); border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black); padding: 6px 10px; cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+}
+.file-actions a:hover, .file-actions button:hover {
+  background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black);
+}
+.file-actions button.done { background: var(--lime); }
+.file-stamp {
+  position: absolute; right: 16px; bottom: 14px; transform: rotate(-9deg);
+  font-family: var(--font-display); font-weight: 700; font-size: 0.85rem;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--red-bright);
+  border: 3px solid var(--red-bright); padding: 2px 8px; opacity: 0.78; pointer-events: none;
+}
+@media (max-width: 620px) {
+  .file-stamp { display: none; }
+  .file-title { max-width: 100%; }
+  .file-num { font-size: 3.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer-body, .drawer-knob i { transition: none; }
+}
+
 </style>
 </head>
 <body>
@@ -93,7 +201,7 @@
     <a href="../quidmodding/">Rule Book</a>
     <a href="../gringotts/">Coin Math</a>
     <a href="../bbcode-fixer/">Tag Check</a>
-    <span class="here">Dirty Tricks</span>
+    <span class="here">Ammo</span>
     <a href="../final-v7-real-final/">Junk Drawer</a>
   </nav>
 </header>
@@ -102,9 +210,25 @@
 
     <div class="masthead">
       <div class="eyebrow">another page for quid again</div>
-      <h1>Dirty Tricks</h1>
+      <h1>Ammo</h1>
       <p class="subtitle">you'll get the idea of what this place is for once you read a few</p>
     </div>
+
+    <section class="drawer" id="drawer">
+      <button class="drawer-handle" id="drawer-handle" aria-expanded="false" aria-controls="drawer-body">
+        <span class="drawer-knob"><i></i></span>
+        <span class="drawer-label"><b>Receipts Drawer</b><small>in case anyone challenges me</small></span>
+        <span class="drawer-count" id="drawer-count"></span>
+      </button>
+      <div class="drawer-body" id="drawer-body">
+        <div>
+          <div class="drawer-inner">
+            <p class="drawer-intro">this section exists as a preemptive measure because im fully aware that someone, somewhere, will have thoughts about some of my modding decisions, and i would like to have my evidence organized and ready before that conversation happens.</p>
+            <div id="file-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <div class="gate" id="gate">
       <div class="gate-eyebrow">A word, please</div>
@@ -208,6 +332,71 @@ function renderBBCode(text) {
   return renderNodes(buildTree(tokenize(text)));
 }
 
+// ==================== ADD NEW PRECEDENTS HERE ====================
+// Each entry: { match, round, title, ruling, url }
+const PRECEDENTS = [
+  {
+    match: "Gryffindor vs Slytherin · Spring 2025",
+    round: "R1",
+    title: "Undeclared ricochet target",
+    ruling: "The ricochet target was not declared, so a random target was rolled using Tatsu.",
+    url: "https://hogwarts.io/viewtopic.php?t=38726&start=20#p1237563"
+  },
+  {
+    match: "Gryffindor vs Slytherin · Spring 2025",
+    round: "R2",
+    title: "Penalty lap, partner dual-wields",
+    ruling: "One beater was serving a penalty lap, and the other beater was allowed to dual-wield.",
+    url: "https://hogwarts.io/viewtopic.php?t=38726&start=40#p1253170"
+  },
+  {
+    match: "Ravenclaw vs Gryffindor · Spring 2024",
+    round: "R2",
+    title: "Missed posts, 2nd string steps in",
+    ruling: "The 1st-string chaser missed two rounds of posting, so the 2nd-string chaser was pulled into play and executed the 1st-string chaser's action.",
+    url: "https://hogwarts.io/viewtopic.php?p=988212#p988212"
+  },
+];
+// ================================================================
+
+function renderDrawer() {
+  document.getElementById('drawer-count').textContent = PRECEDENTS.length + ' on file';
+  document.getElementById('file-list').innerHTML = PRECEDENTS.map((p, i) => `
+    <div class="file">
+      <span class="file-tab">Precedent No. ${String(i + 1).padStart(2, '0')}</span>
+      <div class="file-card">
+        <span class="file-num">${i + 1}</span>
+        <div class="file-match">${esc(p.match)} · ${esc(p.round)}</div>
+        <div class="file-title">${esc(p.title)}</div>
+        <div class="file-ruling">${esc(p.ruling)}</div>
+        <div class="file-actions">
+          <a href="${esc(p.url)}" target="_blank" rel="noopener">Open the thread ↗</a>
+          <button type="button" data-cite="${i}">Copy cite</button>
+        </div>
+        <span class="file-stamp">On record</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('drawer-handle').addEventListener('click', e => {
+  const d = document.getElementById('drawer');
+  const open = d.classList.toggle('open');
+  e.currentTarget.setAttribute('aria-expanded', open);
+});
+
+document.getElementById('file-list').addEventListener('click', e => {
+  const btn = e.target.closest('[data-cite]');
+  if (!btn) return;
+  const p = PRECEDENTS[btn.dataset.cite];
+  const text = `Precedent: ${p.match}, ${p.round}. ${p.ruling} ${p.url}`;
+  const flash = () => {
+    btn.textContent = 'Copied ✓'; btn.classList.add('done');
+    setTimeout(() => { btn.textContent = 'Copy cite'; btn.classList.remove('done'); }, 1400);
+  };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(flash, () => {});
+});
+
 const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
 
 function renderRefs(refs) {
@@ -259,6 +448,7 @@ function tryUnlock() {
 document.getElementById('gate-submit').addEventListener('click', tryUnlock);
 document.getElementById('gate-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
 
+renderDrawer();
 if (localStorage.getItem(LOCK_KEY) === 'true') unlock();
 </script>
 <footer class="site-footer">
