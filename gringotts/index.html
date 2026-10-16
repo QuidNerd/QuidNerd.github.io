@@ -7,9 +7,9 @@
 <link rel="icon" href="../favicon.svg?v=5" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
-<script src="../neo-motion.js" defer></script>
+<script src="../neo-motion.js"></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css (width, selection, etc).
    Colour roles on this page: yellow = you type here, black = the answer.
@@ -17,9 +17,9 @@
    sequence, so numbering them would imply an order that does not exist. */
 
 /* reference callout — each calculator carries the rates it actually uses */
-.rate-note { border: 2px dashed var(--black); padding: 10px 12px; margin: 0 0 18px; background: var(--card); }
+.rate-note { border: 1px dashed var(--rule-strong); padding: 10px 12px; margin: 0 0 18px; background: var(--card); }
 .rate-note .line1 { font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; }
-.rate-note .line1 b { background: var(--yellow); border: 2px solid var(--black); padding: 1px 6px; }
+.rate-note .line1 b { background: var(--yellow); border: 1px solid var(--rule); padding: 1px 6px; }
 .rate-note .line2 { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-dim); margin-top: 6px; line-height: 1.5; }
 
 /* inputs live on the tinted, labelled surface */
@@ -42,7 +42,7 @@
 }
 .field.wide input { width: 190px; font-size: 0.9rem; }
 
-.rule-dotted { width: 100%; border-top: 2px dashed var(--black); margin: 18px 0; }
+.rule-dotted { width: 100%; border-top: 1px dashed var(--rule-strong); margin: 18px 0; }
 .field-group-label { margin-top: 0; }
 .subgroup + .subgroup { margin-top: 0; }
 
@@ -50,25 +50,25 @@
 .result { margin-top: 14px; }
 .result-tag {
   display: inline-block; font-family: var(--font-mono); font-weight: 700;
-  font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
-  background: var(--yellow); color: var(--black);
-  padding: 3px 8px; margin-bottom: 12px;
+  font-size: 0.72rem; letter-spacing: 0; text-transform: none;
+  color: var(--ink-dim);
+  padding: 0; margin-bottom: 8px;
 }
 .result .headline {
-  font-family: var(--font-display); font-weight: 700;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
   font-size: clamp(1.5rem, 6.5vw, 2.3rem); line-height: 1.05;
-  text-transform: uppercase; letter-spacing: -1px; color: var(--yellow);
+  text-transform: uppercase; letter-spacing: 0; color: var(--black);
 }
 .result .sub-line {
   font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.7;
-  color: #b9b9b9; margin-top: 14px;
-  border-top: 2px solid #3a3a3a; padding-top: 11px;
+  color: var(--ink-dim); margin-top: 14px;
+  border-top: 1px dashed rgba(0,0,0,0.25); padding-top: 11px;
 }
 .result .date-line {
   font-family: var(--font-mono); font-size: 0.82rem; margin-top: 12px;
-  text-transform: uppercase; color: var(--card);
+  text-transform: uppercase; color: var(--black);
 }
-.result .date-line b { background: var(--yellow); color: var(--black); padding: 1px 6px; }
+.result .date-line b { background: var(--folder); color: var(--black); padding: 1px 6px; border-radius: 2px; }
 
 @media (max-width: 620px) {
   /* stack the equation so nothing gets squeezed */
@@ -82,27 +82,19 @@
 }
 </style>
 </head>
-<body>
+<body class="f-lime">
 <header class="topbar">
-  <a class="topbar-home" href="../">✦ Stuff</a>
-  <nav class="topbar-links">
-    <a href="../quidmodding/">Rule Book</a>
-    <span class="here">Coin Math</span>
-    <a href="../bbcode-fixer/">Tag Check</a>
-    <a href="../playbook/">Ammo</a>
-    <a href="../final-v7-real-final/">Junk Drawer</a>
-  </nav>
+  <a class="topbar-home" href="../" aria-label="Junk Drawer home">✦ Junk Drawer ✦</a>
 </header>
 <div class="frame">
-  <div class="page">
-
-    <div class="masthead">
-      <div class="eyebrow">Eww, math</div>
+  <div class="masthead">
       <h1>Coin Math</h1>
-      <p class="subtitle">how many potato peelings your money is worth and how long until you can afford the thing you want</p>
     </div>
 
-    <section class="block" id="chapter-1">
+  <div class="page" data-tab="Coin Math">
+  <div class="sheet" data-tab="Coin Math">
+
+    <section class="block" id="chapter-1" data-c="lime">
       <div class="block-head">
         <h2 class="block-title">Potato peeling converter</h2>
       </div>
@@ -133,7 +125,7 @@
       </div>
     </section>
 
-    <section class="block" id="chapter-2">
+    <section class="block" id="chapter-2" data-c="orange">
       <div class="block-head">
         <h2 class="block-title">Stipend savings planner</h2>
       </div>
@@ -189,6 +181,7 @@
       </div>
     </section>
 
+  </div>
   </div>
 </div>
 <footer class="site-footer">
@@ -284,6 +277,22 @@ document.querySelectorAll('.caret-hint').forEach(function (wrap) {
 document.getElementById('ds-startdate').value = todayISO();
 calcPeelings();
 calcDays();
+
+// arriving on #converter or #planner (the home page links straight to each
+// tool): let the folder open first, then glide down to that tool. The hashes
+// deliberately match no id, so the browser does not jump there by itself
+// and throw off the opening.
+const TOOL_HASH = { converter: 'chapter-1', planner: 'chapter-2' };
+const toolTarget = document.getElementById(TOOL_HASH[location.hash.slice(1)] || '');
+if (toolTarget) {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let userScrolled = false;
+  addEventListener('wheel', () => { userScrolled = true; }, { once: true, passive: true });
+  addEventListener('touchmove', () => { userScrolled = true; }, { once: true, passive: true });
+  setTimeout(() => {
+    if (!userScrolled) toolTarget.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+  }, still ? 0 : 2100);
+}
 </script>
 </body>
 </html>

@@ -7,9 +7,9 @@
 <link rel="icon" href="../favicon.svg?v=5" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
-<script src="../neo-motion.js" defer></script>
+<script src="../neo-motion.js"></script>
 <style>
 /* Colour roles on this page: yellow = you type here, green/red = the verdict,
    and the depth colours below are functional (they encode nesting level).
@@ -40,11 +40,11 @@
   font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
   letter-spacing: 1px; text-transform: uppercase;
   color: var(--black); text-decoration: none; cursor: pointer;
-  background: var(--card); border: 2px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black); padding: 7px 11px;
-  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+  background: var(--card); border: 1px solid var(--rule);
+  box-shadow: var(--lift-sm); padding: 7px 11px;
+  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease), background var(--quick) var(--ease);
 }
-.toolbar a:hover { background: var(--yellow); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
+.toolbar a:hover { background: var(--yellow); transform: translateY(-2px); box-shadow: var(--lift); }
 
 /* ---- zone 2: output ---- */
 #code-wrap { position: relative; max-height: 460px; overflow: auto; background: var(--card); }
@@ -57,14 +57,14 @@
 .line-num {
   flex: none; width: 42px; text-align: right; padding-right: 12px; user-select: none;
   color: var(--ink-dim); background: var(--paper);
-  border-right: 2px solid var(--black); font-weight: 700;
+  border-right: 1px solid var(--rule); font-weight: 700;
 }
 .line-content { padding-left: 12px; white-space: pre; }
 
 /* NOTE: .tag here = a BBCode token in the output, not a UI chip.
    Deliberately flat — shadowing inline code would wreck the view. */
 .tag { cursor: pointer; font-weight: 700; padding: 0 2px; }
-.tag:hover { background: var(--yellow); outline: 2px solid var(--black); }
+.tag:hover { background: var(--yellow); outline: 1px solid var(--rule); }
 .tag.flash { background: var(--black) !important; color: var(--yellow) !important; }
 .tag-depth0 { color: var(--depth0); }
 .tag-depth1 { color: var(--depth1); }
@@ -73,7 +73,7 @@
 .tag-depth4 { color: var(--depth4); }
 .tag-depth5 { color: var(--depth5); }
 .tag-warning { text-decoration: underline dotted currentColor; }
-.tag-error { color: #fff; background: var(--red-bright); outline: 2px solid var(--black); font-weight: 700; }
+.tag-error { color: #fff; background: var(--red-bright); outline: 1px solid var(--rule); font-weight: 700; }
 .tag-skip { color: var(--ink-faint); font-weight: 400; }
 
 #arrow-svg { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5; overflow: visible; }
@@ -84,7 +84,7 @@
 .verdict-bar {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.75rem;
   letter-spacing: 1px; text-transform: uppercase;
-  padding: 10px 14px; border-bottom: var(--bw) solid var(--black);
+  padding: 10px 14px; border-bottom: 1px solid var(--rule);
 }
 .verdict-good .verdict-bar { background: var(--lime); }
 .verdict-bad  .verdict-bar { background: var(--red); }
@@ -93,12 +93,12 @@
 .issue-item {
   font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5;
   padding: 10px 12px; margin-bottom: 8px; cursor: pointer;
-  background: var(--card); border: 2px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+  background: var(--card); border: 1px solid var(--rule);
+  box-shadow: var(--lift-sm);
+  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease), background var(--quick) var(--ease);
 }
 .issue-item:last-child { margin-bottom: 0; }
-.issue-item:hover { background: var(--yellow); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
+.issue-item:hover { background: var(--yellow); transform: translateY(-2px); box-shadow: var(--lift); }
 .issue-item b { font-family: var(--font-mono); color: var(--red-bright); }
 
 
@@ -109,27 +109,19 @@
 
 </style>
 </head>
-<body>
+<body class="f-cyan">
 <header class="topbar">
-  <a class="topbar-home" href="../">✦ Stuff</a>
-  <nav class="topbar-links">
-    <a href="../quidmodding/">Rule Book</a>
-    <a href="../gringotts/">Coin Math</a>
-    <span class="here">Tag Check</span>
-    <a href="../playbook/">Ammo</a>
-    <a href="../final-v7-real-final/">Junk Drawer</a>
-  </nav>
+  <a class="topbar-home" href="../" aria-label="Junk Drawer home">✦ Junk Drawer ✦</a>
 </header>
 <div class="frame">
-  <div class="page">
-
-    <div class="masthead">
-      <div class="eyebrow">Find the broken tag</div>
+  <div class="masthead">
       <h1>Tag Check</h1>
-      <p class="subtitle">paste your BBCode and find out which tag you forgor to close</p>
     </div>
 
-    <section class="block">
+  <div class="page" data-tab="Tag Check">
+  <div class="sheet" data-tab="Tag Check">
+
+    <section class="block" data-c="cyan">
       <div class="block-head">
         <span class="block-step">1</span>
         <h2 class="block-title">Paste your code</h2>
@@ -146,7 +138,7 @@
       </div>
     </section>
 
-    <section class="block">
+    <section class="block" data-c="cyan">
       <div class="block-head">
         <span class="block-step">2</span>
         <h2 class="block-title">How it nests</h2>
@@ -161,10 +153,10 @@
       </div>
     </section>
 
-    <section class="block">
+    <section class="block" data-c="cyan">
       <div class="block-head">
         <span class="block-step">3</span>
-        <h2 class="block-title">Verdict</h2>
+        <h2 class="block-title">Results</h2>
       </div>
       <div class="surface surface-headed">
         <div class="surface-head"><span class="head-mark">&#9654;</span> Step 3 &mdash; what&rsquo;s broken</div>
@@ -172,6 +164,7 @@
       </div>
     </section>
 
+  </div>
   </div>
 </div>
 

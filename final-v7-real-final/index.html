@@ -3,15 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Junk Drawer</title>
+<title>final_v7_REAL_final.docx</title>
 <link rel="icon" href="../favicon.svg?v=5" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
-<script src="../neo-motion.js" defer></script>
+<script src="../neo-motion.js"></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css */
+/* this page's name is a long filename, so its title runs smaller than the
+   others to stay on one line (its underscores would otherwise sit on top of
+   a second line) */
+.masthead h1 { font-size: clamp(2rem, 6.2vw, 4.5rem); line-height: 0.95; }   /* sized to fit the folder width on one line */
 @font-face { font-family: 'Zapfino'; src: url('Zapfino.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Snell Roundhand'; src: url('Snell_Roundhand.otf') format('opentype'); font-display: swap; }
 @font-face { font-family: 'American Typewriter'; src: url('American_Typewriter.ttf') format('truetype'); font-display: swap; }
@@ -41,8 +45,8 @@
   font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
   letter-spacing: 1px; text-transform: uppercase;
   background: var(--cyan); color: var(--black);
-  border: var(--bw) solid var(--black);
-  box-shadow: 4px 4px 0 var(--black);
+  border: 1px solid var(--rule);
+  box-shadow: var(--lift-sm);
   padding: 7px 11px; margin-top: 6px;
   transform: rotate(-2deg);
 }
@@ -66,7 +70,7 @@
   cursor: pointer; user-select: none;
   background: var(--black); color: transparent;
   box-decoration-break: clone; -webkit-box-decoration-break: clone;
-  padding: 0 3px; box-shadow: 1px 1px 0 var(--black);
+  padding: 0 3px; box-shadow: var(--lift);
   transition: background 0.12s steps(2, end), color 0.12s steps(2, end);
 }
 /* keep it blacked out even under a drag-select, until it is revealed */
@@ -91,8 +95,8 @@
 .ad-overlay.is-open { display: flex; }
 .ad-box {
   position: relative; width: 100%; max-width: 430px;
-  background: var(--card); border: 4px solid var(--black);
-  box-shadow: 12px 12px 0 var(--pink), 24px 24px 0 var(--cyan);
+  background: var(--card); border: 1px solid var(--rule);
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6); border-radius: 6px;
   transform: rotate(-1.5deg);
   padding: 28px 24px 20px;
 }
@@ -101,12 +105,12 @@
   font-family: var(--font-mono); font-weight: 700; font-size: 0.6rem;
   letter-spacing: 2px; text-transform: uppercase;
   background: var(--cyan); color: var(--black);
-  border: 3px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  border: 1px solid var(--rule); box-shadow: var(--lift-sm);
   padding: 4px 9px; transform: rotate(2deg);
 }
 .ad-head {
-  font-family: var(--font-display); font-weight: 700;
-  font-size: 1.9rem; line-height: 0.95; letter-spacing: -1px;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
+  font-size: 1.9rem; line-height: 0.95; letter-spacing: 0;
   text-transform: uppercase; margin: 4px 0 12px;
 }
 .ad-body {
@@ -115,15 +119,15 @@
 }
 .ad-cta {
   display: block; text-align: center;
-  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1rem;
   letter-spacing: 0.5px; text-transform: uppercase;
   color: var(--black); background: var(--yellow); text-decoration: none;
-  border: 3px solid var(--black); box-shadow: 5px 5px 0 var(--black);
+  border: 1px solid var(--rule); box-shadow: var(--lift-sm);
   padding: 13px 16px; cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease), background var(--quick) var(--ease);
 }
-.ad-cta:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 3px 3px 0 var(--black); }
-.ad-cta:active { transform: translate(5px, 5px); box-shadow: 0 0 0 var(--black); }
+.ad-cta:hover { background: var(--pink); transform: translateY(-2px); box-shadow: var(--lift-sm); }
+.ad-cta:active { transform: translateY(0); box-shadow: 0 0 0 var(--black); }
 .ad-skip {
   display: block; margin: 14px auto 0;
   font-family: var(--font-mono); font-weight: 700; font-size: 0.72rem;
@@ -133,14 +137,14 @@
 }
 .ad-skip:disabled { cursor: default; }
 .ad-skip:not(:disabled):hover { color: var(--black); text-decoration: underline; }
-.ad-skip:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+.ad-skip:focus-visible { outline: 1px solid var(--rule); outline-offset: 2px; }
 /* step two: the guilt trip. No exit control — a countdown that hauls you to
    the fund whether you like it or not (Esc is still a silent escape hatch). */
 .ad-countdown {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.82rem;
   letter-spacing: 1px; text-transform: uppercase;
   color: var(--black); background: var(--pink);
-  border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--black);
+  border: 1px solid var(--rule); box-shadow: var(--lift-sm);
   padding: 11px 13px; margin: 4px 0 0; text-align: center;
 }
 .ad-body em { font-style: normal; background: var(--yellow); padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
@@ -159,8 +163,8 @@
   position: relative; text-align: left; text-transform: none;
   font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.65;
   background: var(--yellow);
-  border: var(--bw) solid var(--black);
-  box-shadow: 5px 5px 0 var(--black);
+  border: 1px solid var(--rule);
+  box-shadow: var(--lift-sm);
   padding: 15px 16px 15px 42px; margin: 0 0 30px;
 }
 .chapter-intro strong { text-transform: uppercase; letter-spacing: 1px; }
@@ -170,12 +174,12 @@
 }
 .notes { max-width: none; }
 .position-heading {
-  font-family: var(--font-display); font-weight: 700;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
   font-size: clamp(1.3rem, 5vw, 1.75rem); text-transform: uppercase;
-  letter-spacing: -1px; color: var(--black);
+  letter-spacing: 0; color: var(--black);
   background: var(--yellow);
-  border: var(--bw) solid var(--black);
-  box-shadow: 5px 5px 0 var(--black);
+  border: 1px solid var(--rule);
+  box-shadow: var(--lift-sm);
   display: block; width: fit-content; padding: 8px 16px;
   margin: 46px 0 18px;
 }
@@ -190,16 +194,16 @@
 .stat-chip {
   font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
   text-transform: uppercase; color: var(--black);
-  background: var(--cyan); border: 2px solid var(--black); padding: 5px 10px;
+  background: var(--cyan); border: 1px solid var(--rule); padding: 5px 10px;
 }
 
 .stat-chips.alloc { gap: 10px; margin: 0 0 22px; }
 .stat-chips.alloc .stat-chip {
   display: flex; flex-direction: column; align-items: stretch;
   min-width: 68px; padding: 0 0 7px; text-align: center;
-  background: var(--card); border: var(--bw) solid var(--black);
+  background: var(--card); border: 1px solid var(--rule);
   font-family: var(--font-display); font-size: 1.6rem;
-  line-height: 1.25; letter-spacing: -1px;
+  line-height: 1.25; letter-spacing: 0;
 }
 .stat-chips.alloc .stat-chip strong {
   display: block; margin-bottom: 5px;
@@ -218,18 +222,18 @@
 /* build comparison table */
 .build-compare {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
-  border: var(--bw) solid var(--black); margin: 18px 0;
+  border: 1px solid var(--rule); margin: 18px 0;
 }
 .build-compare .bc-cell {
   padding: 10px 12px; font-size: 0.85rem; color: var(--black);
-  border-bottom: 2px solid var(--black); border-right: 2px solid var(--black);
+  border-bottom: 1px solid var(--rule); border-right: 1px solid var(--rule);
 }
 .build-compare .bc-cell:nth-child(3n) { border-right: none; }
 .build-compare .bc-cell:nth-last-child(-n+3) { border-bottom: none; }
 .build-compare .bc-head {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
   text-transform: uppercase; letter-spacing: 1px; text-align: center;
-  background: var(--yellow); border-bottom: var(--bw) solid var(--black) !important;
+  background: var(--yellow); border-bottom: 1px solid var(--rule) !important;
 }
 /* Row label — deliberately NOT named .label. That class is the cyan tab
    component in .notes, and it was shrink-wrapping these cells to fit-content,
@@ -243,26 +247,26 @@
 
 /* real-duellist stat comparison: a wide 7-column table, so it scrolls inside
    its own wrapper instead of shoving the page sideways on a narrow screen. */
-.duel-compare-wrap { overflow-x: auto; margin: 16px 0 10px; border: var(--bw) solid var(--black); box-shadow: 5px 5px 0 var(--black); }
+.duel-compare-wrap { overflow-x: auto; margin: 16px 0 10px; border: 1px solid var(--rule); box-shadow: var(--lift-sm); }
 .duel-compare { border-collapse: collapse; width: 100%; min-width: 480px; }
-.duel-compare th, .duel-compare td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--black); font-family: var(--font-mono); font-size: 0.82rem; }
+.duel-compare th, .duel-compare td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--rule); font-family: var(--font-mono); font-size: 0.82rem; }
 .duel-compare thead th { background: var(--black); color: var(--card); font-size: 0.64rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
 .duel-compare tbody tr:last-child td { border-bottom: none; }
 .duel-compare .dc-name { text-align: left; }
-.duel-compare tbody td.dc-name { font-family: var(--font-display); font-weight: 700; font-size: 0.92rem; min-width: 160px; }
+.duel-compare tbody td.dc-name { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 0.92rem; min-width: 160px; }
 .duel-compare .dc-yr { font-family: var(--font-mono); font-weight: 400; font-size: 0.62rem; color: var(--ink-dim); text-transform: uppercase; margin-left: 5px; }
 .duel-compare .dc-note { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.64rem; line-height: 1.4; color: var(--ink-dim); margin-top: 3px; white-space: normal; }
-.duel-compare tr.dc-group td { background: var(--cyan); text-align: left; font-family: var(--font-display); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.5px; text-transform: uppercase; }
+.duel-compare tr.dc-group td { background: var(--cyan); text-align: left; font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 0.78rem; letter-spacing: 0.5px; text-transform: uppercase; }
 /* ARC is the whole point of this comparison, so its column is tinted */
 .duel-compare td.dc-arc { background: #fdeeb0; font-weight: 700; }
 .duel-compare thead th.dc-arc { background: #2a2a2a; color: var(--yellow); }
 .duel-compare-cap { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-dim); margin: 0 0 22px; }
 
 /* font + colour swatches */
-.font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 22px 0; border: var(--bw) solid var(--black); }
+.font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 22px 0; border: 1px solid var(--rule); }
 .font-grid.single { grid-template-columns: 1fr; max-width: 280px; margin-left: 0; }
 .font-grid.trio { grid-template-columns: repeat(3, 1fr); }
-.font-swatch { text-align: center; padding: 14px 8px; border: 1px solid var(--black); background: var(--card); }
+.font-swatch { text-align: center; padding: 14px 8px; border: 1px solid var(--rule); background: var(--card); }
 .font-swatch-sample {
   font-size: 2.1rem; color: var(--black); margin-bottom: 8px; line-height: 1.2;
   display: flex; align-items: center; justify-content: center; height: 3.4rem;
@@ -275,7 +279,7 @@
 }
 .color-chip {
   display: flex; align-items: center; gap: 10px;
-  border: var(--bw) solid var(--black);
+  border: 1px solid var(--rule);
   background: var(--card); padding: 9px 12px;
 }
 /* DO NOT re-theme the values below to the site palette. #C1B89B is the
@@ -284,7 +288,7 @@
 .color-chip.dark { background: #C1B89B; }
 .color-chip.dark .color-name { color: #2a2418; }
 .color-chip.dark .color-hex { color: #4a4436; }
-.color-swatch { width: 30px; height: 30px; flex: none; border: 2px solid var(--black); }
+.color-swatch { width: 30px; height: 30px; flex: none; border: 1px solid var(--rule); }
 .color-swatch.old { opacity: 0.4; }
 .color-info { display: flex; flex-direction: column; }
 .color-name { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; }
@@ -294,9 +298,9 @@
   display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: column;
   grid-template-rows: repeat(26, auto); gap: 0 16px;
   font-family: var(--font-mono); font-size: 0.75rem; margin: 14px 0 22px;
-  background: var(--card); border: var(--bw) solid var(--black); padding: 14px 16px;
+  background: var(--card); border: 1px solid var(--rule); padding: 14px 16px;
 }
-.hex-opacity-row { display: flex; justify-content: space-between; padding: 2px 4px; border-bottom: 1px dashed var(--black); }
+.hex-opacity-row { display: flex; justify-content: space-between; padding: 2px 4px; border-bottom: 1px dashed var(--rule-strong); }
 .hex-opacity-row .op-val { color: var(--ink-dim); }
 .hex-opacity-row .op-hex { font-weight: 700; }
 
@@ -304,7 +308,7 @@
 .radius-box {
   position: relative; width: 200px; height: 120px;
   background: #C1B89B;   /* forum background — keep, see note above */
-  border: var(--bw) solid var(--black); border-radius: 0;
+  border: 1px solid var(--rule); border-radius: 0;
   display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
 }
 .radius-overlay { position: absolute; inset: 14px; background: rgba(255,255,255,0.25); }
@@ -312,7 +316,7 @@
 
 /* prose */
 .notes p { font-size: 0.98rem; line-height: 1.75; color: var(--black); margin-bottom: 14px; }
-.notes img { display: block; max-width: 100%; margin: 14px 0; border: var(--bw) solid var(--black); }
+.notes img { display: block; max-width: 100%; margin: 14px 0; border: 1px solid var(--rule); }
 .notes strong { font-weight: 700; }
 .notes ul { margin: 0 0 14px 22px; }
 .notes li { font-size: 0.96rem; line-height: 1.7; margin-bottom: 5px; }
@@ -320,7 +324,7 @@
 .notes .label {
   display: block; width: fit-content; font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
   text-transform: uppercase; letter-spacing: 2px;
-  background: var(--cyan); border: 2px solid var(--black);
+  background: var(--cyan); border: 1px solid var(--rule);
   padding: 5px 10px; margin: 26px 0 12px;
 }
 .notes .group-label {
@@ -336,7 +340,7 @@
 /* A labelled container, so its own title becomes a header BAR — otherwise
    the box title and the group titles inside it sit at the same level. */
 .abilities-box {
-  border: var(--bw) solid var(--black);
+  border: 1px solid var(--rule);
   background: var(--card); padding: 0; margin: 22px 0;
 }
 .abilities-box > .label:first-child {
@@ -347,7 +351,7 @@
 }
 .abilities-box .group-label {
   display: block; width: fit-content;
-  background: var(--yellow); border: 2px solid var(--black);
+  background: var(--yellow); border: 1px solid var(--rule);
   padding: 4px 10px; margin: 20px 16px 10px;
   font-size: 0.72rem;
 }
@@ -366,8 +370,8 @@
   font-weight: 700; color: var(--black);
 }
 .abilities-box li strong {
-  font-family: var(--font-display); font-weight: 700;
-  letter-spacing: -0.2px;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
+  letter-spacing: 0;
 }
 .abilities-box li s strong { font-weight: 700; }
 
@@ -375,7 +379,7 @@
    fieldset legend, so it outranks the contents without adding another slab. */
 .addendum {
   position: relative;
-  border: var(--bw) dashed var(--black);
+  border: 1px dashed var(--rule-strong);
   padding: 28px 18px 18px; margin: 34px 0;
 }
 .addendum-label {
@@ -383,14 +387,14 @@
   font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
   letter-spacing: 2px; text-transform: uppercase;
   background: var(--cyan); color: var(--black);
-  border: 2px solid var(--black); padding: 4px 10px;
+  border: 1px solid var(--rule); padding: 4px 10px;
 }
 .addendum p { font-size: 0.92rem; line-height: 1.7; margin: 0 0 12px; }
 .addendum p:last-child { margin-bottom: 0; }
 
 .quote-block {
   margin: 14px 0; padding: 13px 16px;
-  background: var(--card); border: var(--bw) solid var(--black);
+  background: var(--card); border: 1px solid var(--rule);
   border-left: 10px solid var(--black);
 }
 .quote-block + .quote-block { margin-top: 12px; }
@@ -399,13 +403,13 @@
   display: inline-block; margin-top: 11px;
   font-family: var(--font-mono); font-weight: 700;
   font-size: 0.64rem; letter-spacing: 1px; text-transform: uppercase;
-  background: var(--yellow); border: 2px solid var(--black); padding: 3px 8px;
+  background: var(--yellow); border: 1px solid var(--rule); padding: 3px 8px;
 }
 .quote-block .quote-attr::before { content: "\2014\00a0"; }
 
 /* bean clock */
 .bean-clock {
-  border: var(--bw) solid var(--black);
+  border: 1px solid var(--rule);
   background: var(--card); padding: 26px; margin: 18px 0; text-align: center;
 }
 .bean-clock-label {
@@ -413,21 +417,58 @@
   letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
 }
 .bean-clock-time {
-  font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 10vw, 3rem);
-  letter-spacing: -2px; color: var(--black);
-  text-shadow: 4px 4px 0 var(--yellow), 4px 4px 0 var(--black);
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: clamp(2rem, 10vw, 3rem);
+  letter-spacing: 0; color: var(--black);
+  text-shadow: none;
 }
 .bean-clock-cest { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-dim); margin-top: 8px; }
 .bean-clock-row {
   display: flex; justify-content: center; gap: 20px; margin-top: 24px;
-  padding-top: 22px; border-top: var(--bw) dashed var(--black); flex-wrap: wrap;
+  padding-top: 22px; border-top: 1px dashed var(--rule-strong); flex-wrap: wrap;
 }
 .bean-clock-col {
   min-width: 240px; background: var(--cyan);
-  border: 2px solid var(--black); padding: 10px;
+  border: 1px solid var(--rule); padding: 10px;
 }
-.bean-clock-value { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; }
+.bean-clock-value { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.5rem; }
 .bean-clock-sub { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; margin-top: 4px; }
+
+/* ---- filing-cabinet pass ---- */
+/* the intro is a sticky note on the sheet */
+.chapter-intro {
+  background: #fff1a6; border: none; border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.08), 0 12px 22px -12px rgba(0,0,0,0.4);
+  transform: rotate(-0.5deg);
+}
+/* topic headings: big condensed ink with a highlighter stroke, no slab */
+.position-heading {
+  background: linear-gradient(transparent 60%, color-mix(in srgb, var(--folder) 80%, transparent) 60%, color-mix(in srgb, var(--folder) 80%, transparent) 92%, transparent 92%);
+  border: none; box-shadow: none; padding: 0 4px;
+  font-size: clamp(1.8rem, 6.5vw, 2.6rem); line-height: 1;
+  margin: 58px 0 18px;
+}
+.position-heading::before { display: none; }
+.stat-chip { border: none; border-radius: 999px; }
+.stat-chips.alloc .stat-chip { border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; box-shadow: var(--lift-sm); }
+.stat-chips.alloc .stat-chip strong { border-radius: 0; }
+.build-compare, .font-grid, .abilities-box, .duel-compare-wrap, .hex-opacity-grid, .bean-clock, .color-chip {
+  border-radius: var(--radius); overflow: hidden;
+}
+.build-compare, .abilities-box, .bean-clock { box-shadow: var(--lift-sm); }
+.build-compare .bc-head { background: #fff1a6; }
+.notes .label, .addendum-label, .quote-block .quote-attr, .tab-hint-label { border: none; border-radius: 999px; }
+.abilities-box .group-label { border: none; border-radius: 2px; background: #fff1a6; }
+.addendum { border-radius: 6px; }
+.quote-block { border-radius: var(--radius); border-left: 3px solid var(--black); }
+.quote-block .quote-attr { background: #fff1a6; }
+.bean-clock-col { border: none; border-radius: var(--radius); }
+.color-swatch { border-radius: 50%; border-color: var(--rule-strong); }
+.notes img { border-radius: var(--radius); box-shadow: var(--lift); }
+.ad-tag, .ad-countdown { border: none; border-radius: 999px; }
+.ad-cta { border-radius: var(--radius); }
+.ad-overlay { background: rgba(20,20,19,0.7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.ad-overlay.is-open .ad-box { animation: sheet-in 0.6s var(--ease) both; }
+.spoiler { border-radius: 2px; }
 
 @media (max-width: 560px) {
   .build-compare .bc-cell { padding: 8px 6px; font-size: 0.78rem; }
@@ -440,33 +481,25 @@
 
 </style>
 </head>
-<body>
+<body class="f-yellow">
 <header class="topbar">
-  <a class="topbar-home" href="../">✦ Stuff</a>
-  <nav class="topbar-links">
-    <a href="../quidmodding/">Rule Book</a>
-    <a href="../gringotts/">Coin Math</a>
-    <a href="../bbcode-fixer/">Tag Check</a>
-    <a href="../playbook/">Ammo</a>
-    <span class="here">Junk Drawer</span>
-  </nav>
+  <a class="topbar-home" href="../" aria-label="Junk Drawer home">✦ Junk Drawer ✦</a>
 </header>
 <div class="frame">
-  <div class="page">
-
-    <div class="masthead">
-<div class="eyebrow">final_v7_REAL_final.docx</div>
-    <h1>Junk Drawer</h1>
-    <p class="subtitle">the junk drawer but make it a webpage</p>
+  <div class="masthead">
+    <h1>final_v7_REAL_final.docx</h1>
     </div>
 
+  <div class="page" data-tab="Quidditch Build">
+  <div class="sheet" data-tab="Quidditch Build">
+
     <div class="tabs" role="tablist">
-      <button class="tab active" id="toc-1" onclick="showChapter(1, this)">Quidditch build</button>
-      <button class="tab" id="toc-2" onclick="showChapter(2, this)">Duelling build</button>
-      <button class="tab" id="toc-3" onclick="showChapter(3, this)">Broomracing build</button>
-      <button class="tab" id="toc-4" onclick="showChapter(4, this)">Summoner's court build</button>
-      <button class="tab" id="toc-5" onclick="showChapter(5, this)">Frontend notes</button>
-      <button class="tab" id="toc-6" onclick="showChapter(6, this)">The bean clock</button>
+      <button class="tab active" id="toc-1" data-c="yellow" style="--c: var(--yellow)" onclick="showChapter(1, this)">Quidditch build</button>
+      <button class="tab" id="toc-2" data-c="pink" style="--c: var(--pink)" onclick="showChapter(2, this)">Duelling build</button>
+      <button class="tab" id="toc-3" data-c="cyan" style="--c: var(--cyan)" onclick="showChapter(3, this)">Broomracing build</button>
+      <button class="tab" id="toc-4" data-c="lime" style="--c: var(--lime)" onclick="showChapter(4, this)">Summoner's court build</button>
+      <button class="tab" id="toc-5" data-c="yellow" style="--c: var(--yellow)" onclick="showChapter(5, this)">Frontend notes</button>
+      <button class="tab" id="toc-6" data-c="red" style="--c: var(--red)" onclick="showChapter(6, this)">The bean clock</button>
     </div>
 
     <div class="tab-hint" aria-hidden="true">
@@ -1000,7 +1033,7 @@
       </div>
     </section>
 
-
+  </div>
   </div>
 </div>
 
@@ -1030,6 +1063,24 @@ function showChapter(n, el) {
   (el || document.getElementById('toc-' + n)).classList.add('active');
   chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// ==================== DEEP LINKS ====================
+// One # per chapter, so the home page can open any of them directly. Arriving
+// from a link lands at the top (the folder is opening); switching chapters
+// here keeps the address bar in step.
+const CHAPTER_HASH = ['', 'duelling', 'broomracing', 'summoners-court', 'frontend', 'bean-clock'];
+function chapterFromHash(land) {
+  const h = location.hash.slice(1);
+  const n = h ? CHAPTER_HASH.indexOf(h) : 0;
+  if (n < 0) return;
+  showChapter(n + 1);
+  if (land) window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tabs .tab').forEach((b, i) => b.addEventListener('click', () => {
+  history.replaceState(null, '', CHAPTER_HASH[i] ? '#' + CHAPTER_HASH[i] : location.pathname);
+}));
+window.addEventListener('hashchange', () => chapterFromHash(false));
+chapterFromHash(true);
 
 // ==================== HEX OPACITY TABLE ====================
 (function buildHexOpacityTable() {

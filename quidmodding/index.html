@@ -7,9 +7,9 @@
 <link rel="icon" href="../favicon.svg?v=5" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
-<script src="../neo-motion.js" defer></script>
+<script src="../neo-motion.js"></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css
    (page-level dropdowns get upgraded by ../neo-select.js) */
@@ -28,12 +28,12 @@
   content: '\25B8'; flex: none;
   display: grid; place-items: center;
   width: 26px; height: 26px; font-size: 0.8em;
-  background: var(--yellow); border: 2px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black);
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  background: var(--yellow); border: 1px solid var(--rule);
+  box-shadow: var(--lift-sm);
+  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease);
 }
 .collapse-toggle.open::before { content: '\25BE'; }
-.collapse-toggle:hover::before { background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
+.collapse-toggle:hover::before { background: var(--pink); transform: translateY(-2px); box-shadow: var(--lift); }
 .collapse-body { display: none; }
 .collapse-body.open { display: block; }
 
@@ -45,49 +45,49 @@
 /* action cards */
 /* STATIC — a reference entry. The quick-roll chips inside it are the controls. */
 .action-card {
-  background: var(--card); border: var(--bw) solid var(--black);
+  background: var(--card); border: 1px solid var(--rule);
   padding: 16px 18px; margin-bottom: 14px;
 }
 .action-card h3 {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;
-  text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 8px;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.15rem;
+  text-transform: uppercase; letter-spacing: 0; margin-bottom: 8px;
 }
 .role-tag {
   display: inline-block; background: var(--cyan);
-  border: 2px solid var(--black); padding: 2px 8px; margin: 0 4px 4px 0;
+  border: 1px solid var(--rule); padding: 2px 8px; margin: 0 4px 4px 0;
   font-family: var(--font-mono); font-weight: 700; font-size: 0.65rem;
   text-transform: uppercase; letter-spacing: 1px; color: var(--black);
 }
 .foul-tag { background: var(--red); }
 .stat-info {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
-  background: var(--yellow); border: 2px solid var(--black);
+  background: var(--yellow); border: 1px solid var(--rule);
   display: inline-block; padding: 3px 8px; margin: 8px 0;
 }
 .desc-short { font-size: 0.92rem; line-height: 1.55; color: var(--black); }
 .desc-full {
   font-size: 0.88rem; line-height: 1.65; margin-top: 10px; padding: 12px 14px;
-  background: var(--bg); border: 2px solid var(--black);
-  border-left: var(--bw) solid var(--black); white-space: pre-wrap;
+  background: var(--bg); border: 1px solid var(--rule);
+  border-left: 1px solid var(--rule); white-space: pre-wrap;
 }
 .quick-roll {
   display: inline-block; background: var(--lime);
-  border: 2px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  border: 1px solid var(--rule); box-shadow: var(--lift-sm);
   padding: 4px 10px; margin: 3px 4px 3px 0; cursor: pointer;
   font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
   text-transform: uppercase; letter-spacing: 1px;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease);
 }
-.quick-roll:hover { background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black); }
+.quick-roll:hover { background: var(--pink); transform: translateY(-2px); box-shadow: var(--lift); }
 
 /* dice roller */
 #roll-panel {
-  background: var(--card); border: var(--bw) solid var(--black); padding: 22px; margin-top: 24px;
+  background: var(--card); border: 1px solid var(--rule); padding: 22px; margin-top: 24px;
 }
 #roll-panel h2 {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.3rem;
-  text-transform: uppercase; letter-spacing: -1px; margin-bottom: 18px;
-  border-bottom: var(--bw) solid var(--black); padding-bottom: 8px;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.3rem;
+  text-transform: uppercase; letter-spacing: 0; margin-bottom: 18px;
+  border-bottom: 1px solid var(--rule); padding-bottom: 8px;
 }
 .roll-row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-bottom: 14px; }
 .roll-group { display: flex; flex-direction: column; gap: 5px; }
@@ -100,7 +100,7 @@
 .roll-btn:hover { background: var(--yellow); }
 #roll-result {
   margin-top: 18px; padding: 16px; font-size: 0.95rem; min-height: 40px;
-  background: var(--bg); border: var(--bw) solid var(--black);
+  background: var(--bg); border: 1px solid var(--rule);
 }
 #roll-result .crit { color: var(--green); font-weight: 700; text-transform: uppercase; }
 #roll-result .fail { color: var(--red-bright); font-weight: 700; text-transform: uppercase; }
@@ -109,11 +109,11 @@
 
 /* reference panels */
 .ref-panel {
-  background: var(--card); border: var(--bw) solid var(--black); padding: 18px 20px; margin-bottom: 18px;
+  background: var(--card); border: 1px solid var(--rule); padding: 18px 20px; margin-bottom: 18px;
 }
 .ref-panel h3 {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
-  text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 12px;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.1rem;
+  text-transform: uppercase; letter-spacing: 0; margin-bottom: 12px;
 }
 .ref-panel ol, .ref-panel ul { padding-left: 22px; font-size: 0.92rem; line-height: 1.8; }
 .ref-panel li b { background: var(--yellow); padding: 0 4px; }
@@ -121,56 +121,56 @@
 /* DC calculator */
 .dc-calc { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
 .dc-box {
-  background: var(--bg); border: var(--bw) solid var(--black); padding: 14px; text-align: center;
+  background: var(--bg); border: 1px solid var(--rule); padding: 14px; text-align: center;
 }
 .dc-box .dc-label {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
   text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
 }
 .dc-box .dc-value {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.8rem;
-  letter-spacing: -1px;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.8rem;
+  letter-spacing: 0;
 }
 .dc-box .dc-formula { font-family: var(--font-mono); font-size: 0.65rem; color: var(--ink-dim); margin-top: 4px; }
 .dc-box select, .dc-box input { margin-top: 8px; font-size: 0.75rem; width: auto; padding: 5px 7px; }
 
 /* player cards */
 .player-card {
-  background: var(--card); border: var(--bw) solid var(--black); padding: 20px; margin-bottom: 16px;
+  background: var(--card); border: 1px solid var(--rule); padding: 20px; margin-bottom: 16px;
 }
 .player-card .player-header {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
-  border-bottom: var(--bw) solid var(--black); padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule); padding-bottom: 10px;
 }
 .player-card .player-header h3 {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.2rem;
-  text-transform: uppercase; letter-spacing: -0.5px;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.2rem;
+  text-transform: uppercase; letter-spacing: 0;
 }
 .player-card .player-header .meta { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; }
 .stat-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 14px; }
-.stat-box { background: var(--yellow); border: 2px solid var(--black); padding: 8px; text-align: center; }
+.stat-box { background: var(--yellow); border: 1px solid var(--rule); padding: 8px; text-align: center; }
 .stat-box .stat-label { font-family: var(--font-mono); font-weight: 700; font-size: 0.62rem; text-transform: uppercase; }
-.stat-box .stat-val { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; }
+.stat-box .stat-val { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.3rem; }
 .stat-box .stat-raw { font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-dim); }
 .stat-box .stat-broom { font-family: var(--font-mono); font-size: 0.6rem; line-height: 1.3; }
 .beater-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 14px; }
-.beater-box { background: var(--orange); border: 2px solid var(--black); padding: 8px; text-align: center; }
+.beater-box { background: var(--orange); border: 1px solid var(--rule); padding: 8px; text-align: center; }
 .beater-box .stat-label { font-family: var(--font-mono); font-weight: 700; font-size: 0.6rem; text-transform: uppercase; }
-.beater-box .stat-val { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+.beater-box .stat-val { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.1rem; }
 .ability-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .ability-tag {
-  background: var(--cyan); border: 2px solid var(--black); padding: 3px 9px;
+  background: var(--cyan); border: 1px solid var(--rule); padding: 3px 9px;
   font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
 }
 .hp-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-family: var(--font-mono); font-size: 0.78rem; }
-.hp-bar strong { background: var(--red); border: 2px solid var(--black); padding: 1px 7px; }
+.hp-bar strong { background: var(--red); border: 1px solid var(--rule); padding: 1px 7px; }
 .broom-select-row {
   display: flex; gap: 8px; align-items: center; margin-bottom: 12px;
   flex-wrap: wrap; font-family: var(--font-mono); font-size: 0.75rem;
 }
 .broom-select-row select { padding: 5px 26px 5px 8px; font-size: 0.7rem; background-position: calc(100% - 15px) calc(50% + 1px), calc(100% - 9px) calc(50% + 1px); background-size: 6px 6px, 6px 6px; }
-.broom-select-row .broom-bonus { font-weight: 700; background: var(--lime); border: 2px solid var(--black); padding: 2px 7px; }
+.broom-select-row .broom-bonus { font-weight: 700; background: var(--lime); border: 1px solid var(--rule); padding: 2px 7px; }
 
 /* database */
 #db-panel .db-controls {
@@ -191,14 +191,14 @@
 }
 .table-wrap {
   overflow: auto; max-height: 75vh; background: var(--card);
-  border: var(--bw) solid var(--black); position: relative;
+  border: 1px solid var(--rule); position: relative;
 }
 #db-table { width: max-content; min-width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.75rem; }
 #db-table th {
   background: var(--yellow); padding: 10px 8px; text-align: left;
   font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
   color: var(--black); position: sticky; top: 0; z-index: 2;
-  border-bottom: var(--bw) solid var(--black);
+  border-bottom: 1px solid var(--rule);
   white-space: nowrap; overflow: hidden; min-width: 60px;
 }
 #db-table th.resizable { position: relative; }
@@ -207,7 +207,7 @@
   cursor: col-resize; background: transparent; z-index: 3;
 }
 #db-table th .col-resizer:hover, #db-table th .col-resizer.active { background: var(--black); }
-#db-table td { padding: 5px 8px; border-bottom: 2px solid var(--black); white-space: nowrap; }
+#db-table td { padding: 5px 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
 #db-table td input {
   width: 100%; background: transparent; border: 2px solid transparent;
   padding: 3px 4px; font-size: 0.75rem; box-shadow: none;
@@ -215,10 +215,29 @@
 #db-table td input:focus { border-color: var(--black); background: var(--yellow); box-shadow: none; }
 #db-table td select { font-size: 0.65rem; padding: 3px 22px 3px 5px; border-width: 2px; background-position: calc(100% - 13px) calc(50% + 1px), calc(100% - 8px) calc(50% + 1px); background-size: 5px 5px, 5px 5px; }
 .del-btn {
-  background: var(--red) !important; border: 2px solid var(--black) !important;
+  background: var(--red) !important; border: 1px solid var(--rule) !important;
   color: var(--black) !important; padding: 4px 9px !important;
-  font-size: 0.68rem; box-shadow: 2px 2px 0 var(--black);
+  font-size: 0.68rem; box-shadow: var(--lift);
 }
+
+/* ---- filing-cabinet pass: cards are index cards, chips are pills ---- */
+.action-card, #roll-panel, .ref-panel, .player-card, .table-wrap { border-radius: var(--radius); box-shadow: var(--lift-sm); }
+.dc-box, #roll-result, .stat-box, .beater-box { border-radius: var(--radius); border-color: transparent; }
+.stat-box { background: #fff1a6; }
+.beater-box { background: #ffe0c2; }
+.role-tag, .ability-tag, .quick-roll, .hp-bar strong, .broom-select-row .broom-bonus { border-radius: 999px; border-color: transparent; }
+.stat-info { border-radius: 2px; border-color: transparent; background: #fff1a6; }
+.desc-full { border-radius: var(--radius); border-left: 3px solid var(--folder); }
+.ref-panel li b { background: none; padding: 0; box-shadow: inset 0 -0.45em 0 color-mix(in srgb, var(--yellow) 70%, transparent); }
+.ref-panel h3, #roll-panel h2 { font-size: 1.6rem; line-height: 1; }
+.action-card h3, .player-card .player-header h3 { font-size: 1.45rem; line-height: 1; }
+.collapse-toggle::before { border-radius: 50%; background: var(--folder); border: none; font-size: 0.7em; }
+.collapse-toggle:hover::before { background: var(--folder); }
+.quick-roll:hover { background: var(--folder); }
+.roll-btn:hover { background: var(--folder); }
+#db-table th { background: var(--bg); border-bottom-color: var(--rule-strong); }
+#db-table td input:focus { background: #fffdf0; }
+.del-btn { box-shadow: none; border-radius: 3px !important; }
 
 @media (max-width: 600px) {
   .stat-grid { grid-template-columns: repeat(3, 1fr); }
@@ -232,30 +251,22 @@
 
 </style>
 </head>
-<body>
+<body class="f-pink">
 <header class="topbar">
-  <a class="topbar-home" href="../">✦ Stuff</a>
-  <nav class="topbar-links">
-    <span class="here">Rule Book</span>
-    <a href="../gringotts/">Coin Math</a>
-    <a href="../bbcode-fixer/">Tag Check</a>
-    <a href="../playbook/">Ammo</a>
-    <a href="../final-v7-real-final/">Junk Drawer</a>
-  </nav>
+  <a class="topbar-home" href="../" aria-label="Junk Drawer home">✦ Junk Drawer ✦</a>
 </header>
 <div class="frame">
-  <div class="page">
-
-    <div class="masthead">
-<div class="eyebrow">i hate modding</div>
+  <div class="masthead">
     <h1>Rule Book</h1>
-    <p class="subtitle">built here so i stop losing it in forty different tabs</p>
     </div>
 
+  <div class="page" data-tab="Rule Book">
+  <div class="sheet" data-tab="Rule Book">
+
     <div class="tabs" role="tablist">
-      <button class="tab active" id="toc-action" onclick="showPanel('action', this)">Actions &amp; rules</button>
-      <button class="tab" id="toc-player" onclick="showPanel('player', this)">Player roster</button>
-      <button class="tab" id="toc-db" onclick="showPanel('db', this)">Team database</button>
+      <button class="tab active" id="toc-action" data-c="pink" style="--c: var(--pink)" onclick="showPanel('action', this)">Actions &amp; rules</button>
+      <button class="tab" id="toc-player" data-c="cyan" style="--c: var(--cyan)" onclick="showPanel('player', this)">Player roster</button>
+      <button class="tab" id="toc-db" data-c="yellow" style="--c: var(--yellow)" onclick="showPanel('db', this)">Team database</button>
     </div>
 
 
@@ -352,7 +363,7 @@
   <div class="table-wrap"><table id="db-table"></table></div>
 </div>
 
-
+  </div>
   </div>
 </div>
 <script src="../neo-select.js"></script>
@@ -1084,10 +1095,25 @@ function stopResize() {
 
 // ==================== INIT ====================
 renderActions(ACTIONS);
+
+// ==================== DEEP LINKS ====================
+// Each tab has its own #, so the home page can link straight to it and the
+// address bar always names the tab that is open.
+const PANEL_HASH = { action: 'actions', player: 'roster', db: 'database' };
+function panelFromHash() {
+  const key = Object.keys(PANEL_HASH).find(k => '#' + PANEL_HASH[k] === location.hash);
+  if (key) showPanel(key);
+}
+document.querySelectorAll('.tabs .tab').forEach(b => b.addEventListener('click', () => {
+  const key = b.id.replace('toc-', '');
+  history.replaceState(null, '', '#' + PANEL_HASH[key]);
+}));
+window.addEventListener('hashchange', panelFromHash);
 renderDcCalc();
 
 ['action-role-filter','player-team','db-team','atk-stat-type','def-stat-type','roll-type','adv-type']
   .forEach(id => { const el = document.getElementById(id); if (el) neoSelect.upgrade(el); });
+panelFromHash();
 </script>
 <footer class="site-footer">
   <span class="footer-star">✦</span>

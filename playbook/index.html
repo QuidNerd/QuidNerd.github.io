@@ -7,9 +7,9 @@
 <link rel="icon" href="../favicon.svg?v=5" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../neo.css">
-<script src="../neo-motion.js" defer></script>
+<script src="../neo-motion.js"></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css */
 
@@ -17,10 +17,10 @@
 .bb-body { font-size: 0.98rem; line-height: 1.7; color: var(--black); }
 .bb-quote {
   padding: 14px 16px; margin: 12px 0;
-  background: var(--card); border: var(--bw) solid var(--black);
+  background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius);
 }
 .bb-quote > .bb-quote {
-  display: block; background: var(--yellow);
+  display: block; background: #fff1a6; border: none; border-radius: 2px;
   font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.7;
   padding: 12px 14px; margin: 12px 0 0; box-shadow: none;
 }
@@ -28,25 +28,26 @@
 
 .play-list { display: flex; flex-direction: column; gap: 26px; }
 .play-entry {
-  border: var(--bw) solid var(--black); padding: 20px 20px 18px;
+  background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius);
+  box-shadow: var(--lift-sm); padding: 20px 20px 18px;
 }
 .play-eyebrow {
   display: inline-block; font-family: var(--font-mono); font-weight: 700;
   font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
-  background: var(--cyan); border: 2px solid var(--black);
-  padding: 3px 8px; margin-bottom: 10px;
+  background: var(--cyan); border-radius: 999px;
+  padding: 3px 10px; margin-bottom: 10px;
 }
 .play-title-text {
-  display: block; font-family: var(--font-display); font-weight: 700;
+  display: block; font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
   font-size: clamp(1.3rem, 5vw, 1.7rem); text-transform: uppercase;
-  letter-spacing: -1px; color: var(--black); margin-bottom: 14px;
+  letter-spacing: 0; color: var(--black); margin-bottom: 14px;
 }
 .play-empty {
   font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase;
-  border: var(--bw) dashed var(--black); padding: 20px; text-align: center;
+  border: 1px dashed var(--rule-strong); padding: 20px; text-align: center;
 }
 
-.play-refs { margin-top: 16px; padding-top: 14px; border-top: var(--bw) dashed var(--black); }
+.play-refs { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--rule-strong); }
 .play-refs-label {
   font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
   letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
@@ -55,18 +56,18 @@
 .play-refs a {
   font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
   text-transform: uppercase; color: var(--black); text-decoration: none;
-  background: var(--yellow); border: 2px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black); padding: 5px 9px;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  background: var(--card); border: 1px solid var(--black); border-radius: var(--radius);
+  box-shadow: var(--lift-sm); padding: 5px 9px;
+  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease);
 }
 .play-refs a:hover {
-  background: var(--pink);
-  transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black);
+  background: var(--folder);
+  transform: translateY(-2px); box-shadow: var(--lift);
 }
 
 /* password gate */
 .gate {
-  text-align: left; border: var(--bw) dashed var(--black);
+  text-align: left; border: 1px dashed var(--rule-strong);
   padding: 24px 22px; max-width: 380px;
 }
 .gate-eyebrow {
@@ -88,36 +89,37 @@
 .drawer { margin-bottom: 34px; }
 .drawer-handle {
   display: flex; align-items: center; gap: 14px; width: 100%;
-  text-align: left; padding: 0; background: var(--black); color: var(--card);
-  box-shadow: 6px 6px 0 var(--yellow);
+  text-align: left; padding: 0; background: var(--desk-2); color: var(--desk-ink);
+  border: none; border-radius: 6px; overflow: hidden;
+  box-shadow: var(--lift);
 }
-.drawer-handle:hover { background: var(--black); box-shadow: 3px 3px 0 var(--yellow); }
-.drawer-handle:active { box-shadow: 0 0 0 var(--yellow); }
+.drawer-handle:hover { background: #2e2d2a; box-shadow: var(--lift-hi); }
+.drawer-handle:active { box-shadow: var(--lift-sm); }
 .drawer-knob {
   flex: none; width: 54px; align-self: stretch; display: grid; place-items: center;
-  background: var(--yellow); border-right: var(--bw) solid var(--black);
+  background: var(--folder);
 }
 .drawer-knob i {
-  width: 22px; height: 22px; border-radius: 50%; background: var(--black);
-  box-shadow: inset -4px -4px 0 #444; transition: transform 0.2s ease;
+  width: 26px; height: 8px; border-radius: 4px; background: var(--black);
+  box-shadow: inset 0 -2px 0 rgba(255,255,255,0.18); transition: transform var(--quick) var(--ease);
 }
-.drawer-handle:hover .drawer-knob i { transform: scale(1.18); }
+.drawer-handle:hover .drawer-knob i { transform: translateY(2px); }
 .drawer-label { flex: 1; padding: 12px 0; line-height: 1.15; }
 .drawer-label b {
   display: block; font-size: clamp(1.05rem, 4vw, 1.35rem);
-  letter-spacing: -0.5px; text-transform: uppercase;
+  letter-spacing: 0; text-transform: uppercase;
 }
 .drawer-label small {
   font-family: var(--font-mono); font-size: 0.68rem; font-weight: 400;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--yellow);
+  letter-spacing: 0; text-transform: none; color: var(--folder);
 }
 .drawer-count {
   flex: none; margin-right: 14px; font-family: var(--font-mono); font-size: 0.72rem;
-  padding: 4px 9px; background: var(--card); color: var(--black); border: 2px solid var(--card);
+  padding: 4px 9px; background: var(--card); color: var(--black); border-radius: 3px;
 }
 .drawer-handle[aria-expanded="true"] .drawer-count::after { content: " · open"; }
 
-.drawer-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.28s ease; }
+.drawer-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--quick) var(--ease); }
 .drawer-body > div { overflow: hidden; }
 .drawer.open .drawer-body { grid-template-rows: 1fr; }
 .drawer-inner {
@@ -135,16 +137,17 @@
   display: inline-block; position: relative; top: 3px; z-index: 1;
   font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
   letter-spacing: 2px; text-transform: uppercase;
-  background: var(--cyan); border: var(--bw) solid var(--black); border-bottom: none;
-  padding: 5px 12px 4px;
+  background: var(--cyan); border-radius: 8px 8px 0 0;
+  padding: 6px 14px 4px;
 }
 .file-card {
   position: relative; background: var(--card);
-  border: var(--bw) solid var(--black); padding: 20px 20px 18px;
+  border: 1px solid var(--rule); border-radius: 0 var(--radius) var(--radius) var(--radius);
+  box-shadow: var(--lift-sm); padding: 20px 20px 18px;
 }
 .file-num {
-  position: absolute; right: 14px; top: -6px; font-family: var(--font-display); font-weight: 700;
-  font-size: 4.4rem; line-height: 1; letter-spacing: -4px;
+  position: absolute; right: 14px; top: -6px; font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
+  font-size: 4.4rem; line-height: 1; letter-spacing: 0;
   color: transparent; -webkit-text-stroke: 2px var(--black); opacity: 0.16; pointer-events: none;
 }
 .file-match {
@@ -152,36 +155,37 @@
   letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
 }
 .file-title {
-  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
-  font-size: clamp(1.2rem, 4.6vw, 1.55rem); letter-spacing: -1px; line-height: 1.05;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; text-transform: uppercase;
+  font-size: clamp(1.2rem, 4.6vw, 1.55rem); letter-spacing: 0; line-height: 1.05;
   margin-bottom: 14px; max-width: 88%;
 }
 .file-ruling {
-  background: var(--black); color: var(--card); padding: 12px 14px;
-  font-size: 0.92rem; line-height: 1.55;
+  background: #fff1a6; color: var(--black); padding: 12px 14px;
+  font-size: 0.98rem; line-height: 1.55; border-radius: 2px;
+  box-shadow: 0 8px 16px -10px rgba(0,0,0,0.4); transform: rotate(0.4deg);
 }
 .file-ruling::before {
   content: "What happened"; display: block; margin-bottom: 5px;
   font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase; color: var(--yellow);
+  letter-spacing: 2px; text-transform: uppercase; color: var(--ink-dim);
 }
 .file-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
 .file-actions a, .file-actions button {
   font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0;
   text-transform: uppercase; color: var(--black); text-decoration: none;
-  background: var(--yellow); border: 2px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black); padding: 6px 10px; cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+  background: var(--card); border: 1px solid var(--black); border-radius: var(--radius);
+  box-shadow: var(--lift-sm); padding: 6px 10px; cursor: pointer;
+  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease), background var(--quick) var(--ease);
 }
 .file-actions a:hover, .file-actions button:hover {
-  background: var(--pink); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--black);
+  background: var(--folder); transform: translateY(-2px); box-shadow: var(--lift);
 }
 .file-actions button.done { background: var(--lime); }
 .file-stamp {
   position: absolute; right: 16px; bottom: 14px; transform: rotate(-9deg);
-  font-family: var(--font-display); font-weight: 700; font-size: 0.85rem;
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 0.85rem;
   letter-spacing: 3px; text-transform: uppercase; color: var(--red-bright);
-  border: 3px solid var(--red-bright); padding: 2px 8px; opacity: 0.78; pointer-events: none;
+  border: 2px solid var(--red-bright); border-radius: 4px; padding: 2px 8px; opacity: 0.78; pointer-events: none;
 }
 @media (max-width: 620px) {
   .file-stamp { display: none; }
@@ -194,25 +198,17 @@
 
 </style>
 </head>
-<body>
+<body class="f-orange">
 <header class="topbar">
-  <a class="topbar-home" href="../">✦ Stuff</a>
-  <nav class="topbar-links">
-    <a href="../quidmodding/">Rule Book</a>
-    <a href="../gringotts/">Coin Math</a>
-    <a href="../bbcode-fixer/">Tag Check</a>
-    <span class="here">Ammo</span>
-    <a href="../final-v7-real-final/">Junk Drawer</a>
-  </nav>
+  <a class="topbar-home" href="../" aria-label="Junk Drawer home">✦ Junk Drawer ✦</a>
 </header>
 <div class="frame">
-  <div class="page">
-
-    <div class="masthead">
-      <div class="eyebrow">another page for quid again</div>
+  <div class="masthead">
       <h1>Ammo</h1>
-      <p class="subtitle">you'll get the idea of what this place is for once you read a few</p>
     </div>
+
+  <div class="page" data-tab="Ammo">
+  <div class="sheet" data-tab="Ammo">
 
     <section class="drawer" id="drawer">
       <button class="drawer-handle" id="drawer-handle" aria-expanded="false" aria-controls="drawer-body">
@@ -243,6 +239,7 @@
       </section>
     </div>
 
+  </div>
   </div>
 </div>
 
