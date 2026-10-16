@@ -360,7 +360,10 @@
       var url = isInternal(a, e);
       if (!url) return;
       e.preventDefault();
+      if (document.documentElement.classList.contains('is-picking') ||
+          document.documentElement.classList.contains('is-leaving')) return;
       var folder = a.closest('.folder');
+      if (folder && window.neoFileTransition && window.neoFileTransition.depart(a, url)) return;
       if (folder) pickFolder(folder);
       else document.documentElement.classList.add('is-leaving');
       setTimeout(function () { location.href = url.href; }, folder ? OPEN_MS : LEAVE_MS);
@@ -452,8 +455,8 @@
       addTab(page.getAttribute('data-tab'), own, 0).classList.add('is-active');
     } else {
       var tabs = sections.map(function (sec, i) {
-        var label = i === 0 ? page.getAttribute('data-tab')
-                  : (row.length ? sec : sec.querySelector('.block-title')).textContent.trim();
+        var label = sec.getAttribute('data-home-label') || (i === 0 ? page.getAttribute('data-tab')
+                  : (row.length ? sec : sec.querySelector('.block-title')).textContent.trim());
         var b = addTab(label, sec.getAttribute('data-c'), i);
         b.addEventListener('click', function () {
           if (row.length) sec.click();
@@ -475,9 +478,11 @@
         row.forEach(function (t) { mo.observe(t, { attributes: true, attributeFilter: ['class'] }); });
         sync();
       } else {
-        open(0);
+        var initial = blocks.findIndex(function (bl) { return bl.getAttribute('data-home-hash') === location.hash.slice(1); });
+        open(initial < 0 ? 0 : initial);
         if ('IntersectionObserver' in window) {
           var io = new IntersectionObserver(function (entries) {
+            if (document.documentElement.classList.contains('file-arriving')) return;
             entries.forEach(function (e) { if (e.isIntersecting) open(blocks.indexOf(e.target)); });
           }, { rootMargin: '-30% 0px -60% 0px' });
           blocks.forEach(function (bl) { io.observe(bl); });
@@ -485,6 +490,7 @@
       }
       document.body.classList.add('has-rail');
     }
+    if (window.neoFileTransition) window.neoFileTransition.fitRail(rail);
     page.appendChild(rail);
     /* the folder must be at least as long as its tabs, or a short section
        would leave them hanging off the bottom */
@@ -503,6 +509,7 @@
     var page = document.querySelector('.page');
     try {
       if (!page || reduced) return;
+      if (window.neoFileTransition && window.neoFileTransition.arrive(page)) return;
       var cls = 'is-opening';
       var r = page.getBoundingClientRect();
       page.style.setProperty('--open-x', (-r.width) + 'px');
@@ -510,7 +517,7 @@
       page.classList.add(cls);
       var done = function () { page.classList.remove(cls); };
       page.addEventListener('animationend', function (e) {
-        if (e.target === page && e.pseudoElement === '::after') done();
+        if (e.target.classList.contains('page-cover')) done();
       });
       setTimeout(done, 3200);
     } finally {
@@ -521,6 +528,8 @@
   function init() {
     /* decoration first, guarded: if either fails, the file must still open */
     try { splitTitle(); buildRail(); } catch (err) { /* page works without them */ }
+    var page = document.querySelector('.page');
+    if (page && window.neoFileTransition) window.neoFileTransition.ensureCover(page);
     openFile();
     mountHazard();
     duckTopbar();

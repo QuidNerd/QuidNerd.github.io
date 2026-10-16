@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="neo.css">
+<script src="neo-transition.js"></script>
 <script src="neo-motion.js"></script>
 <style>
 /* A folder has a tabbed back and an independent front cover.
@@ -43,9 +44,9 @@ body.home {
 
 /* ---------- THE STACK ---------- */
 .stack {
-  --tabh: 40px;     /* 4px taller than before, all of it under the label */
-  --tab-pb: 4px;     /* room under the label, so it does not sit on the edge */
-  --sh: 40px;
+  --tabh: var(--file-tab-height);     /* 4px taller than before, all of it under the label */
+  --tab-pb: var(--file-tab-bottom);     /* room under the label, so it does not sit on the edge */
+  --sh: var(--file-tab-shoulder);
   --peek: 52px;
   --reveal: clamp(210px, 15vw, 320px);
   /* --cover-min: the About sheet's own height, measured by neo-motion.js */
@@ -53,7 +54,7 @@ body.home {
   --open: calc(var(--reveal) - var(--peek));
   --tilt: -3deg;
   --cover-offset: 16px;
-  max-width: 1280px; margin: 0 auto;
+  max-width: 1300px; margin: 0 auto;
   user-select: none;
   position: relative;
   /* (vertical overflow is clipped by <main>, below) */
@@ -107,13 +108,13 @@ body.home {
   position: absolute; bottom: 100%; left: 0; right: var(--reserve, 0px);
   display: flex; align-items: flex-end;
   padding-left: var(--sh);
-  font-size: var(--tab-fs, clamp(1.15rem, 2.4vw, 1.45rem));
+  font-size: var(--tab-fs, var(--file-tab-font));
 }
 .folder-tab.is-squeezed-out { display: none; }
 .folder-tab {
   position: relative; flex: none;
   display: flex; align-items: center; justify-content: center;
-  width: max-content; height: var(--tabh); padding: 10px 0.6em var(--tab-pb); margin-right: calc(var(--tsh, var(--sh)) * 2 + var(--tgap, 14px));
+  width: max-content; height: var(--tabh); padding: var(--file-tab-padding); margin-right: calc(var(--tsh, var(--sh)) * 2 + var(--tgap, 14px));
   background: var(--pc); color: inherit; text-decoration: none;
   font-family: var(--font-body); font-size: inherit; line-height: 1; white-space: nowrap;
 }
@@ -252,13 +253,21 @@ body.home {
 html.is-picking main { overflow: visible; }
 html.is-picking .stack .folder:not(.is-picked),
 html.is-picking .home-intro {
-  opacity: 0; transform: translateY(70px);
-  transition: opacity 0.4s ease, transform 0.55s var(--ease);
+  opacity: 0; transform: translateY(110vh);
+  transition: opacity 0.35s ease, transform 0.65s var(--ease);
+}
+
+html.is-picking .home-intro { transform: translateY(32px); }
+html.is-picking .folder.is-picked .folder-band > * {
+  opacity: 0; transition: opacity 0.15s ease;
+}
+html.is-picking .folder.is-picked .folder-band::after {
+  opacity: var(--held-light, 0); transition: none;
 }
 
 @media (max-width: 620px) {
-  .stack { --peek: 42px; --tabh: 34px; --tab-pb: 2px; --sh: 26px; }
-  .folder-tabs { font-size: 1.05rem; right: 0; }
+  .stack { --peek: 42px; --tabh: var(--file-tab-height); --tab-pb: var(--file-tab-bottom); --sh: var(--file-tab-shoulder); }
+  .folder-tabs { font-size: var(--file-tab-font); right: 0; }
   /* no room for a row of sub-pages: the first tab stands for the file */
   .folder-tab:not(:first-child) { display: none; }
   .folder-band { grid-template-columns: auto 1fr; padding: 12px 14px 0; gap: 0 12px; }
@@ -269,7 +278,7 @@ html.is-picking .home-intro {
 </head>
 <body class="home f-yellow">
 <header class="topbar">
-  <a class="topbar-home" href="./" aria-label="Junk Drawer home">✦ Junk Drawer ✦</a>
+  <span class="topbar-home">✦ Junk Drawer ✦</span>
 </header>
 
 <main>
