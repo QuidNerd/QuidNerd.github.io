@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="neo.css?v=no-peek-5">
-<script src="neo-transition.js?v=no-peek-5"></script>
-<script src="neo-motion.js?v=no-peek-5"></script>
+<link rel="stylesheet" href="neo.css?v=no-peek-6">
+<script src="neo-transition.js?v=no-peek-6"></script>
+<script src="neo-motion.js?v=no-peek-6"></script>
 <style>
 /* A folder has a tabbed back and an independent front cover.
    The cover tips forward on hover; the right third unfolds the stack. */
@@ -25,16 +25,29 @@ body { padding-bottom: 0; }
    behind it, which is what makes the folder look like it is opening.
    (Lifted while a file is picked, as it slides out of the stack.) */
 main { overflow-x: visible; overflow-y: clip; }
+/* --gutter: the dark margin either side of the stack. The paper strip along
+   the bottom (so no dark shows under the last folder) uses the same numbers
+   as the stack: as wide as the window minus both gutters, capped at the
+   stack's max-width, centred. The top bar cancels the gutter to stay full width. */
 body.home {
-  background: linear-gradient(var(--paper), var(--paper)) center bottom / min(1280px, calc(100% - 32px)) 220px no-repeat, var(--desk);
+  --gutter: 80px;
+  --stack-max: 1300px;
+  padding-left: var(--gutter); padding-right: var(--gutter);
+  background:
+    linear-gradient(var(--paper), var(--paper)) center bottom / min(var(--stack-max), calc(100% - 2 * var(--gutter))) 220px no-repeat,
+    var(--desk);
 }
-@media (max-width: 620px) {
-  body.home { background-size: calc(100% - 20px) 220px, auto; }
-}
+body.home .topbar { margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1 * var(--gutter)); }
+@media (max-width: 1020px) { body.home { --gutter: 32px; } }
+@media (max-width: 780px)  { body.home { --gutter: 24px; } }
+@media (max-width: 500px)  { body.home { --gutter: 0px; } }
 
 /* title only, at Mosby's scale: ~17vw, just under the bar, stack right after */
 .home-intro { text-align: center; padding: clamp(40px, 6vw, 72px) 0 44px; }
-.home-intro h1 { font-size: clamp(4rem, 17vw, 11rem); line-height: 0.8; }
+/* "JUNK DRAWER" sets about 5.5x its font size wide: size it to the room
+   between the gutters (with a little slack) so it stays on one line as long
+   as it can, and only wraps once it would drop below 3rem */
+.home-intro h1 { font-size: clamp(3rem, calc((100vw - 2 * var(--gutter) - 16px) / 5.7), 11rem); line-height: 0.8; }
 /* the line under the title, as Mosby's: quiet serif, centred, a short measure */
 .home-sub {
   max-width: 34ch; margin: 22px auto 0;
@@ -54,7 +67,7 @@ body.home {
   --open: calc(var(--reveal) - var(--peek));
   --tilt: -3deg;
   --cover-offset: 16px;
-  max-width: 1300px; margin: 0 auto;
+  max-width: var(--stack-max); margin: 0 auto;
   user-select: none;
   position: relative;
   /* (vertical overflow is clipped by <main>, below) */
