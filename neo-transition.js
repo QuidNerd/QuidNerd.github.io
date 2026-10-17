@@ -140,12 +140,22 @@
       }).filter(Boolean);
       try { sessionStorage.setItem(HOME_KEY, JSON.stringify({ width: innerWidth, height: innerHeight, targets: targets })); } catch (_) {}
     }
-    // Only measure at rest: home return animations temporarily transform the stack.
-    if (!returning) measure();
-    if (document.fonts) document.fonts.ready.then(function () { if (!returning) measure(); });
-    addEventListener('resize', function () { setTimeout(function () { if (!returning) measure(); }, 180); });
-    addEventListener('neo:home-opened', measure);
-    addEventListener('neo:home-layout', measure);
+    // Only measure at rest: home return animations temporarily transform the
+    // stack, and the folders ease to their final heights (--cover-min lands
+    // after load, again once the webfonts do), so wait those out first.
+    function atRest() {
+      var running = document.getAnimations ? document.getAnimations().filter(function (a) {
+        return a.transitionProperty === 'height' && a.effect && a.effect.target &&
+          a.effect.target.classList.contains('folder');
+      }) : [];
+      if (!running.length) { measure(); return; }
+      Promise.all(running.map(function (a) { return a.finished.catch(function () {}); })).then(atRest);
+    }
+    if (!returning) atRest();
+    if (document.fonts) document.fonts.ready.then(function () { if (!returning) atRest(); });
+    addEventListener('resize', function () { setTimeout(function () { if (!returning) atRest(); }, 180); });
+    addEventListener('neo:home-opened', atRest);
+    addEventListener('neo:home-layout', atRest);
   }
 
   function closeHome(url) {
@@ -181,8 +191,10 @@
     content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
     content.removeAttribute('id');
     content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+    // Pinned to the tab edge by a fixed offset (not top:100%, which moves as
+    // the folder resizes mid-turn), so the paper rides rigidly with it.
     Object.assign(content.style, { width: box.width + 'px', height: box.height + 'px', margin: '0',
-      padding: getComputedStyle(page).padding, opacity: '1', '--folder': colour });
+      top: box.width + 'px', padding: getComputedStyle(page).padding, opacity: '1', '--folder': colour });
     windowEl.appendChild(content); flight.appendChild(windowEl);
     var labels = Array.from(page.querySelectorAll('.side-tab')).map(function (original) {
       var m = metric(original), style = getComputedStyle(original), copy = document.createElement('span');
@@ -282,7 +294,9 @@
       var intro = document.querySelector('.home-intro');
       if (intro) animate(intro, [{ opacity: 0, transform: 'translateY(32px)' }, { opacity: 1, transform: 'none' }],
         { duration: 900, delay: 120, easing: 'ease-out', fill: 'both' });
-      if (selected) selected.querySelectorAll('.folder-band > *, .folder-tab.is-own').forEach(function (el) {
+      // only what is always on show: the number, title and description stay
+      // hidden until the folder is hovered, so they must not be faded in here
+      if (selected) selected.querySelectorAll('.folder-go, .folder-tab.is-own').forEach(function (el) {
         if (el.textContent.trim() === state.label) return;
         animate(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 450, delay: 350, fill: 'both' });
       });
@@ -342,7 +356,7 @@
       content.removeAttribute('id');
       content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
       Object.assign(content.style, {
-        width: dest.width + 'px', height: dest.height + 'px',
+        width: dest.width + 'px', height: dest.height + 'px', top: dest.width + 'px',
         padding: getComputedStyle(page).padding, margin: '0',
         '--folder': state.paper, '--edge': getComputedStyle(page).getPropertyValue('--edge')
       });
@@ -465,6 +479,52 @@
       band.style.removeProperty('--held-light');
     });
   });
+  // A file reached without passing through home (a shared link, a bookmark)
+  // has no home layout to close back into, so it would fold up somewhere
+  // generic and then jump. Lay home out in a hidden frame at this exact
+  // window size instead: its own rememberHome() records where every folder
+  // sits (sessionStorage is shared), then the frame goes away. Redone after
+  // a resize, since the stack moves with the window.
+  var measuringHome = null;
+  function haveHomeLayout() {
+    try {
+      var layout = JSON.parse(sessionStorage.getItem(HOME_KEY));
+      return !!layout && layout.width === innerWidth && layout.height === innerHeight;
+    } catch (_) { return false; }
+  }
+  function measureHomeOffscreen() {
+    var home = document.querySelector('.topbar-home[href]');
+    if (!home || document.body.classList.contains('home') || haveHomeLayout()) return;
+    if (measuringHome) measuringHome.remove();
+    var frame = measuringHome = document.createElement('iframe');
+    frame.setAttribute('aria-hidden', 'true');
+    frame.tabIndex = -1;
+    // in the viewport but see-through and behind the page: a frame that is
+    // off screen or hidden gets throttled, and its folders would never finish
+    // easing into place
+    frame.style.cssText = 'position:fixed;left:0;top:0;z-index:-1;border:0;opacity:0;pointer-events:none;' +
+      'width:' + innerWidth + 'px;height:' + innerHeight + 'px';
+    frame.src = new URL(home.getAttribute('href'), location.href).href;
+    // it records the layout once its webfonts and folder heights settle,
+    // a few seconds in; drop the frame as soon as that lands
+    var started = Date.now();
+    var poll = setInterval(function () {
+      if (!haveHomeLayout() && Date.now() - started < 10000) return;
+      clearInterval(poll);
+      frame.remove();
+      if (measuringHome === frame) measuringHome = null;
+    }, 250);
+    document.body.appendChild(frame);
+  }
+  if (!reduce) {
+    addEventListener('load', function () { setTimeout(measureHomeOffscreen, 1600); });
+    var measureTimer;
+    addEventListener('resize', function () {
+      clearTimeout(measureTimer);
+      measureTimer = setTimeout(measureHomeOffscreen, 500);
+    });
+  }
+
   window.neoFileTransition = { depart: depart, arrive: arrive, fitRail: fitRail, ensureCover: ensureCover,
     revealRail: revealRail, closeHome: closeHome, arriveHome: arriveHome, rememberHome: rememberHome };
 })();
