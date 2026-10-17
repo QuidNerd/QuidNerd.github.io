@@ -238,17 +238,16 @@ h1 .char { display: inline-block; animation: char-shutter 0.65s cubic-bezier(.21
   background: var(--folder); border-radius: inherit;
   transition: background-color 0.45s ease;   /* the folder re-colours with the open section */
 }
-/* The hovered tab belongs to a whole sheet tucked behind the open file.
-   Move its edge by the same distance as the tab, retaining the 2px overlap. */
-.page::after {
-  content: ""; position: absolute; inset: var(--peek-inset) 0; z-index: -2;
-  background: var(--peek-colour, var(--folder)); border-radius: 0 6px 6px 0;
+/* Each tab owns a separate, permanently coloured backing sheet. The old
+   sheet retracts while the next slides out; no shared surface changes hue. */
+.side-page-peek {
+  position: absolute; inset: var(--peek-inset) 0; z-index: -3;
+  background: var(--c); border-radius: 0 6px 6px 0;
   pointer-events: none; transform: translateX(0);
   transition: transform 0.325s var(--ease);
 }
-.page:has(.side-tab:not(.is-active):hover)::after,
-.page:has(.side-tab:not(.is-active):focus-visible)::after {
-  transform: translateX(12px);
+.side-page-peek.is-peeking {
+  transform: translateX(12px); z-index: -2;
 }
 .page-cover {
   /* 1px wider on the hinge side and hinged 1px in, so once open it overlaps

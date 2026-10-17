@@ -450,6 +450,13 @@
     var blocks = row.length ? [] : Array.prototype.slice.call(document.querySelectorAll('.sheet .block'))
       .filter(function (bl) { return bl.querySelector('.block-title'); });
     var sections = row.length ? row : (blocks.length > 1 ? blocks : []);
+    var backingSheets = [], hoveredTab = null;
+    function syncPeeks() {
+      backingSheets.forEach(function (pair) {
+        pair.sheet.classList.toggle('is-peeking', !pair.tab.classList.contains('is-active') &&
+          (pair.tab === hoveredTab || pair.tab.matches(':focus-visible')));
+      });
+    }
 
     function addTab(label, c, i) {
       var b = document.createElement(sections.length ? 'button' : 'span');
@@ -463,13 +470,21 @@
         b.appendChild(hitbox);
       }
       b.style.setProperty('--c', 'var(--' + (c || (i === 0 ? own : colours[i % colours.length])) + ')');
-      function peek() {
-        if (!b.classList.contains('is-active')) {
-          page.style.setProperty('--peek-colour', getComputedStyle(b).getPropertyValue('--c'));
-        }
+      if (sections.length) {
+        var backing = document.createElement('div');
+        backing.className = 'side-page-peek';
+        backing.setAttribute('aria-hidden', 'true');
+        backing.style.setProperty('--c', b.style.getPropertyValue('--c'));
+        page.appendChild(backing);
+        backingSheets.push({ tab: b, sheet: backing });
+        b.addEventListener('pointerenter', function () { hoveredTab = b; syncPeeks(); });
+        b.addEventListener('pointerleave', function () {
+          if (hoveredTab === b) hoveredTab = null;
+          syncPeeks();
+        });
+        b.addEventListener('focus', function () { requestAnimationFrame(syncPeeks); });
+        b.addEventListener('blur', syncPeeks);
       }
-      b.addEventListener('pointerenter', peek);
-      b.addEventListener('focus', peek);
       rail.appendChild(b);
       return b;
     }
@@ -490,6 +505,7 @@
       /* exactly one tab is open: it sits on the folder in the folder's colour */
       var open = function (k) {
         tabs.forEach(function (t, j) { t.classList.toggle('is-active', j === k); });
+        syncPeeks();
         paint(sections[k] && sections[k].getAttribute('data-c'));
       };
       if (row.length) {

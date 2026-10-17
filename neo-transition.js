@@ -178,7 +178,7 @@
     windowEl.className = 'file-flight-window'; windowEl.style.backgroundColor = colour;
     var content = page.cloneNode(true);
     content.classList.remove('is-sliding'); content.classList.add('file-flight-content');
-    content.querySelectorAll('.side-tabs, .page-cover').forEach(function (el) { el.remove(); });
+    content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
     content.removeAttribute('id');
     content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
     Object.assign(content.style, { width: box.width + 'px', height: box.height + 'px', margin: '0',
@@ -338,7 +338,7 @@
       windowEl.style.backgroundColor = state.paper;
       var content = page.cloneNode(true);
       content.classList.add('file-flight-content');
-      content.querySelectorAll('.side-tabs, .page-cover').forEach(function (el) { el.remove(); });
+      content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
       content.removeAttribute('id');
       content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
       Object.assign(content.style, {
