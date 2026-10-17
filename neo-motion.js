@@ -473,7 +473,7 @@
     };
 
     /* The sections: a tab row (Rule Book, the Junk Drawer page) or titled
-       blocks (Coin Math, Tag Check). The page opens on the first one, so the
+       blocks (Useful Tools). The page opens on the first one, so the
        file's own tab (named by data-tab) stands for it; the rest get a tab
        each. A page without sections just has its file tab, always open. */
     var row = Array.prototype.slice.call(document.querySelectorAll('.sheet .tabs .tab'));
@@ -522,13 +522,30 @@
     if (!sections.length) {
       addTab(page.getAttribute('data-tab'), own, 0).classList.add('is-active');
     } else {
+      var shownSub = function () {
+        return blocks.filter(function (bl) { return bl.hasAttribute('data-subpage') && !bl.classList.contains('hidden'); })[0];
+      };
+      var showSub = function (sub) {
+        blocks.forEach(function (bl) {
+          bl.classList.toggle('hidden', bl.hasAttribute('data-subpage') ? bl !== sub : !!sub);
+        });
+      };
       var tabs = sections.map(function (sec, i) {
         var label = sec.getAttribute('data-home-label') || (i === 0 ? page.getAttribute('data-tab')
                   : (row.length ? sec : sec.querySelector('.block-title')).textContent.trim());
         var b = addTab(label, sec.getAttribute('data-c'), i);
         b.addEventListener('click', function () {
-          if (row.length) sec.click();
-          else sec.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+          if (row.length) { sec.click(); return; }
+          /* a data-subpage block is a page of its own: its tab swaps it in
+             for the rest; any other tab swaps the rest back, then scrolls */
+          var isSub = sec.hasAttribute('data-subpage');
+          if (isSub || shownSub()) {
+            showSub(isSub ? sec : null);
+            open(i);
+            history.replaceState(null, '', isSub ? '#' + sec.getAttribute('data-home-hash') : location.pathname);
+            if (window.neoShutter) window.neoShutter(isSub ? sec : blocks[0]);
+          }
+          sec.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
         });
         return b;
       });
@@ -548,6 +565,7 @@
         sync();
       } else {
         var initial = blocks.findIndex(function (bl) { return bl.getAttribute('data-home-hash') === location.hash.slice(1); });
+        if (initial >= 0 && blocks[initial].hasAttribute('data-subpage')) showSub(blocks[initial]);
         open(initial < 0 ? 0 : initial);
         if ('IntersectionObserver' in window) {
           var io = new IntersectionObserver(function (entries) {

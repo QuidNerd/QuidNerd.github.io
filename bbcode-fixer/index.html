@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../neo.css?v=no-peek-6">
-<script src="../neo-transition.js?v=no-peek-6"></script>
-<script src="../neo-motion.js?v=no-peek-6"></script>
+<link rel="stylesheet" href="../neo.css?v=palette-5">
+<script src="../neo-transition.js?v=palette-5"></script>
+<script src="../neo-motion.js?v=palette-5"></script>
 <style>
 /* Colour roles on this page: yellow = you type here, green/red = the verdict,
    and the depth colours below are functional (they encode nesting level).
@@ -108,6 +108,107 @@
   .line-num { width: 32px; padding-right: 8px; }
 }
 
+
+/* ---------- SUB-PAGES ----------
+   Tag Check (the checker) and Frontend notes, one tab each, as on the
+   other files. #frontend opens the notes directly. */
+.chapter { scroll-margin-top: 96px; }
+@font-face { font-family: 'Zapfino'; src: url('Zapfino.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Snell Roundhand'; src: url('Snell_Roundhand.otf') format('opentype'); font-display: swap; }
+@font-face { font-family: 'American Typewriter'; src: url('American_Typewriter.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Georgia'; src: url('Georgia.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Charter'; src: url('CharterBT.otf') format('opentype'); font-display: swap; }
+@font-face { font-family: 'Atkinson Hyperlegible Next'; src: url('AtkinsonHyperlegibleNext.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Lucida Handwriting'; src: url('LucidaHandwriting.TTF') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Segoe Script'; src: url('Segoe_Script.ttf') format('truetype'); font-display: swap; }
+@font-face { font-family: 'Consolas'; src: url('Consolas.TTF') format('truetype'); font-display: swap; }
+
+/* ---------- FRONTEND NOTES ---------- */
+.notes { max-width: none; }
+.notes p, .notes li { max-width: 68ch; }
+.notes > .position-heading:first-child { margin-top: 6px; }
+/* topic headings: big condensed ink with a highlighter stroke */
+.position-heading {
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
+  font-size: clamp(1.8rem, 6.5vw, 2.6rem); line-height: 1; text-transform: uppercase;
+  letter-spacing: 0; color: var(--black);
+  background: linear-gradient(transparent 60%, color-mix(in srgb, var(--folder) 80%, transparent) 60%, color-mix(in srgb, var(--folder) 80%, transparent) 92%, transparent 92%);
+  display: block; width: fit-content; padding: 0 4px;
+  margin: 58px 0 18px;
+}
+
+/* font + colour swatches */
+.font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 22px 0; border: 1px solid var(--rule); }
+.font-grid.single { grid-template-columns: 1fr; max-width: 280px; margin-left: 0; }
+.font-grid.trio { grid-template-columns: repeat(3, 1fr); }
+.font-swatch { text-align: center; padding: 14px 8px; border: 1px solid var(--rule); background: var(--card); }
+.font-swatch-sample {
+  font-size: 2.1rem; color: var(--black); margin-bottom: 8px; line-height: 1.2;
+  display: flex; align-items: center; justify-content: center; height: 3.4rem;
+}
+.font-swatch-name { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; }
+
+.color-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px; margin: 14px 0 22px;
+}
+.color-chip {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--rule);
+  background: var(--card); padding: 9px 12px;
+}
+/* DO NOT re-theme the values below to the site palette. #C1B89B is the
+   forum's actual background and #443D28 its blockquote text — these
+   demos only mean anything shown in the forum's real context. */
+.color-chip.dark { background: #C1B89B; }
+.color-chip.dark .color-name { color: #2a2418; }
+.color-chip.dark .color-hex { color: #4a4436; }
+.color-swatch { width: 30px; height: 30px; flex: none; border: 1px solid var(--rule); }
+.color-swatch.old { opacity: 0.4; }
+.color-info { display: flex; flex-direction: column; }
+.color-name { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; }
+.color-hex { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-dim); }
+
+.hex-opacity-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: column;
+  grid-template-rows: repeat(26, auto); gap: 0 16px;
+  font-family: var(--font-mono); font-size: 0.75rem; margin: 14px 0 22px;
+  background: var(--card); border: 1px solid var(--rule); padding: 14px 16px;
+}
+.hex-opacity-row { display: flex; justify-content: space-between; padding: 2px 4px; border-bottom: 1px dashed var(--rule-strong); }
+.hex-opacity-row .op-val { color: var(--ink-dim); }
+.hex-opacity-row .op-hex { font-weight: 700; }
+
+.radius-demo { display: flex; gap: 24px; justify-content: flex-start; margin: 18px 0; flex-wrap: wrap; }
+.radius-box {
+  position: relative; width: 200px; height: 120px;
+  background: #C1B89B;   /* forum background — keep, see note above */
+  border: 1px solid var(--rule); border-radius: 0;
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
+}
+.radius-overlay { position: absolute; inset: 14px; background: rgba(255,255,255,0.25); }
+.radius-box-label { position: relative; z-index: 1; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: #443D28; }
+
+.font-grid, .hex-opacity-grid, .color-chip { border-radius: var(--radius); overflow: hidden; }
+.color-swatch { border-radius: 50%; border-color: var(--rule-strong); }
+
+/* prose */
+.notes p { font-size: 0.98rem; line-height: 1.75; color: var(--black); margin-bottom: 14px; }
+.notes strong { font-weight: 700; }
+/* block + fit-content so the next heading can't flow up beside it */
+.notes .label {
+  display: block; width: fit-content; font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 2px;
+  background: var(--cyan); border: none; border-radius: 999px;
+  padding: 5px 10px; margin: 26px 0 12px;
+}
+.notes a { color: var(--black); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.notes a:hover { background: var(--yellow); }
+
+@media (max-width: 480px) {
+  .font-grid { display: none; }
+  .hex-opacity-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(51, auto); }
+}
 </style>
 </head>
 <body class="f-cyan">
@@ -121,6 +222,14 @@
 
   <div class="page" data-tab="Tag Check">
   <div class="sheet" data-tab="Tag Check">
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="toc-1" data-c="cyan" style="--c: var(--cyan)" onclick="showChapter(1, this)">Tag Check</button>
+      <button class="tab" id="toc-2" data-c="pink" style="--c: var(--pink)" onclick="showChapter(2, this)">Frontend Notes</button>
+    </div>
+
+    <!-- Tag Check: the checker -->
+    <section class="chapter" id="chapter-1">
 
     <section class="block" data-c="cyan">
       <div class="block-head">
@@ -162,6 +271,163 @@
       <div class="surface surface-headed">
         <div class="surface-head"><span class="head-mark">&#9654;</span> Step 3 &mdash; what&rsquo;s broken</div>
         <div id="issues-panel" class="verdict"><div class="verdict-bar">Nothing to check yet</div></div>
+      </div>
+    </section>
+    </section>
+
+    <!-- Frontend notes -->
+    <section class="chapter hidden" id="chapter-2">
+      <h2>Frontend Notes for BBCoders</h2>
+      <div class="notes">
+        <p><a href="./" onclick="showChapter(1); history.replaceState(null, '', location.pathname); return false;">Tag Check</a> is a BBCode structure checker I built, give it a try! Just keep in mind it's plain JavaScript running in your browser, so refreshing the page wipes everything you've typed.</p>
+
+        <div class="position-heading">Fonts</div>
+        <p>Apple devices (macOS/iOS) have their own font system, because of course they do, but as of a <s>December 2025</s> July 2026 update the regular font has been unified to <span style="font-family: 'Georgia', serif;"><s>Georgia</s></span> <span style="font-family: 'Charter', serif;">Bitstream Charter</span> across the board. RIP Iowan Old Style <s>&mdash; genuinely thrilled to see it go, one less thing to account for when coding across systems.</s> and RIP Georgia too, that lasted all of seven months.</p>
+        <p><s>anyway that's settled now.</s> <strong>ANOTHER update</strong> bc why not: they've stopped choosing for us entirely &mdash; you can now pick the regular font yourself, between <span style="font-family: 'Charter', serif;">Bitstream Charter</span> (the new one), <span style="font-family: 'Georgia', serif;">Georgia</span> (the old one), and <span style="font-family: 'Atkinson Hyperlegible Next', sans-serif;">Atkinson Hyperlegible Next</span> &mdash; an san serif accessibility font built to be as legible as possible, especially for anyone with vision or reading difficulties. so instead of <s>one thing</s> zero things to account for, it is now three. cool. cool cool cool.</p>
+        <div class="font-grid trio">
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Charter', serif; font-size: 2.2rem;">Regular</div>
+            <div class="font-swatch-name">Bitstream Charter<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">the new one</span></div>
+          </div>
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Georgia', serif; font-size: 2.2rem;">Regular</div>
+            <div class="font-swatch-name">Georgia<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">the old one</span></div>
+          </div>
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Atkinson Hyperlegible Next', sans-serif; font-size: 2rem;">Regular</div>
+            <div class="font-swatch-name">Atkinson Hyperlegible Next<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">most legible</span></div>
+          </div>
+        </div>
+
+        <p>Signature, cursive, and typewriter still run on two separate sets depending on the device though.</p>
+
+        <div class="font-grid">
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: Zapfino, cursive; font-size: 2.0rem; transform: translateY(5px);">Signature</div>
+            <div class="font-swatch-name">Zapfino</div>
+          </div>
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Lucida Handwriting', cursive;">Signature</div>
+            <div class="font-swatch-name">Lucida Handwriting</div>
+          </div>
+        </div>
+
+        <div class="font-grid">
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Snell Roundhand', cursive; font-size: 2.6rem;">Cursive</div>
+            <div class="font-swatch-name">Snell Roundhand</div>
+          </div>
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'Segoe Script', cursive;">Cursive</div>
+            <div class="font-swatch-name">Segoe Script</div>
+          </div>
+        </div>
+
+        <div class="font-grid">
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: 'American Typewriter', monospace; font-size: 1.9rem;">Typewriter</div>
+            <div class="font-swatch-name">American Typewriter</div>
+          </div>
+          <div class="font-swatch">
+            <div class="font-swatch-sample" style="font-family: Consolas, monospace; font-size: 1.9rem; transform: translateY(3px);">Typewriter</div>
+            <div class="font-swatch-name">Consolas</div>
+          </div>
+        </div>
+
+        <p>In table: Left column is what Apple users see, right column is what everyone else gets. And if you're reading this on mobile — no tables for you >:( why are you looking at coding resources on your phone? Go find a laptop!</p>
+
+        <div class="position-heading">Colors</div>
+
+        <p class="label">User Group Colors</p>
+        <div class="color-grid">
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#8a1d1d;"></span>
+            <div class="color-info"><span class="color-name">Gryffindor</span><span class="color-hex">#8a1d1d</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#1a541a;"></span>
+            <div class="color-info"><span class="color-name">Slytherin</span><span class="color-hex">#1a541a</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#22476c;"></span>
+            <div class="color-info"><span class="color-name">Ravenclaw</span><span class="color-hex">#22476c</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch old" style="background:#89700a;"></span>
+            <span class="color-swatch" style="background:#9e7e1e;"></span>
+            <div class="color-info"><span class="color-name">Hufflepuff</span><span class="color-hex"><s>#89700a</s> &rarr; #9e7e1e</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch old" style="background:#6f5d8a;"></span>
+            <span class="color-swatch" style="background:#450d59;"></span>
+            <div class="color-info"><span class="color-name">Staffs</span><span class="color-hex"><s>#6f5d8a</s> &rarr; #450d59</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch old" style="background:#505050;"></span>
+            <span class="color-swatch" style="background:#5c361f;"></span>
+            <div class="color-info"><span class="color-name">Adults</span><span class="color-hex"><s>#505050</s> &rarr; #5c361f</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#005757;"></span>
+            <div class="color-info"><span class="color-name">INPCs</span><span class="color-hex">#005757</span></div>
+          </div>
+        </div>
+
+        <p class="label">Money Colors</p>
+        <div class="color-grid">
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#D1A541;"></span>
+            <div class="color-info"><span class="color-name">Galleons</span><span class="color-hex">#D1A541</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#BCB1B9;"></span>
+            <div class="color-info"><span class="color-name">Sickles</span><span class="color-hex">#BCB1B9</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#A26E49;"></span>
+            <div class="color-info"><span class="color-name">Knuts</span><span class="color-hex">#A26E49</span></div>
+          </div>
+        </div>
+
+        <p class="label">Blockquote</p>
+        <p>Blockquote text on encyclopedia pages uses rgb(67.753696319, 61.1166627571, 39.546303681). Rounded everything up and the closest hex I could manage is #434027. Tho I tend to use #443D28.</p>
+        <div class="color-grid">
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#434027;"></span>
+            <div class="color-info"><span class="color-name">Blockquote Text</span><span class="color-hex">#434027</span></div>
+          </div>
+          <div class="color-chip">
+            <span class="color-swatch" style="background:#443D28;"></span>
+            <div class="color-info"><span class="color-name">What I Use</span><span class="color-hex">#443D28</span></div>
+          </div>
+        </div>
+
+        <p>Blockquote background is 20% white opacity, so something like #FFFFFF33 gets you close enough. But #FFFFFF59 actually looks better.</p>
+        <div class="color-grid">
+          <div class="color-chip dark">
+            <span class="color-swatch" style="background: rgba(255,255,255,0.25);"></span>
+            <div class="color-info"><span class="color-name">20% White</span><span class="color-hex">#FFFFFF33</span></div>
+          </div>
+          <div class="color-chip dark">
+            <span class="color-swatch" style="background: rgba(255,255,255,0.35);"></span>
+            <div class="color-info"><span class="color-name">35% White</span><span class="color-hex">#FFFFFF59</span></div>
+          </div>
+        </div>
+                <p>Corner radius is 0.3em (site default 1rem = 16px, so roughly 4.8px, can just round to 5px). This probably doesn't belong in the color section but I'm putting it here anyway since we're talking blockquotes.</p>
+
+        <div class="radius-demo">
+          <div class="radius-box">
+            <div class="radius-overlay" style="border-radius: 0;"></div>
+            <span class="radius-box-label">0px</span>
+          </div>
+          <div class="radius-box">
+            <div class="radius-overlay" style="border-radius: 5px;"></div>
+            <span class="radius-box-label">5px</span>
+          </div>
+        </div>
+
+        <p class="label">Hex Opacity Table</p>
+        <div class="hex-opacity-grid" id="hex-opacity-table"></div>
       </div>
     </section>
 
@@ -413,6 +679,44 @@ document.getElementById('clear-input').addEventListener('click', () => {
   document.getElementById('bb-input').value = '';
   runAnalysis();
 });
+
+// ==================== SUB-PAGES ====================
+function showChapter(n, el) {
+  document.querySelectorAll('.tabs .tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.chapter').forEach(c => c.classList.add('hidden'));
+  const chapter = document.getElementById('chapter-' + n);
+  chapter.classList.remove('hidden');
+  if (window.neoShutter) neoShutter(chapter);
+  (el || document.getElementById('toc-' + n)).classList.add('active');
+  chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+// One # per sub-page, so the home page can open Frontend notes directly.
+const CHAPTER_HASH = ['', 'frontend'];
+function chapterFromHash(land) {
+  const h = location.hash.slice(1);
+  const n = h ? CHAPTER_HASH.indexOf(h) : 0;
+  if (n < 0) return;
+  showChapter(n + 1);
+  if (land) window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tabs .tab').forEach((b, i) => b.addEventListener('click', () => {
+  history.replaceState(null, '', CHAPTER_HASH[i] ? '#' + CHAPTER_HASH[i] : location.pathname);
+}));
+window.addEventListener('hashchange', () => chapterFromHash(false));
+chapterFromHash(true);
+
+// ==================== HEX OPACITY TABLE ====================
+(function buildHexOpacityTable() {
+  const el = document.getElementById('hex-opacity-table');
+  if (!el) return;
+  let html = '';
+  for (let p = 100; p >= 0; p--) {
+    const v = Math.round(p * 255 / 100);
+    const hex = v.toString(16).toUpperCase().padStart(2, '0');
+    html += `<div class="hex-opacity-row"><span class="op-val">${p}%</span><span class="op-hex">${hex}</span></div>`;
+  }
+  el.innerHTML = html;
+})();
 </script>
 <footer class="site-footer">
   <span class="footer-star">✦</span>

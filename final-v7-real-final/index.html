@@ -8,24 +8,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../neo.css?v=no-peek-6">
-<script src="../neo-transition.js?v=no-peek-6"></script>
-<script src="../neo-motion.js?v=no-peek-6"></script>
+<link rel="stylesheet" href="../neo.css?v=palette-5">
+<script src="../neo-transition.js?v=palette-5"></script>
+<script src="../neo-motion.js?v=palette-5"></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css */
 /* this page's name is a long filename, so its title runs smaller than the
    others to stay on one line (its underscores would otherwise sit on top of
    a second line) */
 .masthead h1 { font-size: clamp(2rem, 6.2vw, 4.5rem); line-height: 0.95; }   /* sized to fit the folder width on one line */
-@font-face { font-family: 'Zapfino'; src: url('Zapfino.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Snell Roundhand'; src: url('Snell_Roundhand.otf') format('opentype'); font-display: swap; }
-@font-face { font-family: 'American Typewriter'; src: url('American_Typewriter.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Georgia'; src: url('Georgia.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Charter'; src: url('CharterBT.otf') format('opentype'); font-display: swap; }
-@font-face { font-family: 'Atkinson Hyperlegible Next'; src: url('AtkinsonHyperlegibleNext.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Lucida Handwriting'; src: url('LucidaHandwriting.TTF') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Segoe Script'; src: url('Segoe_Script.ttf') format('truetype'); font-display: swap; }
-@font-face { font-family: 'Consolas'; src: url('Consolas.TTF') format('truetype'); font-display: swap; }
 
 
 /* Nudge: the tab row can read as a set of labels rather than controls,
@@ -263,58 +254,6 @@
 .duel-compare thead th.dc-arc { background: #2a2a2a; color: var(--yellow); }
 .duel-compare-cap { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-dim); margin: 0 0 22px; }
 
-/* font + colour swatches */
-.font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 22px 0; border: 1px solid var(--rule); }
-.font-grid.single { grid-template-columns: 1fr; max-width: 280px; margin-left: 0; }
-.font-grid.trio { grid-template-columns: repeat(3, 1fr); }
-.font-swatch { text-align: center; padding: 14px 8px; border: 1px solid var(--rule); background: var(--card); }
-.font-swatch-sample {
-  font-size: 2.1rem; color: var(--black); margin-bottom: 8px; line-height: 1.2;
-  display: flex; align-items: center; justify-content: center; height: 3.4rem;
-}
-.font-swatch-name { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; }
-
-.color-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 10px; margin: 14px 0 22px;
-}
-.color-chip {
-  display: flex; align-items: center; gap: 10px;
-  border: 1px solid var(--rule);
-  background: var(--card); padding: 9px 12px;
-}
-/* DO NOT re-theme the values below to the site palette. #C1B89B is the
-   forum's actual background and #443D28 its blockquote text — these
-   demos only mean anything shown in the forum's real context. */
-.color-chip.dark { background: #C1B89B; }
-.color-chip.dark .color-name { color: #2a2418; }
-.color-chip.dark .color-hex { color: #4a4436; }
-.color-swatch { width: 30px; height: 30px; flex: none; border: 1px solid var(--rule); }
-.color-swatch.old { opacity: 0.4; }
-.color-info { display: flex; flex-direction: column; }
-.color-name { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; }
-.color-hex { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-dim); }
-
-.hex-opacity-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: column;
-  grid-template-rows: repeat(26, auto); gap: 0 16px;
-  font-family: var(--font-mono); font-size: 0.75rem; margin: 14px 0 22px;
-  background: var(--card); border: 1px solid var(--rule); padding: 14px 16px;
-}
-.hex-opacity-row { display: flex; justify-content: space-between; padding: 2px 4px; border-bottom: 1px dashed var(--rule-strong); }
-.hex-opacity-row .op-val { color: var(--ink-dim); }
-.hex-opacity-row .op-hex { font-weight: 700; }
-
-.radius-demo { display: flex; gap: 24px; justify-content: flex-start; margin: 18px 0; flex-wrap: wrap; }
-.radius-box {
-  position: relative; width: 200px; height: 120px;
-  background: #C1B89B;   /* forum background — keep, see note above */
-  border: 1px solid var(--rule); border-radius: 0;
-  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
-}
-.radius-overlay { position: absolute; inset: 14px; background: rgba(255,255,255,0.25); }
-.radius-box-label { position: relative; z-index: 1; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: #443D28; }
-
 /* prose */
 .notes p { font-size: 0.98rem; line-height: 1.75; color: var(--black); margin-bottom: 14px; }
 .notes img { display: block; max-width: 100%; margin: 14px 0; border: 1px solid var(--rule); }
@@ -408,32 +347,6 @@
 }
 .quote-block .quote-attr::before { content: "\2014\00a0"; }
 
-/* bean clock */
-.bean-clock {
-  border: 1px solid var(--rule);
-  background: var(--card); padding: 26px; margin: 18px 0; text-align: center;
-}
-.bean-clock-label {
-  font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
-  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
-}
-.bean-clock-time {
-  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: clamp(2rem, 10vw, 3rem);
-  letter-spacing: 0; color: var(--black);
-  text-shadow: none;
-}
-.bean-clock-cest { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-dim); margin-top: 8px; }
-.bean-clock-row {
-  display: flex; justify-content: center; gap: 20px; margin-top: 24px;
-  padding-top: 22px; border-top: 1px dashed var(--rule-strong); flex-wrap: wrap;
-}
-.bean-clock-col {
-  min-width: 240px; background: var(--cyan);
-  border: 1px solid var(--rule); padding: 10px;
-}
-.bean-clock-value { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.5rem; }
-.bean-clock-sub { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; margin-top: 4px; }
-
 /* ---- filing-cabinet pass ---- */
 /* the intro is a sticky note on the sheet */
 .chapter-intro {
@@ -452,18 +365,16 @@
 .stat-chip { border: none; border-radius: 999px; }
 .stat-chips.alloc .stat-chip { border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; box-shadow: var(--lift-sm); }
 .stat-chips.alloc .stat-chip strong { border-radius: 0; }
-.build-compare, .font-grid, .abilities-box, .duel-compare-wrap, .hex-opacity-grid, .bean-clock, .color-chip {
+.build-compare, .abilities-box, .duel-compare-wrap {
   border-radius: var(--radius); overflow: hidden;
 }
-.build-compare, .abilities-box, .bean-clock { box-shadow: var(--lift-sm); }
+.build-compare, .abilities-box { box-shadow: var(--lift-sm); }
 .build-compare .bc-head { background: #fff1a6; }
 .notes .label, .addendum-label, .quote-block .quote-attr, .tab-hint-label { border: none; border-radius: 999px; }
 .abilities-box .group-label { border: none; border-radius: 2px; background: #fff1a6; }
 .addendum { border-radius: 6px; }
 .quote-block { border-radius: var(--radius); border-left: 3px solid var(--black); }
 .quote-block .quote-attr { background: #fff1a6; }
-.bean-clock-col { border: none; border-radius: var(--radius); }
-.color-swatch { border-radius: 50%; border-color: var(--rule-strong); }
 .notes img { border-radius: var(--radius); box-shadow: var(--lift); }
 .ad-tag, .ad-countdown { border: none; border-radius: 999px; }
 .ad-cta { border-radius: var(--radius); }
@@ -474,10 +385,6 @@
 @media (max-width: 560px) {
   .build-compare .bc-cell { padding: 8px 6px; font-size: 0.78rem; }
   .build-compare .bc-sub { font-size: 0.65rem; }
-}
-@media (max-width: 480px) {
-  .font-grid { display: none; }
-  .hex-opacity-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(51, auto); }
 }
 
 </style>
@@ -491,16 +398,14 @@
     <h1>final_v7_REAL_final.docx</h1>
     </div>
 
-  <div class="page" data-tab="Quidditch build">
-  <div class="sheet" data-tab="Quidditch build">
+  <div class="page" data-tab="Quidditch Build">
+  <div class="sheet" data-tab="Quidditch Build">
 
     <div class="tabs" role="tablist">
-      <button class="tab active" id="toc-1" data-c="yellow" style="--c: var(--yellow)" onclick="showChapter(1, this)">Quidditch build</button>
-      <button class="tab" id="toc-2" data-home-label="Duelling" data-c="pink" style="--c: var(--pink)" onclick="showChapter(2, this)">Duelling build</button>
+      <button class="tab active" id="toc-1" data-c="yellow" style="--c: var(--yellow)" onclick="showChapter(1, this)">Quidditch Build</button>
+      <button class="tab" id="toc-2" data-home-label="Duelling" data-c="lime" style="--c: var(--lime)" onclick="showChapter(2, this)">Duelling build</button>
       <button class="tab" id="toc-3" data-home-label="Broomracing" data-c="cyan" style="--c: var(--cyan)" onclick="showChapter(3, this)">Broomracing build</button>
       <button class="tab" id="toc-4" data-c="lime" style="--c: var(--lime)" onclick="showChapter(4, this)">Summoner's court build</button>
-      <button class="tab" id="toc-5" data-c="yellow" style="--c: var(--yellow)" onclick="showChapter(5, this)">Frontend notes</button>
-      <button class="tab" id="toc-6" data-c="red" style="--c: var(--red)" onclick="showChapter(6, this)">The bean clock</button>
     </div>
 
     <div class="tab-hint" aria-hidden="true">
@@ -853,187 +758,6 @@
       <p class="chapter-intro">i have not read a single line of rules for this lmfao (the rules are staff-only and i am but a humble civilian) but based on the rolls i'm seeing, it's giving heavy WIS ACC EVA energy. Countering Expelliarmus needs STR tho</p>
     </section>
 
-    <!-- Chapter V: Frontend Notes for BBCoders -->
-    <section class="chapter hidden" id="chapter-5">
-      <h2>Frontend Notes for BBCoders</h2>
-      <div class="notes">
-        <p><a href="../bbcode-fixer/">Tag Check</a> is a BBCode structure checker I built, give it a try! Just keep in mind it's plain JavaScript running in your browser, so refreshing the page wipes everything you've typed.</p>
-
-        <div class="position-heading">Fonts</div>
-        <p>Apple devices (macOS/iOS) have their own font system, because of course they do, but as of a <s>December 2025</s> July 2026 update the regular font has been unified to <span style="font-family: 'Georgia', serif;"><s>Georgia</s></span> <span style="font-family: 'Charter', serif;">Bitstream Charter</span> across the board. RIP Iowan Old Style <s>&mdash; genuinely thrilled to see it go, one less thing to account for when coding across systems.</s> and RIP Georgia too, that lasted all of seven months.</p>
-        <p><s>anyway that's settled now.</s> <strong>ANOTHER update</strong> bc why not: they've stopped choosing for us entirely &mdash; you can now pick the regular font yourself, between <span style="font-family: 'Charter', serif;">Bitstream Charter</span> (the new one), <span style="font-family: 'Georgia', serif;">Georgia</span> (the old one), and <span style="font-family: 'Atkinson Hyperlegible Next', sans-serif;">Atkinson Hyperlegible Next</span> &mdash; an san serif accessibility font built to be as legible as possible, especially for anyone with vision or reading difficulties. so instead of <s>one thing</s> zero things to account for, it is now three. cool. cool cool cool.</p>
-        <div class="font-grid trio">
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'Charter', serif; font-size: 2.2rem;">Regular</div>
-            <div class="font-swatch-name">Bitstream Charter<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">the new one</span></div>
-          </div>
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'Georgia', serif; font-size: 2.2rem;">Regular</div>
-            <div class="font-swatch-name">Georgia<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">the old one</span></div>
-          </div>
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'Atkinson Hyperlegible Next', sans-serif; font-size: 2rem;">Regular</div>
-            <div class="font-swatch-name">Atkinson Hyperlegible Next<span style="display: block; text-transform: none; opacity: 0.6; margin-top: 3px;">most legible</span></div>
-          </div>
-        </div>
-
-        <p>Signature, cursive, and typewriter still run on two separate sets depending on the device though.</p>
-
-        <div class="font-grid">
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: Zapfino, cursive; font-size: 2.0rem; transform: translateY(5px);">Signature</div>
-            <div class="font-swatch-name">Zapfino</div>
-          </div>
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'Lucida Handwriting', cursive;">Signature</div>
-            <div class="font-swatch-name">Lucida Handwriting</div>
-          </div>
-        </div>
-
-        <div class="font-grid">
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'Snell Roundhand', cursive; font-size: 2.6rem;">Cursive</div>
-            <div class="font-swatch-name">Snell Roundhand</div>
-          </div>
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'Segoe Script', cursive;">Cursive</div>
-            <div class="font-swatch-name">Segoe Script</div>
-          </div>
-        </div>
-
-        <div class="font-grid">
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: 'American Typewriter', monospace; font-size: 1.9rem;">Typewriter</div>
-            <div class="font-swatch-name">American Typewriter</div>
-          </div>
-          <div class="font-swatch">
-            <div class="font-swatch-sample" style="font-family: Consolas, monospace; font-size: 1.9rem; transform: translateY(3px);">Typewriter</div>
-            <div class="font-swatch-name">Consolas</div>
-          </div>
-        </div>
-
-        <p>In table: Left column is what Apple users see, right column is what everyone else gets. And if you're reading this on mobile — no tables for you >:( why are you looking at coding resources on your phone? Go find a laptop!</p>
-
-        <div class="position-heading">Colors</div>
-
-        <p class="label">User Group Colors</p>
-        <div class="color-grid">
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#8a1d1d;"></span>
-            <div class="color-info"><span class="color-name">Gryffindor</span><span class="color-hex">#8a1d1d</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#1a541a;"></span>
-            <div class="color-info"><span class="color-name">Slytherin</span><span class="color-hex">#1a541a</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#22476c;"></span>
-            <div class="color-info"><span class="color-name">Ravenclaw</span><span class="color-hex">#22476c</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch old" style="background:#89700a;"></span>
-            <span class="color-swatch" style="background:#9e7e1e;"></span>
-            <div class="color-info"><span class="color-name">Hufflepuff</span><span class="color-hex"><s>#89700a</s> &rarr; #9e7e1e</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch old" style="background:#6f5d8a;"></span>
-            <span class="color-swatch" style="background:#450d59;"></span>
-            <div class="color-info"><span class="color-name">Staffs</span><span class="color-hex"><s>#6f5d8a</s> &rarr; #450d59</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch old" style="background:#505050;"></span>
-            <span class="color-swatch" style="background:#5c361f;"></span>
-            <div class="color-info"><span class="color-name">Adults</span><span class="color-hex"><s>#505050</s> &rarr; #5c361f</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#005757;"></span>
-            <div class="color-info"><span class="color-name">INPCs</span><span class="color-hex">#005757</span></div>
-          </div>
-        </div>
-
-        <p class="label">Money Colors</p>
-        <div class="color-grid">
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#D1A541;"></span>
-            <div class="color-info"><span class="color-name">Galleons</span><span class="color-hex">#D1A541</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#BCB1B9;"></span>
-            <div class="color-info"><span class="color-name">Sickles</span><span class="color-hex">#BCB1B9</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#A26E49;"></span>
-            <div class="color-info"><span class="color-name">Knuts</span><span class="color-hex">#A26E49</span></div>
-          </div>
-        </div>
-
-        <p class="label">Blockquote</p>
-        <p>Blockquote text on encyclopedia pages uses rgb(67.753696319, 61.1166627571, 39.546303681). Rounded everything up and the closest hex I could manage is #434027. Tho I tend to use #443D28.</p>
-        <div class="color-grid">
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#434027;"></span>
-            <div class="color-info"><span class="color-name">Blockquote Text</span><span class="color-hex">#434027</span></div>
-          </div>
-          <div class="color-chip">
-            <span class="color-swatch" style="background:#443D28;"></span>
-            <div class="color-info"><span class="color-name">What I Use</span><span class="color-hex">#443D28</span></div>
-          </div>
-        </div>
-
-        <p>Blockquote background is 20% white opacity, so something like #FFFFFF33 gets you close enough. But #FFFFFF59 actually looks better.</p>
-        <div class="color-grid">
-          <div class="color-chip dark">
-            <span class="color-swatch" style="background: rgba(255,255,255,0.25);"></span>
-            <div class="color-info"><span class="color-name">20% White</span><span class="color-hex">#FFFFFF33</span></div>
-          </div>
-          <div class="color-chip dark">
-            <span class="color-swatch" style="background: rgba(255,255,255,0.35);"></span>
-            <div class="color-info"><span class="color-name">35% White</span><span class="color-hex">#FFFFFF59</span></div>
-          </div>
-        </div>
-                <p>Corner radius is 0.3em (site default 1rem = 16px, so roughly 4.8px, can just round to 5px). This probably doesn't belong in the color section but I'm putting it here anyway since we're talking blockquotes.</p>
-
-        <div class="radius-demo">
-          <div class="radius-box">
-            <div class="radius-overlay" style="border-radius: 0;"></div>
-            <span class="radius-box-label">0px</span>
-          </div>
-          <div class="radius-box">
-            <div class="radius-overlay" style="border-radius: 5px;"></div>
-            <span class="radius-box-label">5px</span>
-          </div>
-        </div>
-
-        <p class="label">Hex Opacity Table</p>
-        <div class="hex-opacity-grid" id="hex-opacity-table"></div>
-      </div>
-    </section>
-
-    <!-- Chapter VI: The Bean Clock -->
-    <section class="chapter hidden" id="chapter-6">
-      <h2>The Bean Clock</h2>
-      <div class="notes">
-        <p>Every Flavour Beans locations refresh every 6 hours at 00:00, 06:00, 12:00, and 18:00 (EST/EDT, auto-adjusted for DST), shown below alongside the French time equivalent.</p>
-        <div class="bean-clock">
-          <div class="bean-clock-label">Right Now</div>
-          <div class="bean-clock-time" id="bean-now-est">--:--</div>
-          <div class="bean-clock-cest" id="bean-now-cest">France --:--</div>
-          <div class="bean-clock-row">
-            <div class="bean-clock-col">
-              <div class="bean-clock-label">Last Spawn</div>
-              <div class="bean-clock-value" id="bean-last-time">--:--</div>
-              <div class="bean-clock-sub" id="bean-last-ago">-- ago</div>
-            </div>
-            <div class="bean-clock-col">
-              <div class="bean-clock-label">Next Spawn</div>
-              <div class="bean-clock-value" id="bean-next-time">--:--</div>
-              <div class="bean-clock-sub" id="bean-next-in">in --</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
   </div>
   </div>
 </div>
@@ -1069,7 +793,7 @@ function showChapter(n, el) {
 // One # per chapter, so the home page can open any of them directly. Arriving
 // from a link lands at the top (the folder is opening); switching chapters
 // here keeps the address bar in step.
-const CHAPTER_HASH = ['', 'duelling', 'broomracing', 'summoners-court', 'frontend', 'bean-clock'];
+const CHAPTER_HASH = ['', 'duelling', 'broomracing', 'summoners-court'];
 function chapterFromHash(land) {
   const h = location.hash.slice(1);
   const n = h ? CHAPTER_HASH.indexOf(h) : 0;
@@ -1083,91 +807,6 @@ document.querySelectorAll('.tabs .tab').forEach((b, i) => b.addEventListener('cl
 window.addEventListener('hashchange', () => chapterFromHash(false));
 chapterFromHash(true);
 
-// ==================== HEX OPACITY TABLE ====================
-(function buildHexOpacityTable() {
-  const el = document.getElementById('hex-opacity-table');
-  if (!el) return;
-  let html = '';
-  for (let p = 100; p >= 0; p--) {
-    const v = Math.round(p * 255 / 100);
-    const hex = v.toString(16).toUpperCase().padStart(2, '0');
-    html += `<div class="hex-opacity-row"><span class="op-val">${p}%</span><span class="op-hex">${hex}</span></div>`;
-  }
-  el.innerHTML = html;
-})();
-
-// ==================== BEAN CLOCK ====================
-// Spawn grid is anchored to Toronto's wall-clock time (00/06/12/18), which
-// auto-shifts between EST and EDT with real-world DST. no hardcoded offset.
-const BEAN_SPAWN_HOURS_LOCAL = [0, 6, 12, 18];
-
-function beanPad(n) { return String(n).padStart(2, '0'); }
-
-// Returns { y, mo, da, h, mi, s, wallMs, offsetH } describing `date` as rendered in `timeZone`.
-// y/mo/da/h/mi/s are reusable as UTC fields to do wall-clock arithmetic safely.
-// offsetH is the zone's current UTC offset in whole hours (derived, not read from ICU
-// abbreviations -- those are unreliable for European zones in "short" format).
-function beanZoneParts(date, timeZone) {
-  const dtf = new Intl.DateTimeFormat('en-US', {
-    timeZone, hour12: false,
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
-  const map = {};
-  dtf.formatToParts(date).forEach(p => { map[p.type] = p.value; });
-  const y = Number(map.year), mo = Number(map.month) - 1, da = Number(map.day);
-  const h = map.hour === '24' ? 0 : Number(map.hour);
-  const mi = Number(map.minute), s = Number(map.second);
-  const wallMs = Date.UTC(y, mo, da, h, mi, s);
-  const offsetH = Math.round((wallMs - date.getTime()) / 3600000);
-  return { y, mo, da, h, mi, s, wallMs, offsetH };
-}
-
-function beanZoneLabel(timeZone, offsetH) {
-  if (timeZone === 'America/Toronto') return offsetH === -4 ? 'EDT' : 'EST';
-  return '';
-}
-
-function beanFmtDuration(ms) {
-  const totalMin = Math.round(ms / 60000);
-  const h = Math.floor(totalMin / 60), m = totalMin % 60;
-  return h > 0 ? `${h}h ${m}m` : `${m}m`;
-}
-
-function updateBeanClock() {
-  if (!document.getElementById('bean-now-est')) return;
-  const now = new Date();
-  const toronto = beanZoneParts(now, 'America/Toronto');
-  const paris = beanZoneParts(now, 'Europe/Paris');
-  const torontoLabel = beanZoneLabel('America/Toronto', toronto.offsetH);
-
-  document.getElementById('bean-now-est').textContent =
-    beanPad(toronto.h) + ':' + beanPad(toronto.mi) + ' ' + torontoLabel;
-  document.getElementById('bean-now-cest').textContent =
-    'France ' + beanPad(paris.h) + ':' + beanPad(paris.mi);
-
-  const candidates = [];
-  for (let dOff = -1; dOff <= 1; dOff++) {
-    BEAN_SPAWN_HOURS_LOCAL.forEach(h => candidates.push(Date.UTC(toronto.y, toronto.mo, toronto.da + dOff, h, 0, 0)));
-  }
-  candidates.sort((a, b) => a - b);
-  let last = null, next = null;
-  candidates.forEach(c => {
-    if (c <= toronto.wallMs) last = c;
-    if (c > toronto.wallMs && next === null) next = c;
-  });
-
-  const lastD = new Date(last), nextD = new Date(next);
-  document.getElementById('bean-last-time').textContent =
-    beanPad(lastD.getUTCHours()) + ':' + beanPad(lastD.getUTCMinutes()) + ' ' + torontoLabel;
-  document.getElementById('bean-last-ago').textContent = beanFmtDuration(toronto.wallMs - last) + ' ago';
-  document.getElementById('bean-next-time').textContent =
-    beanPad(nextD.getUTCHours()) + ':' + beanPad(nextD.getUTCMinutes()) + ' ' + torontoLabel;
-  document.getElementById('bean-next-in').textContent = 'in ' + beanFmtDuration(next - toronto.wallMs);
-}
-
-updateBeanClock();
-setInterval(updateBeanClock, 1000);
 </script>
 <footer class="site-footer">
   <span class="footer-star">✦</span>
