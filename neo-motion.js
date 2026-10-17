@@ -152,7 +152,8 @@
      scroll up. A small dead zone stops it twitching on trackpad jitter. */
   function duckTopbar() {
     var bar = document.querySelector('.topbar');
-    if (!bar) return;
+    /* home only: on the files the bar stays pinned */
+    if (!bar || !document.body.classList.contains('home')) return;
     var last = window.scrollY, ticking = false;
     window.addEventListener('scroll', function () {
       if (ticking) return;
@@ -167,6 +168,35 @@
     }, { passive: true });
     /* keyboard users tabbing into the bar must be able to see it */
     bar.addEventListener('focusin', function () { bar.classList.remove('is-hidden'); });
+  }
+
+  /* ---------- NO RIGHT CLICK ----------
+     The context menu is swapped for a little note by the cursor. Text
+     fields keep the real menu so pasting still works. */
+  function noPeek() {
+    var note = null;
+    document.addEventListener('contextmenu', function (e) {
+      if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
+      e.preventDefault();
+      if (note) note.remove();
+      note = document.createElement('div');
+      note.className = 'no-peek';
+      note.setAttribute('role', 'status');
+      note.textContent = 'no peeking behind the folders\nthank you';
+      document.body.appendChild(note);
+      /* sit just below-right of the cursor, flipped back inside the window */
+      var w = note.offsetWidth, h = note.offsetHeight, pad = 12;
+      var x = e.clientX + 14, y = e.clientY + 16;
+      if (x + w > innerWidth - pad) x = e.clientX - w - 10;
+      if (y + h > innerHeight - pad) y = e.clientY - h - 12;
+      note.style.left = Math.max(pad, x) + 'px';
+      note.style.top = Math.max(pad, y) + 'px';
+      var mine = note;
+      note.addEventListener('animationend', function () {
+        mine.remove();
+        if (note === mine) note = null;
+      });
+    });
   }
 
   /* ---------- REVEAL ----------
@@ -569,6 +599,7 @@
     openFile();
     mountHazard();
     duckTopbar();
+    noPeek();
     mountReveal();
     mountHomeStack();
     mountLeaving();
