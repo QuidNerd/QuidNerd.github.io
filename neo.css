@@ -209,16 +209,21 @@ h1 {
   text-transform: uppercase; color: var(--desk-ink);
   margin: 0; overflow-wrap: anywhere;
 }
-/* neo-motion.js splits the title into letters that rise in one by one */
+/* Each letter slides sideways inside its own mask, like opening shutters. */
 h1 .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.04em; }
-h1 .char { display: inline-block; animation: char-up 0.9s var(--ease) both; animation-delay: calc(0.1s + var(--n) * 0.035s); }
-@keyframes char-up { from { transform: translateY(105%); } }
+h1 .char-mask { display: inline-block; overflow: hidden; vertical-align: top; }
+h1 .char { display: inline-block; animation: char-shutter 0.65s cubic-bezier(.215,.61,.355,1) both; animation-delay: calc(var(--title-delay, 0.1s) + var(--n) * 0.025s); }
+@keyframes char-shutter {
+  from { transform: translateX(-150%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
 
 /* THE FOLDER — coloured, with its tabs down the right-hand edge (the
    .side-tabs rail, built by neo-motion.js). Its colour is drawn by ::before
    so the rail can sit underneath it and the tab roots tuck behind the edge;
    .page-cover is the front cover, which swings open when the file opens. */
 .page {
+  --peek-inset: 6px;
   position: relative; isolation: isolate;
   perspective: 3000px;
   /* the cover is hinged down the left edge, so only the right-hand corners
@@ -232,6 +237,18 @@ h1 .char { display: inline-block; animation: char-up 0.9s var(--ease) both; anim
   content: ""; position: absolute; inset: 0; z-index: 0;
   background: var(--folder); border-radius: inherit;
   transition: background-color 0.45s ease;   /* the folder re-colours with the open section */
+}
+/* The hovered tab belongs to a whole sheet tucked behind the open file.
+   Move its edge by the same distance as the tab, retaining the 2px overlap. */
+.page::after {
+  content: ""; position: absolute; inset: var(--peek-inset) 0; z-index: -2;
+  background: var(--peek-colour, var(--folder)); border-radius: 0 6px 6px 0;
+  pointer-events: none; transform: translateX(0);
+  transition: transform 0.325s var(--ease);
+}
+.page:has(.side-tab:not(.is-active):hover)::after,
+.page:has(.side-tab:not(.is-active):focus-visible)::after {
+  transform: translateX(12px);
 }
 .page-cover {
   /* 1px wider on the hinge side and hinged 1px in, so once open it overlaps
@@ -267,7 +284,8 @@ h1 .char { display: inline-block; animation: char-up 0.9s var(--ease) both; anim
    row of ordinary top tabs and turned 90° so they run down the right edge
    and read top to bottom, the way a file's tabs do once it is stood up. */
 .side-tabs {
-  position: absolute; left: 100%; top: 0; z-index: -1;
+  /* Overlap the folder by 2px so fractional mobile pixels cannot open a seam. */
+  position: absolute; left: calc(100% - 2px); top: 0; z-index: -1;
   display: flex; align-items: flex-end; gap: var(--file-tab-gap);
   padding-left: 0;
   transform: translateY(-100%) rotate(90deg);
@@ -282,21 +300,31 @@ h1 .char { display: inline-block; animation: char-up 0.9s var(--ease) both; anim
   line-height: 1; letter-spacing: 0; text-transform: none; white-space: nowrap;
   color: var(--black); background: var(--tc);
   border: none; border-radius: 0; box-shadow: none;
-  filter: drop-shadow(0 -1px 4px rgba(0,0,0,0.22));
+  filter: none;
   transform: translateY(7px);
-  transition: transform 0.325s var(--ease), background-color 0.45s ease;
+  transition: transform 0.325s var(--ease);
 }
-.side-tab::before, .side-tab::after { transition: background-color 0.45s ease; }
 /* Two states, as in a real filing cabinet:
    OPEN — the section on screen. Its tab is the folder's own colour and sits
    flush on the folder edge, so tab and folder read as one file.
-   BEHIND — every other section. Its tab keeps its own colour, a little
-   paler, and is tucked a few px back behind the folder, like the next file
-   in the drawer rather than part of this one. Pointing at it pulls it most
-   of the way out. */
-.side-tab { --tc: color-mix(in srgb, var(--c, var(--folder)) 72%, #fff); }
+   BEHIND — every other section keeps its full colour and is tucked a few
+   px back behind the folder. Hover only pulls the tab and its sheet out. */
 button.side-tab { cursor: pointer; }
-button.side-tab:hover { transform: translateY(2px); --tc: var(--c, var(--folder)); }
+/* Keep the original hit area connected while the tab moves outward, so
+   hovering near its root cannot repeatedly trigger enter/leave. */
+.side-tab-hitbox {
+  position: absolute; left: calc(1px - var(--sh)); right: calc(1px - var(--sh));
+  top: calc(100% - 1px); height: 20px;
+}
+button.side-tab:not(.is-active):hover,
+button.side-tab:not(.is-active):focus-visible {
+  transform: translateY(-12px);
+}
+/* The first shoulder starts at the top of the inset backing sheet, too. */
+button.side-tab:first-child:not(.is-active):hover,
+button.side-tab:first-child:not(.is-active):focus-visible {
+  transform: translate(var(--peek-inset), -12px);
+}
 .side-tab.is-active, .side-tab.is-active:hover {
   --tc: var(--folder); transform: none; cursor: default;
   filter: none;   /* no shadow at the join, so it reads as one piece */
@@ -314,12 +342,10 @@ button.side-tab:focus-visible { outline: 2px solid var(--desk-ink); outline-offs
 .side-tab::before, .tab::before { right: calc(100% - 1px); --m: var(--shoulder-l); }
 .side-tab::after,  .tab::after  { left: calc(100% - 1px);  --m: var(--shoulder-r); }
 
-/* the rail replaces the in-sheet tab row wherever there is room for it */
-@media (min-width: 981px) {
-  .has-rail .tabs, .has-rail .tab-hint { display: none; }
-  .page { display: flex; flex-direction: column; min-height: calc(var(--rail-len, 0px) + 60px); }
-  .sheet { flex: 1 0 auto; }
-}
+/* Every viewport uses the same rail; the folder grows to contain every tab. */
+.has-rail .tabs, .has-rail .tab-hint { display: none; }
+.page { display: flex; flex-direction: column; min-height: calc(var(--rail-len, 0px) + 60px); }
+.sheet { flex: 1 0 auto; }
 
 .rule { width: 100%; height: 1px; background: var(--rule); margin: 0 0 30px; }
 .rule.wide { margin: 30px 0; }
@@ -633,27 +659,17 @@ button:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
    MOTION — the CSS half; neo-motion.js drives the rest.
    ============================================================ */
 
-/* ENTER — on wide screens the file arrives the way Mosby's do: it starts
-   lying flat along the bottom of the screen, tabs on top, like it was just
-   pulled from the stack; swings upright around its top-right corner (which
-   turns the top tabs into side tabs) while its front cover flips open.
-   neo-motion.js measures the start position into --open-x/--open-y and adds
-   .is-opening. Until it has, the folder stays hidden so it never flashes in
-   its final place first. Narrow screens just slide it up. */
+/* Direct visits slide an already open folder in. Home-to-file opening is
+   handled separately by neo-transition.js using the clicked cover. */
 .js:not(.opened) .page { visibility: hidden; }
-.page.is-opening {
-  transform-origin: right top;
-  animation: file-swing 1.15s cubic-bezier(0.65, 0, 0.25, 1) both;
+.page.is-sliding {
+  animation: file-slide 1s cubic-bezier(.165,.84,.44,1) both;
 }
-.page.is-opening > .page-cover { animation: cover-open 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both; }
-@keyframes file-swing {
-  from { transform: translate(var(--open-x), var(--open-y)) rotate(-90deg); }
-  to   { transform: translate(0, 0) rotate(0deg); }
+.page.is-sliding > .sheet {
+  animation: file-paper-slide 1s cubic-bezier(.165,.84,.44,1) 0.1s both;
 }
-@keyframes cover-open {
-  from { transform: rotateY(0deg); }
-  to   { transform: rotateY(-180deg); }
-}
+@keyframes file-slide { from { transform: translateY(var(--slide-y)); } }
+@keyframes file-paper-slide { from { transform: translateY(10rem); } }
 .site-footer { animation: rise-in var(--slow) var(--ease) 1.4s both; }
 @keyframes rise-in   { from { opacity: 0; transform: translateY(24px); } }
 @keyframes folder-in { from { transform: translateY(70vh); } }
@@ -720,13 +736,10 @@ a { color: var(--black); }
 .sheet ::-webkit-scrollbar-track { background: var(--bg); }
 .sheet ::-webkit-scrollbar-thumb { background: #b9b3a3; border-color: var(--bg); }
 
-/* narrow: the file keeps its own tab down the side (it has to, for the
-   swing-open to read), leaving room for it; the section tabs stay in the
-   sheet, since a column of them would not fit */
+/* Narrow screens reserve the same side rail, including all section tabs. */
 @media (max-width: 980px) {
   .frame, .site-footer { width: auto; }
   .page { margin-right: var(--file-tab-height); }
-  .side-tab:not(.is-file) { display: none; }
 }
 @media (max-width: 620px) {
   :root { --file-tab-height: 34px; --file-tab-bottom: 2px; --file-tab-shoulder: 26px; --file-tab-font: 1.05rem; }
@@ -775,7 +788,13 @@ a { color: var(--black); }
 }
 .file-arriving .frame > .page { visibility: hidden; }
 .file-arriving .site-footer { visibility: hidden; }
-.file-arriving .masthead .char { animation-delay: calc(0.6s + var(--n) * 0.025s); }
+.file-closing .frame > .page { visibility: hidden; }
+.file-closing { pointer-events: none; }
+html.home-returning .folder { opacity: 0; }
+html.home-returning .home-intro { opacity: 0; }
+html.home-returning .folder, html.home-returned .folder,
+html.home-returning .home-intro .char, html.home-returned .home-intro .char { animation: none; }
+html.home-returning .folder { transition: none; }
 .file-flight-stage {
   position: fixed; inset: 0; z-index: 60; overflow: clip;
   perspective: 3000px; pointer-events: none;
@@ -785,7 +804,7 @@ a { color: var(--black); }
   will-change: transform, width, height;
 }
 .file-flight-window {
-  position: absolute; inset: 0; overflow: hidden; border-radius: 6px 6px 0 0;
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: 6px 6px 0 0;
 }
 .page.file-flight-content {
   position: absolute; left: 0; top: 100%;
@@ -797,7 +816,7 @@ a { color: var(--black); }
 }
 .file-flight-content .reveal { opacity: 1; transform: none; }
 .file-flight-cover {
-  position: absolute; inset: 0; border-radius: 6px 6px 0 0;
+  position: absolute; inset: 0; z-index: 1; border-radius: 6px 6px 0 0;
   transform-origin: bottom; transform-style: preserve-3d;
   backface-visibility: visible; will-change: transform;
 }
@@ -807,7 +826,8 @@ a { color: var(--black); }
   opacity: var(--cover-light, 0); transition: opacity 0.5s ease;
 }
 .file-flight-tab {
-  position: absolute; bottom: 100%; display: flex; align-items: center; justify-content: center;
+  position: absolute; bottom: 100%; z-index: -1;
+  display: flex; align-items: center; justify-content: center;
   font-family: var(--font-body); font-weight: 400; line-height: 1; white-space: nowrap;
 }
 .file-flight-tab::before, .file-flight-tab::after {

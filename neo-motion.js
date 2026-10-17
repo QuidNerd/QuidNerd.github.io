@@ -221,7 +221,8 @@
     var narrow = window.matchMedia('(max-width: 620px)');
 
     function setState(active, unfolded, sheet) {
-      if (document.documentElement.classList.contains('is-picking')) return;
+      if (document.documentElement.classList.contains('is-picking') ||
+          document.documentElement.classList.contains('home-returning')) return;
       sheet = sheet || 0;
       if (narrow.matches) unfolded = false;
       folders.forEach(function (folder, i) {
@@ -361,9 +362,12 @@
       if (!url) return;
       e.preventDefault();
       if (document.documentElement.classList.contains('is-picking') ||
+          document.documentElement.classList.contains('home-returning') ||
+          document.documentElement.classList.contains('file-closing') ||
           document.documentElement.classList.contains('is-leaving')) return;
       var folder = a.closest('.folder');
       if (folder && window.neoFileTransition && window.neoFileTransition.depart(a, url)) return;
+      if (a.matches('a.topbar-home') && window.neoFileTransition && window.neoFileTransition.closeHome(url)) return;
       if (folder) pickFolder(folder);
       else document.documentElement.classList.add('is-leaving');
       setTimeout(function () { location.href = url.href; }, folder ? OPEN_MS : LEAVE_MS);
@@ -381,13 +385,16 @@
   }
 
   /* ---------- TITLE ----------
-     Split into letters so they can rise in one after another. The heading
+     Give each letter a mask for the staggered sideways reveal. The heading
      keeps its text as an aria-label; the letter spans are hidden from
      screen readers so it is not spelled out. */
   function splitTitle() {
     var h = document.querySelector('.masthead h1');
     if (!h || reduced) return;
     var text = h.textContent.trim();
+    // Keep this delay on the heading: removing file-arriving must not
+    // change the timing of an animation already in progress.
+    h.style.setProperty('--title-delay', document.documentElement.classList.contains('file-arriving') ? '0.65s' : '0.1s');
     h.setAttribute('aria-label', text);
     h.textContent = '';
     var n = 0;
@@ -397,11 +404,14 @@
       word.className = 'word';
       word.setAttribute('aria-hidden', 'true');
       Array.from(w).forEach(function (ch) {
+        var mask = document.createElement('span');
+        mask.className = 'char-mask';
         var c = document.createElement('span');
         c.className = 'char';
         c.style.setProperty('--n', n++);
         c.textContent = ch;
-        word.appendChild(c);
+        mask.appendChild(c);
+        word.appendChild(mask);
       });
       h.appendChild(word);
     });
@@ -446,7 +456,20 @@
       if (sections.length) b.type = 'button';
       b.className = 'side-tab' + (i === 0 ? ' is-file' : '');
       b.textContent = label;
+      if (sections.length) {
+        var hitbox = document.createElement('span');
+        hitbox.className = 'side-tab-hitbox';
+        hitbox.setAttribute('aria-hidden', 'true');
+        b.appendChild(hitbox);
+      }
       b.style.setProperty('--c', 'var(--' + (c || (i === 0 ? own : colours[i % colours.length])) + ')');
+      function peek() {
+        if (!b.classList.contains('is-active')) {
+          page.style.setProperty('--peek-colour', getComputedStyle(b).getPropertyValue('--c'));
+        }
+      }
+      b.addEventListener('pointerenter', peek);
+      b.addEventListener('focus', peek);
       rail.appendChild(b);
       return b;
     }
@@ -494,32 +517,29 @@
     page.appendChild(rail);
     /* the folder must be at least as long as its tabs, or a short section
        would leave them hanging off the bottom */
-    page.style.setProperty('--rail-len', rail.offsetWidth + 'px');
+    var sizeRail = function () { page.style.setProperty('--rail-len', rail.offsetWidth + 'px'); };
+    sizeRail();
+    if ('ResizeObserver' in window) new ResizeObserver(sizeRail).observe(rail);
   }
 
-  /* ---------- OPENING ----------
-     Measure where the folder will end up, then start it lying flat along
-     the bottom of the screen (rotated -90deg about its top-right corner, so
-     its side tabs point up) and let the CSS swing it upright and flip the
-     cover. At every width: it is the page's arrival, not a garnish. The class
-     comes off once the cover is open, so no transform is left on the folder
-     (a transform would trap position:fixed pop-ups inside it). */
+  /* Home clicks carry a folder pose. Every other visit slides an already
+     open file up from below the viewport, including reloads and deep links. */
   function openFile() {
     var html = document.documentElement;
     var page = document.querySelector('.page');
     try {
       if (!page || reduced) return;
       if (window.neoFileTransition && window.neoFileTransition.arrive(page)) return;
-      var cls = 'is-opening';
+      if (window.neoFileTransition) window.neoFileTransition.revealRail(page, 350);
+      var cls = 'is-sliding';
       var r = page.getBoundingClientRect();
-      page.style.setProperty('--open-x', (-r.width) + 'px');
-      page.style.setProperty('--open-y', (window.innerHeight - PEEK - r.top) + 'px');
+      page.style.setProperty('--slide-y', Math.max(0, window.innerHeight - r.top) + 'px');
       page.classList.add(cls);
       var done = function () { page.classList.remove(cls); };
       page.addEventListener('animationend', function (e) {
-        if (e.target.classList.contains('page-cover')) done();
+        if (e.target.classList.contains('sheet') && e.animationName === 'file-paper-slide') done();
       });
-      setTimeout(done, 3200);
+      setTimeout(done, 1400);
     } finally {
       html.classList.add('opened');
     }
@@ -536,6 +556,10 @@
     mountReveal();
     mountHomeStack();
     mountLeaving();
+    if (window.neoFileTransition) {
+      window.neoFileTransition.rememberHome();
+      window.neoFileTransition.arriveHome();
+    }
   }
 
   if (document.readyState === 'loading') {
