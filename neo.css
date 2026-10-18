@@ -157,6 +157,25 @@ body {
 }
 a.topbar-home { cursor: pointer; }
 a.topbar-home:hover { color: var(--folder); }
+/* on the files it is a link home, so it says so: a small "back to" above
+   the wordmark (home itself has a plain <span> and no label) */
+a.topbar-home { flex-direction: column; justify-content: center; gap: 2px; line-height: 1; }
+a.topbar-home::before {
+  content: "back to";
+  font-family: var(--font-mono); font-weight: 500; font-stretch: 100%;
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: lowercase;
+  color: inherit;   /* the wordmark's own colour, hover included */
+  transition: opacity 0.35s ease, margin-top 0.55s var(--ease);
+}
+/* heading home: "back to" fades and folds away (its line plus the gap), so
+   the wordmark rises into the exact spot it has on the home page */
+.file-closing a.topbar-home::before { opacity: 0; margin-top: calc(-1em - 2px); }
+.file-closing a.topbar-home { color: var(--desk-ink); }
+/* and arriving from home, the reverse: the wordmark starts where it sat on
+   home, then makes room as "back to" unfolds and fades in above it (over
+   well before the folder lands, when .file-arriving comes off) */
+.file-arriving a.topbar-home::before { animation: back-to-in 0.55s var(--ease) 0.35s both; }
+@keyframes back-to-in { from { opacity: 0; margin-top: calc(-1em - 2px); } }
 
 .topbar-links { grid-column: 3; justify-self: end; }
 .topbar-links a {
@@ -644,7 +663,7 @@ button:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
 .site-footer .footer-star {
   font-size: 1rem; color: var(--folder);
   animation: spin 8s linear infinite;
-  display: inline-block;
+  display: inline-block; width: 1rem; text-align: center;   /* a fixed width, for the indent below */
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .footer-links { display: flex; gap: 6px 16px; flex-wrap: wrap; margin-left: auto; }
@@ -656,6 +675,11 @@ button:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
   transition: color var(--quick) ease;
 }
 .site-footer a:hover { color: var(--folder); }
+/* narrow: the links drop to a line of their own, both lines flush left
+   (the home page's copy, inside the About sheet, breaks at 820px instead) */
+@media (max-width: 720px) {
+  .site-footer .footer-links { flex-basis: 100%; margin-left: 0; padding-left: calc(1rem + 16px); }   /* under the text, past the star and the gap */
+}
 
 /* ============================================================
    MOTION — the CSS half; neo-motion.js drives the rest.
@@ -822,7 +846,7 @@ a { color: var(--black); }
 .file-arriving .frame > .page { visibility: hidden; }
 .file-arriving .site-footer { visibility: hidden; }
 .file-closing .frame > .page { visibility: hidden; }
-.file-closing { pointer-events: none; }
+.file-closing, .file-rewinding { pointer-events: none; }
 html.home-returning .folder { opacity: 0; }
 html.home-returning .home-intro { opacity: 0; }
 html.home-returning .folder, html.home-returned .folder,

@@ -8,9 +8,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="neo.css?v=phone-nobar-1">
-<script src="neo-transition.js?v=phone-nobar-1"></script>
-<script src="neo-motion.js?v=phone-nobar-1"></script>
+<link rel="stylesheet" href="neo.css?v=footer-2line-2">
+<script src="neo-transition.js?v=footer-2line-2"></script>
+<script src="neo-motion.js?v=footer-2line-2"></script>
+<script>
+/* Start the stack at its final height. --cover-min (the About sheet's
+   height, measured by neo-motion.js once it runs) is remembered per width;
+   apply it before the first paint, so the page's scroll height does not
+   change after it shows. Android Chrome flashes its scrollbar whenever that
+   height changes, and on a phone that was every return home. */
+try {
+  var cm = JSON.parse(sessionStorage.getItem('junk-drawer:cover-min'));
+  if (cm && cm.w === innerWidth) document.documentElement.style.setProperty('--cover-min', cm.v);
+} catch (_) {}
+</script>
 <style>
 /* A folder has a tabbed back and an independent front cover.
    The cover tips forward on hover; the right third unfolds the stack. */
@@ -49,6 +60,10 @@ body.home .topbar { margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1
    as it can, and only wraps once it would drop below 3rem */
 .home-intro h1 { font-size: clamp(3rem, calc((100vw - 2 * var(--gutter) - 16px) / 5.7), 11rem); line-height: 0.8; }
 /* the line under the title, as Mosby's: quiet serif, centred, a short measure */
+/* same reason: the title must not wrap onto a second line for the moment
+   its webfont is still loading (it is sized to fit on one; only on the very
+   narrowest screens may it wrap) */
+@media (min-width: 300px) { .home-intro h1 { white-space: nowrap; } }
 .home-sub {
   max-width: 34ch; margin: 22px auto 0;
   font-family: var(--font-body); font-size: clamp(1.05rem, 2vw, 1.35rem); line-height: 1.35;
@@ -261,6 +276,9 @@ body.home .topbar { margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1
 .folder-cover .site-footer .footer-star { color: var(--black); }
 .folder-cover .site-footer a { color: var(--black); text-decoration-color: currentColor; }
 .folder-cover .site-footer a:hover { color: var(--ink-dim); }
+@media (max-width: 820px) {
+  .folder-cover .site-footer .footer-links { flex-basis: 100%; margin-left: 0; padding-left: calc(1rem + 16px); }
+}
 
 /* clicked: the folder slides to the bottom of the screen and everything else
    falls away; the next page picks it up from there (neo-motion.js) */
@@ -321,8 +339,8 @@ html.is-picking .folder.is-picked .folder-band::after {
       <a class="folder-unfold" href="gringotts/" tabindex="-1" aria-hidden="true"></a>
       <span class="folder-band">
         <span class="folder-num">02</span>
-        <span class="folder-desc">Useful Tools</span>
-        <span class="folder-go">Useful Tools <i aria-hidden="true">⌄</i></span>
+        <span class="folder-desc">useful tools</span>
+        <span class="folder-go">useful tools <i aria-hidden="true">⌄</i></span>
         <span class="folder-more">how many potato peelings your money is worth and how long until you can afford the thing you want, plus a bean clock</span>
       </span>
     </div>
@@ -338,12 +356,12 @@ html.is-picking .folder.is-picked .folder-band::after {
       </span>
     </div>
     <div class="folder" style="--c: var(--orange); --i: 3">
-      <a class="folder-page" href="playbook/" data-k="0" style="--pc: var(--orange); --k: 0;"><span class="folder-tabs"><span class="folder-tab is-own">Ammo</span></span></a>
+      <a class="folder-page" href="playbook/" data-k="0" style="--pc: var(--orange); --k: 0;"><span class="folder-tabs"><span class="folder-tab is-own">Evidence</span></span></a>
       <a class="folder-unfold" href="playbook/" tabindex="-1" aria-hidden="true"></a>
       <span class="folder-band">
         <span class="folder-num">04</span>
-        <span class="folder-desc">plays + receipts :)</span>
-        <span class="folder-go">plays + receipts :) <i aria-hidden="true">⌄</i></span>
+        <span class="folder-desc">exhibit a through z</span>
+        <span class="folder-go">exhibit a through z <i aria-hidden="true">⌄</i></span>
         <span class="folder-more">you'll get the idea of what this place is for once you read a few</span>
       </span>
     </div>

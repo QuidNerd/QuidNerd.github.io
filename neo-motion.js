@@ -182,7 +182,7 @@
       note = document.createElement('div');
       note.className = 'no-peek';
       note.setAttribute('role', 'status');
-      note.textContent = 'no peeking behind the folders\nthank you';
+      note.textContent = 'hey you!\nno peeking behind the folders';
       document.body.appendChild(note);
       /* sit just below-right of the cursor, flipped back inside the window */
       var w = note.offsetWidth, h = note.offsetHeight, pad = 12;
@@ -313,9 +313,14 @@
         /* ...plus a little spare room under it: the cover slides down a
            few px and tilts when a folder above it is hovered (it slides,
            rather than shrinks, so it never needs room for the larger unfold) */
-        stack.style.removeProperty('--cover-min');
+        /* 0px, not removed: the page may already carry the last value from
+           <head> (index.html), and the band must be measured unstretched */
+        stack.style.setProperty('--cover-min', '0px');
         var drop = (parseFloat(getComputedStyle(stack).getPropertyValue('--cover-offset')) || 16) + 24;
-        stack.style.setProperty('--cover-min', Math.ceil(coverBand.scrollHeight + drop) + 'px');
+        var coverMin = Math.ceil(coverBand.scrollHeight + drop) + 'px';
+        stack.style.setProperty('--cover-min', coverMin);
+        /* remembered per width, so the next visit starts at its final height */
+        try { sessionStorage.setItem('junk-drawer:cover-min', JSON.stringify({ w: window.innerWidth, v: coverMin })); } catch (_) {}
       }
       folders.forEach(function (folder, i) {
         var rows = Array.prototype.slice.call(folder.querySelectorAll('.folder-tabs'));

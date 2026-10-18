@@ -19,6 +19,20 @@
     document.documentElement.classList.add('home-returning');
   }
   if (incoming) document.documentElement.classList.add('file-arriving');
+  // On a hand-off, hold this page's first paint until it has been parsed in
+  // full: the flying folder is built from it (on DOMContentLoaded), and a long
+  // page could otherwise show a frame of bare desk first, a flash before the
+  // swing. An expect link for an id that never appears unblocks rendering
+  // once parsing finishes; browsers without it just ignore the link.
+  if (incoming || returning) {
+    try {
+      var hold = document.createElement('link');
+      hold.rel = 'expect';
+      hold.href = '#neo-parsed';
+      hold.setAttribute('blocking', 'render');
+      document.head.appendChild(hold);
+    } catch (_) {}
+  }
 
   addEventListener('pagereveal', function (e) {
     reveal = e.viewTransition ? e.viewTransition.finished.catch(function () {}) : Promise.resolve();
@@ -170,9 +184,42 @@
     addEventListener('neo:home-layout', atRest);
   }
 
+  // Read from partway down a file, the folder would fold up from wherever it
+  // has scrolled to, half off screen. So glide back to the top first, then
+  // close. A long way down jumps most of the distance at once, so the glide
+  // is only ever about a screen long.
   function closeHome(url) {
     var page = document.querySelector('.frame > .page');
     if (!page || reduce || leaving || document.documentElement.classList.contains('file-arriving')) return false;
+    if (!page.querySelector('.side-tab')) return false;
+    if (scrollY <= 1) return closeHomeNow(url);
+    leaving = true;
+    var html = document.documentElement;
+    html.classList.add('file-rewinding');
+    if (scrollY > innerHeight * 1.5) scrollTo({ top: innerHeight, behavior: 'instant' });
+    scrollTo({ top: 0, behavior: 'smooth' });
+    var done = false, started = Date.now();
+    function go() {
+      if (done) return;
+      done = true;
+      removeEventListener('scrollend', check);
+      html.classList.remove('file-rewinding');
+      leaving = false;
+      if (!closeHomeNow(url)) location.assign(url.href);
+    }
+    function check() {
+      if (scrollY <= 1 || Date.now() - started > 1500) go();
+      else if (!done) requestAnimationFrame(check);
+    }
+    addEventListener('scrollend', check);
+    requestAnimationFrame(check);
+    setTimeout(go, 1600);
+    return true;
+  }
+
+  function closeHomeNow(url) {
+    var page = document.querySelector('.frame > .page');
+    if (!page || leaving) return false;
     var active = page.querySelector('.side-tab.is-active') || page.querySelector('.side-tab');
     if (!active) return false;
     leaving = true;
