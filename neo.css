@@ -732,7 +732,13 @@ a { color: var(--black); }
 ::-moz-selection { background: var(--yellow); color: var(--black); }
 
 /* No scrollbar styling, same as Mosby: the browser's own overlay scrollbar
-   already hides until you scroll and grows gently on hover. */
+   already hides until you scroll and grows gently on hover.
+   Phones: none at all. A phone flashes its scroll indicator whenever a page
+   loads or its scroll height settles, so it blinked on every return home. */
+@media (max-width: 500px) {
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
+}
 
 /* ---------- RIGHT-CLICK NOTE ----------
    A slip of paper that pops up by the cursor instead of the context menu
