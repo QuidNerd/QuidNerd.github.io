@@ -857,10 +857,14 @@ html.home-returning .folder { transition: none; }
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-body); font-weight: 400; line-height: 1; white-space: nowrap;
 }
+/* the shoulders run 4px past the tab's foot, solid below the curve, like
+   the tab's own box-shadow skirt (neo-transition.js): both hide behind the
+   folder, and close the hairline the turning folder can open under them */
 .file-flight-tab::before, .file-flight-tab::after {
-  content: ""; position: absolute; top: 0; bottom: 0;
+  content: ""; position: absolute; top: 0; bottom: -4px;
   width: var(--file-tab-shoulder); background: inherit;
-  -webkit-mask: var(--m) 0 0 / 100% 100% no-repeat; mask: var(--m) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: var(--m) 0 0 / 100% calc(100% - 4px) no-repeat, linear-gradient(#000 0 0) 0 100% / 100% 4px no-repeat;
+  mask: var(--m) 0 0 / 100% calc(100% - 4px) no-repeat, linear-gradient(#000 0 0) 0 100% / 100% 4px no-repeat;
 }
 .file-flight-tab::before { right: calc(100% - 1px); --m: var(--shoulder-l); }
 .file-flight-tab::after { left: calc(100% - 1px); --m: var(--shoulder-r); }

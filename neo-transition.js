@@ -208,12 +208,15 @@
     Object.assign(content.style, { width: box.width + 'px', height: box.height + 'px', margin: '0',
       top: box.width + 'px', padding: getComputedStyle(page).padding, opacity: '1', '--folder': colour });
     windowEl.appendChild(content); flight.appendChild(windowEl);
+    // Each flying tab gets a 4px skirt of its own colour (the box-shadow),
+    // tucked behind the folder: while it turns, sub-pixel rounding would
+    // otherwise open a hairline of desk between tab and folder.
     var labels = Array.from(page.querySelectorAll('.side-tab')).map(function (original) {
       var m = metric(original), style = getComputedStyle(original), copy = document.createElement('span');
       copy.className = 'file-flight-tab'; copy.textContent = original.textContent;
       Object.assign(copy.style, { left: original.offsetLeft + 'px', bottom: 'calc(100% - 2px)',
         height: m.height, width: m.width, fontSize: m.fontSize, padding: m.padding,
-        color: style.color, backgroundColor: style.backgroundColor, transform: style.transform,
+        color: style.color, backgroundColor: style.backgroundColor, boxShadow: '0 4px 0 ' + style.backgroundColor, transform: style.transform,
         '--file-tab-shoulder': m.shoulder });
       flight.appendChild(copy);
       return { el: copy, active: original === active, left: original.offsetLeft, transform: style.transform };
@@ -380,7 +383,7 @@
       Object.assign(label.style, {
         left: state.tabX + 'px', height: state.tab.height, width: state.tab.width,
         fontSize: state.tab.fontSize, padding: state.tab.padding,
-        color: state.ink, backgroundColor: state.paper,
+        color: state.ink, backgroundColor: state.paper, boxShadow: '0 4px 0 ' + state.paper,
         '--file-tab-shoulder': state.tab.shoulder
       });
       flight.appendChild(label);
@@ -398,7 +401,7 @@
         Object.assign(copy.style, {
           left: tab.offsetLeft + 'px', bottom: 'calc(100% - 2px)',
           height: m.height, width: m.width, fontSize: m.fontSize, padding: m.padding,
-          color: s.color, backgroundColor: s.backgroundColor, opacity: '0',
+          color: s.color, backgroundColor: s.backgroundColor, boxShadow: '0 4px 0 ' + s.backgroundColor, opacity: '0',
           '--file-tab-shoulder': m.shoulder
         });
         flight.appendChild(copy);
