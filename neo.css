@@ -873,8 +873,11 @@ html.home-returning .folder { transition: none; }
 }
 .file-flight-content .reveal { opacity: 1; transform: none; }
 .file-flight-cover {
-  position: absolute; inset: 0; z-index: 1; border-radius: 6px 6px 0 0;
-  transform-origin: bottom; transform-style: preserve-3d;
+  /* like .page-cover: 2px longer on the hinge side and hinged 2px in, so
+     once it has swung open it still overlaps the folder and no hairline of
+     desk shows along the fold */
+  position: absolute; inset: 0 0 -2px 0; z-index: 1; border-radius: 6px 6px 0 0;
+  transform-origin: 50% calc(100% - 2px); transform-style: preserve-3d;
   backface-visibility: visible; will-change: transform;
 }
 .file-flight-cover::after {
