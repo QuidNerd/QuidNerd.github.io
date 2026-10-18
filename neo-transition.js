@@ -25,6 +25,18 @@
     if (startFlight) reveal.then(startFlight);
   });
 
+  // The layout key: width plus the px height of 100vh. On a phone 100vh is
+  // the tallest viewport and stays put while the address bar comes and goes
+  // (innerHeight does not), and the stack is sized in vh, not innerHeight.
+  function vh() {
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;visibility:hidden;pointer-events:none';
+    document.documentElement.appendChild(probe);
+    var h = probe.offsetHeight;
+    probe.remove();
+    return h;
+  }
+  function layoutFits(layout) { return !!layout && layout.width === innerWidth && layout.vh === vh(); }
   function rect(el) {
     var r = el.getBoundingClientRect();
     return { x: r.x, y: r.y, width: r.width, height: r.height };
@@ -138,7 +150,7 @@
           paper: getComputedStyle(sheet).backgroundColor,
           cover: getComputedStyle(folder.querySelector('.folder-band')).backgroundColor };
       }).filter(Boolean);
-      try { sessionStorage.setItem(HOME_KEY, JSON.stringify({ width: innerWidth, height: innerHeight, targets: targets })); } catch (_) {}
+      try { sessionStorage.setItem(HOME_KEY, JSON.stringify({ width: innerWidth, vh: vh(), targets: targets })); } catch (_) {}
     }
     // Only measure at rest: home return animations temporarily transform the
     // stack, and the folders ease to their final heights (--cover-min lands
@@ -168,7 +180,7 @@
     var target = null;
     try {
       var layout = JSON.parse(sessionStorage.getItem(HOME_KEY));
-      if (layout && layout.width === innerWidth && layout.height === innerHeight) {
+      if (layoutFits(layout)) {
         target = layout.targets.find(function (t) { return t.label === active.textContent.trim(); }) ||
           layout.targets.find(function (t) { return new URL(t.url).pathname === location.pathname; });
       }
@@ -488,8 +500,7 @@
   var measuringHome = null;
   function haveHomeLayout() {
     try {
-      var layout = JSON.parse(sessionStorage.getItem(HOME_KEY));
-      return !!layout && layout.width === innerWidth && layout.height === innerHeight;
+      return layoutFits(JSON.parse(sessionStorage.getItem(HOME_KEY)));
     } catch (_) { return false; }
   }
   function measureHomeOffscreen() {
@@ -503,7 +514,7 @@
     // off screen or hidden gets throttled, and its folders would never finish
     // easing into place
     frame.style.cssText = 'position:fixed;left:0;top:0;z-index:-1;border:0;opacity:0;pointer-events:none;' +
-      'width:' + innerWidth + 'px;height:' + innerHeight + 'px';
+      'width:' + innerWidth + 'px;height:' + vh() + 'px';
     frame.src = new URL(home.getAttribute('href'), location.href).href;
     // it records the layout once its webfonts and folder heights settle,
     // a few seconds in; drop the frame as soon as that lands

@@ -297,6 +297,16 @@
        sub-pages) steps its type down a little until it fits. Measured at rest,
        on load, once the webfonts land, and on resize. */
     function fitTabs() {
+      /* measuring means briefly undoing these settings; with transitions
+         live, that would set every folder easing to the undone size and
+         back, a visible bounce */
+      stack.classList.add('is-fitting');
+      try { fitTabsNow(); } finally {
+        void stack.offsetHeight;
+        stack.classList.remove('is-fitting');
+      }
+    }
+    function fitTabsNow() {
       /* the open cover at the bottom must be tall enough for its text */
       var coverBand = stack.querySelector('.folder-cover .folder-band');
       if (coverBand) {
@@ -342,8 +352,12 @@
     }
     fitTabs();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTabs);
-    var fitTimer;
+    /* only a change of width can change the fit: on a phone the address
+       bar showing and hiding while you scroll fires resize too */
+    var fitTimer, fitWidth = window.innerWidth;
     window.addEventListener('resize', function () {
+      if (window.innerWidth === fitWidth) return;
+      fitWidth = window.innerWidth;
       clearTimeout(fitTimer);
       fitTimer = setTimeout(fitTabs, 120);
     });
