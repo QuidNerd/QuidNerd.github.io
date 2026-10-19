@@ -226,7 +226,9 @@
     }
     var fold = window.scrollY + window.innerHeight;
     document.querySelectorAll(REVEAL).forEach(function (el) {
-      if (el.matches('.tabs, .tab-hint, .masthead, script, style')) return;
+      /* .chapter-intro is a tilted sticky note: the rise-in sets transform,
+         which would straighten it until the effect let go, then it tipped */
+      if (el.matches('.tabs, .tab-hint, .masthead, .chapter-intro, script, style')) return;
       var hiddenNow = el.offsetParent === null;
       if (!hiddenNow && layoutTop(el) < fold) return;
       el.classList.add('reveal');
@@ -526,7 +528,11 @@
         backing.style.setProperty('--c', b.style.getPropertyValue('--c'));
         page.appendChild(backing);
         backingSheets.push({ tab: b, sheet: backing });
-        b.addEventListener('pointerenter', function () { hoveredTab = b; syncPeeks(); });
+        /* mouse only: a tap would leave the sheet peeking out */
+        b.addEventListener('pointerenter', function (e) {
+          if (e.pointerType !== 'mouse') return;
+          hoveredTab = b; syncPeeks();
+        });
         b.addEventListener('pointerleave', function () {
           if (hoveredTab === b) hoveredTab = null;
           syncPeeks();

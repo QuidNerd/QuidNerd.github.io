@@ -337,14 +337,18 @@ button.side-tab { cursor: pointer; }
   position: absolute; left: calc(1px - var(--sh)); right: calc(1px - var(--sh));
   top: calc(100% - 1px); height: 20px;
 }
-button.side-tab:not(.is-active):hover,
+/* The pull-out is for a mouse (and the keyboard) only: a touch screen keeps
+   :hover on whatever was last tapped, which left that tab stuck out. */
 button.side-tab:not(.is-active):focus-visible {
   transform: translateY(-12px);
 }
 /* The first shoulder starts at the top of the inset backing sheet, too. */
-button.side-tab:first-child:not(.is-active):hover,
 button.side-tab:first-child:not(.is-active):focus-visible {
   transform: translate(var(--peek-inset), -12px);
+}
+@media (hover: hover) and (pointer: fine) {
+  button.side-tab:not(.is-active):hover { transform: translateY(-12px); }
+  button.side-tab:first-child:not(.is-active):hover { transform: translate(var(--peek-inset), -12px); }
 }
 .side-tab.is-active, .side-tab.is-active:hover {
   --tc: var(--folder); transform: none; cursor: default;

@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../neo.css?v=hinge-1">
-<script src="../neo-transition.js?v=hinge-1"></script>
-<script src="../neo-motion.js?v=hinge-1"></script>
+<link rel="stylesheet" href="../neo.css?v=note-tilt-1">
+<script src="../neo-transition.js?v=note-tilt-1"></script>
+<script src="../neo-motion.js?v=note-tilt-1"></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css */
 /* this page's name is a long filename, so its title runs smaller than the
@@ -405,7 +405,7 @@
       <button class="tab active" id="toc-1" data-c="yellow" style="--c: var(--yellow)" onclick="showChapter(1, this)">Quidditch Build</button>
       <button class="tab" id="toc-2" data-home-label="Duelling" data-c="lime" style="--c: var(--lime)" onclick="showChapter(2, this)">Duelling build</button>
       <button class="tab" id="toc-3" data-home-label="Broomracing" data-c="cyan" style="--c: var(--cyan)" onclick="showChapter(3, this)">Broomracing build</button>
-      <button class="tab" id="toc-4" data-c="lime" style="--c: var(--lime)" onclick="showChapter(4, this)">Summoner's court build</button>
+      <button class="tab" id="toc-4" data-c="pink" style="--c: var(--pink)" onclick="showChapter(4, this)">Summoner's court build</button>
     </div>
 
     <div class="tab-hint" aria-hidden="true">
@@ -779,14 +779,16 @@ document.addEventListener('keydown', e => {
   if (sp) { e.preventDefault(); openSpoiler(sp); }
 });
 
-function showChapter(n, el) {
+// quiet: the chapter a page opens on, while the folder is still swinging
+// in. No slide-up and no scroll then (both made the first lines judder).
+function showChapter(n, el, quiet) {
   document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.chapter').forEach(c => c.classList.add('hidden'));
   const chapter = document.getElementById('chapter-' + n);
   chapter.classList.remove('hidden');
-  neoShutter(chapter);
+  if (!quiet) neoShutter(chapter);
   (el || document.getElementById('toc-' + n)).classList.add('active');
-  chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (!quiet) chapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ==================== DEEP LINKS ====================
@@ -798,7 +800,7 @@ function chapterFromHash(land) {
   const h = location.hash.slice(1);
   const n = h ? CHAPTER_HASH.indexOf(h) : 0;
   if (n < 0) return;
-  showChapter(n + 1);
+  showChapter(n + 1, null, land);
   if (land) window.scrollTo(0, 0);
 }
 document.querySelectorAll('.tabs .tab').forEach((b, i) => b.addEventListener('click', () => {
