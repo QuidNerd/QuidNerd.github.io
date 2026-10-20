@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="neo.css?v=note-tilt-1">
-<script src="neo-transition.js?v=note-tilt-1"></script>
-<script src="neo-motion.js?v=note-tilt-1"></script>
+<link rel="stylesheet" href="neo.css?v=shadow-fade-2">
+<script src="neo-transition.js?v=shadow-fade-2"></script>
+<script src="neo-motion.js?v=shadow-fade-2"></script>
 <script>
 /* Start the stack at its final height. --cover-min (the About sheet's
    height, measured by neo-motion.js once it runs) is remembered per width;
@@ -283,14 +283,36 @@ body.home .topbar { margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1
 /* clicked: the folder slides to the bottom of the screen and everything else
    falls away; the next page picks it up from there (neo-motion.js) */
 .folder.is-picked { z-index: 10; transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1); }
+/* LEAVING HOME — Mosby's own "folder-open" exit, step for step:
+   - every other folder slides down 120% of its own height, 0.75s, easing
+     out (GSAP's power2.out, a cubic: quick off the mark), one after another in
+     stack order (back to front), all set off within 0.2s as on Mosby's
+     four-folder stack (--out, each folder's start, set by neo-transition.js), and the clicked one keeps its place in the stack,
+     so the folders in front of it stay in front;
+   - the clicked folder's other tabs drop away behind it (0.4s);
+   - the line under the title, then the title, sink 2rem and fade (0.45s).
+   They fall past the bottom of the screen; clipping at the body keeps that
+   from lengthening the page. */
 html.is-picking main { overflow: visible; }
-html.is-picking .stack .folder:not(.is-picked),
-html.is-picking .home-intro {
-  opacity: 0; transform: translateY(110vh);
-  transition: opacity 0.35s ease, transform 0.65s var(--ease);
+html.is-picking body { overflow: clip; }
+html.is-picking .stack .folder:not(.is-picked) {
+  transform: translateY(120%);
+  transition: transform 0.75s cubic-bezier(0.33, 1, 0.68, 1) var(--out, 0ms);
 }
-
-html.is-picking .home-intro { transform: translateY(32px); }
+html.is-picking .stack .folder.is-picked { z-index: var(--i); }
+/* the strip the tab sits in clips it, so it drops out of sight (as Mosby's
+   header mask does) instead of sliding down onto its own sheet */
+html.is-picking .folder.is-picked .folder-page.is-tucked .folder-tabs { overflow: clip; }
+html.is-picking .folder.is-picked .folder-page.is-tucked .folder-tab.is-own {
+  transform: translateY(110%);
+  transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+html.is-picking .home-sub,
+html.is-picking .home-intro h1 {
+  opacity: 0; transform: translateY(2rem);
+  transition: opacity 0.45s cubic-bezier(0.33, 1, 0.68, 1) 0.05s, transform 0.45s cubic-bezier(0.33, 1, 0.68, 1) 0.05s;
+}
+html.is-picking .home-intro h1 { transition-delay: 0.15s; }
 html.is-picking .folder.is-picked .folder-band > * {
   opacity: 0; transition: opacity 0.15s ease;
 }

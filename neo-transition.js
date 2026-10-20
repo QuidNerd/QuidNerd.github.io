@@ -3,6 +3,9 @@
 (function () {
   'use strict';
   var KEY = 'junk-drawer:flight';
+  // Mosby's swing: 1.5s on GSAP's power3.inOut (a quartic in-out), which
+  // gets going decisively and does most of the turn in its quick middle
+  var SWING = 'cubic-bezier(.76,0,.24,1)';
   var HOME_KEY = 'junk-drawer:home-layout';
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var incoming = null, returning = null, leaving = false, reveal = null, startFlight = null, resetClose = null;
@@ -34,7 +37,14 @@
     } catch (_) {}
   }
 
+  // and on the page being left: its side of a skipped transition rejects too
+  addEventListener('pageswap', function (e) {
+    var vt = e.viewTransition;
+    if (vt) { vt.ready.catch(function () {}); vt.finished.catch(function () {}); vt.updateCallbackDone.catch(function () {}); }
+  });
   addEventListener('pagereveal', function (e) {
+    // a skipped transition (e.g. a page in the background) rejects .ready too
+    if (e.viewTransition) { e.viewTransition.ready.catch(function () {}); e.viewTransition.updateCallbackDone.catch(function () {}); }
     reveal = e.viewTransition ? e.viewTransition.finished.catch(function () {}) : Promise.resolve();
     if (startFlight) reveal.then(startFlight);
   });
@@ -51,6 +61,14 @@
     return h;
   }
   function layoutFits(layout) { return !!layout && layout.width === innerWidth && layout.vh === vh(); }
+  // Object.assign onto el.style silently drops custom properties (--x), so
+  // the swing's --cover-light, --folder and tab shoulders never took effect.
+  function setStyle(el, props) {
+    Object.keys(props).forEach(function (k) {
+      if (k.indexOf('--') === 0) el.style.setProperty(k, props[k]);
+      else el.style[k] = props[k];
+    });
+  }
   function rect(el) {
     var r = el.getBoundingClientRect();
     return { x: r.x, y: r.y, width: r.width, height: r.height };
@@ -92,7 +110,14 @@
       coverTransform: getComputedStyle(band).transform,
       light: getComputedStyle(band, '::after').opacity,
       perspective: [sr.x + parseFloat(origin[0]), sr.y + parseFloat(origin[1])],
-      gap: fs.getPropertyValue('--tgap').trim() || '14px'
+      gap: fs.getPropertyValue('--tgap').trim() || '14px',
+      // the sheets in front of the one picked (Quidditch Build in front of
+      // Duelling): they turn over with the cover, so the colour in front
+      // stays put through the hand-off. Nearest the picked sheet first.
+      fronts: Array.from(folder.querySelectorAll('.folder-page')).filter(function (p) {
+        return +p.getAttribute('data-k') < +sheet.getAttribute('data-k');
+      }).sort(function (x, y) { return +y.getAttribute('data-k') - +x.getAttribute('data-k'); })
+        .map(function (p) { return getComputedStyle(p).backgroundColor; })
     };
     try { sessionStorage.setItem(KEY, JSON.stringify(state)); }
     catch (_) { return false; }
@@ -102,13 +127,31 @@
     band.style.transition = 'none';
     band.style.transform = state.coverTransform;
     band.style.setProperty('--held-light', state.light);
+    // The other files leave in turn, in stack order (as Mosby's timeline
+    // staggers them), and the page eases back to the top meanwhile; the next
+    // page loads once the last one has gone, 0.75s after it set off.
+    // Mosby staggers 0.1s with three folders to clear, so they have all set
+    // off by 0.2s; ours keep that same 0.2s spread, however many there are.
+    var others = Array.from(stack.querySelectorAll('.folder')).filter(function (f) { return f !== folder; });
+    var spread = 200, step = others.length > 1 ? spread / (others.length - 1) : 0;
+    others.forEach(function (f, n) { f.style.setProperty('--out', Math.round(n * step) + 'ms'); });
     document.documentElement.classList.add('is-picking');
     folder.classList.add('is-picked');
     folder.querySelectorAll('.folder-page').forEach(function (other) {
-      if (other !== sheet) other.style.visibility = 'hidden';
+      if (other !== sheet) other.classList.add('is-tucked');
     });
+    var total = (others.length > 1 ? spread : 0) + 750;
+    if (scrollY > 1) scrollTo({ top: 0, behavior: 'smooth' });
     // Keep the selected cover still. Only its labels and the other files leave.
-    setTimeout(function () { location.assign(url.href); }, 260);
+    setTimeout(function () {
+      // it may have ridden up with the scroll: hand over where it is now
+      var sr2 = rect(stack);
+      state.box = rect(folder);
+      state.perspective = [sr2.x + parseFloat(origin[0]), sr2.y + parseFloat(origin[1])];
+      state.time = Date.now();
+      try { sessionStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {}
+      location.assign(url.href);
+    }, total);
     return true;
   }
 
@@ -241,7 +284,7 @@
     var flight = document.createElement('div');
     flight.className = 'file-flight';
     var length = Math.max(innerHeight - box.y + 160, innerWidth);
-    Object.assign(flight.style, { left: '0', top: '0', width: length + 'px', height: box.width + 'px',
+    setStyle(flight, { left: '0', top: '0', width: length + 'px', height: box.width + 'px',
       transform: 'translate(' + (box.x + box.width) + 'px,' + box.y + 'px) rotate(90deg)' });
     var windowEl = document.createElement('div');
     windowEl.className = 'file-flight-window'; windowEl.style.backgroundColor = colour;
@@ -252,7 +295,7 @@
     content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
     // Pinned to the tab edge by a fixed offset (not top:100%, which moves as
     // the folder resizes mid-turn), so the paper rides rigidly with it.
-    Object.assign(content.style, { width: box.width + 'px', height: box.height + 'px', margin: '0',
+    setStyle(content, { width: box.width + 'px', height: box.height + 'px', margin: '0',
       top: box.width + 'px', padding: getComputedStyle(page).padding, opacity: '1', '--folder': colour });
     windowEl.appendChild(content); flight.appendChild(windowEl);
     // Each flying tab gets a 4px skirt of its own colour (the box-shadow),
@@ -261,7 +304,7 @@
     var labels = Array.from(page.querySelectorAll('.side-tab')).map(function (original) {
       var m = metric(original), style = getComputedStyle(original), copy = document.createElement('span');
       copy.className = 'file-flight-tab'; copy.textContent = original.textContent;
-      Object.assign(copy.style, { left: original.offsetLeft + 'px', bottom: 'calc(100% - 2px)',
+      setStyle(copy, { left: original.offsetLeft + 'px', bottom: 'calc(100% - 2px)',
         height: m.height, width: m.width, fontSize: m.fontSize, padding: m.padding,
         color: style.color, backgroundColor: style.backgroundColor, boxShadow: '0 4px 0 ' + style.backgroundColor, transform: style.transform,
         '--file-tab-shoulder': m.shoulder });
@@ -270,7 +313,7 @@
     });
     var cover = document.createElement('div');
     cover.className = 'file-flight-cover';
-    Object.assign(cover.style, { backgroundColor: colour, transform: 'rotateX(-180deg)' });
+    setStyle(cover, { backgroundColor: colour, transform: 'rotateX(-180deg)' });
     flight.appendChild(cover); stage.appendChild(flight); document.body.appendChild(stage);
     document.documentElement.classList.add('file-closing');
     var animations = [], navigated = false, timeout;
@@ -286,7 +329,7 @@
       clearTimeout(timeout); animations.forEach(function (a) { a.cancel(); }); stage.remove();
       document.documentElement.classList.remove('file-closing'); leaving = false;
     };
-    var timing = { duration: 1500, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'both' };
+    var timing = { duration: 1500, easing: SWING, fill: 'both' };
     var move = animate(flight, [
       { width: length + 'px', height: box.width + 'px', transform: flight.style.transform },
       { width: end.width + 'px', height: end.height + 'px', transform: 'translate(' + end.x + 'px,' + end.y + 'px) rotate(0deg)' }
@@ -404,7 +447,7 @@
       stage.style.perspectiveOrigin = state.perspective.join('px ') + 'px';
       flight = document.createElement('div');
       flight.className = 'file-flight';
-      Object.assign(flight.style, {
+      setStyle(flight, {
         left: '0', top: '0',
         transform: 'translate(' + state.box.x + 'px,' + state.box.y + 'px)',
         width: state.box.width + 'px', height: state.box.height + 'px'
@@ -417,7 +460,7 @@
       content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
       content.removeAttribute('id');
       content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
-      Object.assign(content.style, {
+      setStyle(content, {
         width: dest.width + 'px', height: dest.height + 'px', top: dest.width + 'px',
         padding: getComputedStyle(page).padding, margin: '0',
         '--folder': state.paper, '--edge': getComputedStyle(page).getPropertyValue('--edge')
@@ -427,7 +470,7 @@
       var label = document.createElement('span');
       label.className = 'file-flight-tab';
       label.textContent = state.label;
-      Object.assign(label.style, {
+      setStyle(label, {
         left: state.tabX + 'px', height: state.tab.height, width: state.tab.width,
         fontSize: state.tab.fontSize, padding: state.tab.padding,
         color: state.ink, backgroundColor: state.paper, boxShadow: '0 4px 0 ' + state.paper,
@@ -445,7 +488,7 @@
         var copy = document.createElement('span');
         copy.className = 'file-flight-tab';
         copy.textContent = tab.textContent;
-        Object.assign(copy.style, {
+        setStyle(copy, {
           left: tab.offsetLeft + 'px', bottom: 'calc(100% - 2px)',
           height: m.height, width: m.width, fontSize: m.fontSize, padding: m.padding,
           color: s.color, backgroundColor: s.backgroundColor, boxShadow: '0 4px 0 ' + s.backgroundColor, opacity: '0',
@@ -454,9 +497,20 @@
         flight.appendChild(copy);
         neighbours.push({ el: copy, index: i, transform: s.transform });
       });
+      // The sheets in front of the picked one, each a hair behind the next,
+      // so they turn over as one with the cover (see depart).
+      var closedPose = state.coverTransform === 'none' ? 'translateY(0px) rotateX(0deg)' : state.coverTransform;
+      var fronts = (state.fronts || []).map(function (colour, n) {
+        var sheetEl = document.createElement('div');
+        sheetEl.className = 'file-flight-cover';
+        var z = ' translateZ(' + -(state.fronts.length - n) * 0.5 + 'px)';
+        setStyle(sheetEl, { backgroundColor: colour, transform: closedPose + z });
+        flight.appendChild(sheetEl);
+        return { el: sheetEl, colour: colour, z: z };
+      });
       cover = document.createElement('div');
       cover.className = 'file-flight-cover';
-      Object.assign(cover.style, {
+      setStyle(cover, {
         backgroundColor: state.cover, transform: state.coverTransform,
         '--cover-light': state.light
       });
@@ -473,7 +527,7 @@
       startFlight = function () {
         if (started || finished) return;
         started = true;
-        var timing = { duration: 1500, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'both' };
+        var timing = { duration: 1500, easing: SWING, fill: 'both' };
         animate(flight, [
           { width: state.box.width + 'px', height: state.box.height + 'px', transform: 'translate(' + state.box.x + 'px,' + state.box.y + 'px) rotate(0deg)' },
           { width: length + 'px', height: dest.width + 'px', transform: 'translate(' + (dest.x + dest.width) + 'px,' + dest.y + 'px) rotate(90deg)' }
@@ -485,6 +539,14 @@
         ], timing);
         animate(cover, [{ backgroundColor: state.cover }, { backgroundColor: state.paper }],
           { duration: 600, delay: 900, easing: 'ease', fill: 'both' });
+        fronts.forEach(function (f) {
+          animate(f.el, [
+            { transform: closedPose + f.z },
+            { transform: 'translateY(0px) rotateX(180deg)' + f.z }
+          ], timing);
+          animate(f.el, [{ backgroundColor: f.colour }, { backgroundColor: state.paper }],
+            { duration: 600, delay: 900, easing: 'ease', fill: 'both' });
+        });
         animate(label, [
           { left: state.tabX + 'px', bottom: '100%' },
           { left: activeOffset + 'px', bottom: 'calc(100% - 2px)' }
@@ -534,7 +596,7 @@
     if (!e.persisted) return;
     if (resetClose) { resetClose(); resetClose = null; }
     leaving = false;
-    document.querySelectorAll('.folder-page').forEach(function (sheet) { sheet.style.removeProperty('visibility'); });
+    document.querySelectorAll('.folder-page').forEach(function (sheet) { sheet.style.removeProperty('visibility'); sheet.classList.remove('is-tucked'); });
     document.querySelectorAll('.folder-band').forEach(function (band) {
       band.style.removeProperty('transition');
       band.style.removeProperty('transform');
