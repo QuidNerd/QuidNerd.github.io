@@ -291,8 +291,9 @@
     var content = page.cloneNode(true);
     content.classList.remove('is-sliding'); content.classList.add('file-flight-content');
     content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
-    content.removeAttribute('id');
-    content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+    // Ids stay: pieces styled by id (#bb-input) would otherwise change size
+    // at the hand-off. The copy sits after the real page, so lookups by id
+    // still find the real elements, and it is gone once the swing ends.
     // Pinned to the tab edge by a fixed offset (not top:100%, which moves as
     // the folder resizes mid-turn), so the paper rides rigidly with it.
     setStyle(content, { width: box.width + 'px', height: box.height + 'px', margin: '0',
@@ -458,8 +459,9 @@
       var content = page.cloneNode(true);
       content.classList.add('file-flight-content');
       content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
-      content.removeAttribute('id');
-      content.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+      // Ids stay: pieces styled by id (#bb-input) would otherwise change size
+      // at the hand-off. The copy sits after the real page, so lookups by id
+      // still find the real elements, and it is gone once the swing ends.
       setStyle(content, {
         width: dest.width + 'px', height: dest.height + 'px', top: dest.width + 'px',
         padding: getComputedStyle(page).padding, margin: '0',
