@@ -196,7 +196,7 @@
     if (!document.body.classList.contains('home')) return;
     function measure() {
       if (document.documentElement.classList.contains('is-picking')) return;
-      var targets = Array.from(document.querySelectorAll('a.folder-page')).map(function (sheet) {
+      var targets = Array.from(document.querySelectorAll('a.folder-page[href]')).map(function (sheet) {
         var folder = sheet.closest('.folder'), tab = sheet.querySelector('.folder-tab.is-own');
         if (!tab || !tab.offsetWidth) return null;
         var stackBox = rect(folder.parentElement);
@@ -277,8 +277,14 @@
     } catch (_) {}
     var end = target ? target.box : { x: innerWidth <= 620 ? 10 : 16, y: innerHeight - 190,
       width: document.documentElement.clientWidth - (innerWidth <= 620 ? 20 : 32), height: Math.max(innerHeight, box.width) };
+    // A section with no tab of its own on home (Summoner's court; on a phone,
+    // anything but each folder's first) closes into that folder's own tab.
+    // It lands as itself, then home swaps it for the right one (arriveHome).
+    var swap = target && target.label !== active.textContent.trim() ?
+      { label: active.textContent.trim(), colour: colour } : null;
     var state = { kind: 'close', url: url.href, time: Date.now(), source: location.href,
-      label: target ? target.label : active.textContent.trim(), box: end, cover: target ? target.cover : colour };
+      label: target ? target.label : active.textContent.trim(), box: end, cover: target ? target.cover : colour,
+      swap: swap };
     var stage = document.createElement('div');
     stage.className = 'file-flight-stage'; stage.inert = true; stage.setAttribute('aria-hidden', 'true');
     var flight = document.createElement('div');
@@ -344,10 +350,13 @@
           { duration: 400, easing: 'ease-in', fill: 'both' });
       } else {
         var endTab = target ? target.tab : tab;
+        var to = { left: (target ? target.tabX : parseFloat(tab.shoulder)) + 'px', bottom: '100%',
+          width: endTab.width, height: endTab.height, fontSize: endTab.fontSize, padding: endTab.padding };
+        // keeping its own name, it keeps the width that name needs
+        if (swap) to.width = tab.width;
         animate(label.el, [
           { left: label.left + 'px', bottom: 'calc(100% - 2px)', width: tab.width, height: tab.height, fontSize: tab.fontSize, padding: tab.padding },
-          { left: (target ? target.tabX : parseFloat(tab.shoulder)) + 'px', bottom: '100%',
-            width: endTab.width, height: endTab.height, fontSize: endTab.fontSize, padding: endTab.padding }
+          to
         ], timing);
       }
     });
@@ -406,10 +415,47 @@
         if (el.textContent.trim() === state.label) return;
         animate(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 450, delay: 350, fill: 'both' });
       });
+      if (state.swap && sheet) swapTab(sheet, state.swap);
       Promise.all(animations.map(function (a) { return a.finished; })).then(finish, finish);
       setTimeout(finish, 1700);
       addEventListener('pagehide', finish, { once: true });
     } catch (_) { finish(); }
+  }
+
+  // The file came home from a section home has no tab for: it lands showing
+  // that section's tab, in that section's colour, on a stand-in sheet in
+  // front of the folder's own. Once it has landed, the stand-in's tab drops
+  // into the folder and the folder's own tab rises in its place, the same
+  // slide Mosby uses to put tabs away.
+  function swapTab(sheet, swap) {
+    var realTab = sheet.querySelector('.folder-tab.is-own');
+    if (!realTab) return;
+    var ghost = sheet.cloneNode(true);
+    ghost.removeAttribute('href');
+    ghost.removeAttribute('data-k');
+    ghost.setAttribute('aria-hidden', 'true');
+    ghost.tabIndex = -1;
+    ghost.style.setProperty('--pc', swap.colour);
+    ghost.style.pointerEvents = 'none';
+    var ghostTab = ghost.querySelector('.folder-tab.is-own');
+    ghostTab.textContent = swap.label;
+    sheet.after(ghost);
+    var rows = [realTab.parentElement, ghostTab.parentElement];
+    rows.forEach(function (row) { row.style.overflow = 'clip'; });
+    realTab.style.transform = 'translateY(110%)';
+    function done() {
+      ghost.remove();
+      rows[0].style.removeProperty('overflow');
+      realTab.style.removeProperty('transform');
+    }
+    setTimeout(function () {
+      ghostTab.animate([{ transform: 'none' }, { transform: 'translateY(110%)' }],
+        { duration: 400, easing: 'cubic-bezier(.33,1,.68,1)', fill: 'forwards' });
+      realTab.style.removeProperty('transform');
+      realTab.animate([{ transform: 'translateY(110%)' }, { transform: 'none' }],
+        { duration: 500, delay: 150, easing: 'cubic-bezier(.25,1,.5,1)', fill: 'backwards' })
+        .finished.then(done, done);
+    }, 700);
   }
 
   function arrive(page) {
