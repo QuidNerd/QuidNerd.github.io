@@ -266,6 +266,14 @@ body.home .topbar { margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1
   font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.7;
   margin-bottom: 14px;
 }
+/* links in the about text: same underline as the footer's, and clickable
+   (the cover itself ignores the pointer) */
+.hero-line a {
+  color: var(--black); text-decoration: underline; text-decoration-thickness: 1px;
+  text-underline-offset: 4px; pointer-events: auto;
+  transition: color var(--quick) ease;
+}
+.hero-line a:hover { color: var(--ink-dim); }
 /* the footer sits at the foot of the cover, in its ink; the cover itself
    ignores the pointer, so the links switch it back on */
 .folder-cover .site-footer {
@@ -404,7 +412,7 @@ html.is-picking .folder.is-picked .folder-band::after {
       <div class="folder-band">
         <span class="folder-go">patch notes v3 <i aria-hidden="true">⌄</i></span>
         <div class="cover-body">
-          <p class="hero-line">yes, neubrutalism has been laid to rest just like the victorian codex before it. sorry about the whole neubrutalism 4 ever thing because that was a lie :(</p>
+          <p class="hero-line">yes, <a href="https://neubrutalism.com/" target="_blank" rel="noopener">neubrutalism</a> has been laid to rest just like the victorian codex before it. sorry about the whole neubrutalism 4 ever thing because that was a lie :(</p>
           <p class="hero-line">this is my web design lab now and it will change whenever i feel like it, so maybe don't get too attached to anything you see here.</p>
         </div>
         <footer class="site-footer">
