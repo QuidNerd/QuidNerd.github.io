@@ -489,8 +489,20 @@
 
     var own = (document.body.className.match(/\bf-([a-z]+)/) || [])[1];
     var colours = PALETTE.filter(function (c) { return c !== own; });
+    /* The first paint, as the page opens, lands at once: the folder is set
+       to its section's colour with its 0.45s fade switched off, so a page
+       opened straight on a section (#duelling, a reload) never shows the
+       parent's colour turning into it. Later tab switches still fade. */
+    var painted = false;
     var paint = function (c) {
+      var html = document.documentElement;
+      if (!painted) html.classList.add('no-folder-fade');
       document.body.style.setProperty('--folder', 'var(--' + (c || own) + ')');
+      if (!painted) {
+        painted = true;
+        void document.body.offsetWidth;   /* settle the new colour while the fade is off */
+        html.classList.remove('no-folder-fade');
+      }
     };
 
     /* The sections: a tab row (Rule Book, the Junk Drawer page) or titled

@@ -6,6 +6,11 @@
   // Mosby's swing: 1.5s on GSAP's power3.inOut (a quartic in-out), which
   // gets going decisively and does most of the turn in its quick middle
   var SWING = 'cubic-bezier(.76,0,.24,1)';
+  // Depth inside the swinging folder (preserve-3d): the page sits at 0.25px,
+  // the sheets in front of it and the cover each a fraction above. Flat on
+  // one plane, the browser does not reliably keep the cover on top, and the
+  // page underneath could show through instead of it.
+  var LIFT = '1px';
   var HOME_KEY = 'junk-drawer:home-layout';
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var incoming = null, returning = null, leaving = false, reveal = null, startFlight = null, resetClose = null;
@@ -68,6 +73,12 @@
       if (k.indexOf('--') === 0) el.style.setProperty(k, props[k]);
       else el.style[k] = props[k];
     });
+  }
+  // A colour that changes in one step at the halfway point of the swing: the
+  // turn eases symmetrically, so that is where the cover stands edge-on.
+  function faces(from, to) {
+    return [{ backgroundColor: from, offset: 0 }, { backgroundColor: from, offset: 0.5 },
+            { backgroundColor: to, offset: 0.5 }, { backgroundColor: to, offset: 1 }];
   }
   function rect(el) {
     var r = el.getBoundingClientRect();
@@ -267,6 +278,10 @@
     if (!active) return false;
     leaving = true;
     var box = rect(page), tab = metric(active), colour = getComputedStyle(page, '::before').backgroundColor;
+    // The cover's two faces: lying open it shows its inside, the section's
+    // colour; shut, its outside, the parent tab's (--cover). The swap
+    // happens edge-on, halfway through the turn, where neither face shows.
+    var outside = getComputedStyle(document.body).getPropertyValue('--cover').trim() || colour;
     var target = null;
     try {
       var layout = JSON.parse(sessionStorage.getItem(HOME_KEY));
@@ -320,7 +335,7 @@
     });
     var cover = document.createElement('div');
     cover.className = 'file-flight-cover';
-    setStyle(cover, { backgroundColor: colour, transform: 'rotateX(-180deg)' });
+    setStyle(cover, { backgroundColor: colour, transform: 'rotateX(-180deg) translateZ(' + LIFT + ')' });
     flight.appendChild(cover); stage.appendChild(flight); document.body.appendChild(stage);
     document.documentElement.classList.add('file-closing');
     var animations = [], navigated = false, timeout;
@@ -341,8 +356,8 @@
       { width: length + 'px', height: box.width + 'px', transform: flight.style.transform },
       { width: end.width + 'px', height: end.height + 'px', transform: 'translate(' + end.x + 'px,' + end.y + 'px) rotate(0deg)' }
     ], timing);
-    animate(cover, [{ transform: 'rotateX(-180deg)', backgroundColor: colour },
-      { transform: 'rotateX(0deg)', backgroundColor: target ? target.cover : colour }], timing);
+    animate(cover, [{ transform: 'rotateX(-180deg) translateZ(' + LIFT + ')' }, { transform: 'rotateX(0deg) translateZ(' + LIFT + ')' }], timing);
+    animate(cover, faces(colour, target ? target.cover : outside), { duration: timing.duration, fill: 'both' });
     animate(content, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 950, fill: 'both' });
     labels.forEach(function (label) {
       if (!label.active) {
@@ -470,8 +485,8 @@
       clearTimeout(safety);
       animations.forEach(function (a) { a.cancel(); });
       if (cover) {
-        // Once open, inherit the current section colour all the way to the
-        // viewport edge; do not pin this surface to the home cover colour.
+        // Once open it is the page's own cover, lying open: its inside, the
+        // section's colour, flat to the viewport edge.
         cover.className = 'page-cover';
         cover.removeAttribute('style');
         permanentCover.replaceWith(cover);
@@ -548,10 +563,11 @@
       // The sheets in front of the picked one, each a hair behind the next,
       // so they turn over as one with the cover (see depart).
       var closedPose = state.coverTransform === 'none' ? 'translateY(0px) rotateX(0deg)' : state.coverTransform;
+      var coverZ = ' translateZ(' + (0.5 + (state.fronts || []).length * 0.5) + 'px)';
       var fronts = (state.fronts || []).map(function (colour, n) {
         var sheetEl = document.createElement('div');
         sheetEl.className = 'file-flight-cover';
-        var z = ' translateZ(' + -(state.fronts.length - n) * 0.5 + 'px)';
+        var z = ' translateZ(' + (0.5 + n * 0.5) + 'px)';   /* nearest the picked sheet deepest */
         setStyle(sheetEl, { backgroundColor: colour, transform: closedPose + z });
         flight.appendChild(sheetEl);
         return { el: sheetEl, colour: colour, z: z };
@@ -559,7 +575,7 @@
       cover = document.createElement('div');
       cover.className = 'file-flight-cover';
       setStyle(cover, {
-        backgroundColor: state.cover, transform: state.coverTransform,
+        backgroundColor: state.cover, transform: closedPose + coverZ,
         '--cover-light': state.light
       });
       flight.appendChild(cover);
@@ -582,18 +598,22 @@
         ], timing);
         // The original hover rotation is the first frame, not a new closed lid.
         animate(cover, [
-          { transform: state.coverTransform === 'none' ? 'translateY(0px) rotateX(0deg)' : state.coverTransform },
-          { transform: 'translateY(0px) rotateX(180deg)' }
+          { transform: closedPose + coverZ },
+          // -180, not 180: the cover lifts toward the viewer and over. From a
+          // flat start, +180 swung it back through the page, which then showed
+          // in its place for the first half of the turn.
+          { transform: 'translateY(0px) rotateX(-180deg)' + coverZ }
         ], timing);
-        animate(cover, [{ backgroundColor: state.cover }, { backgroundColor: state.paper }],
-          { duration: 600, delay: 900, easing: 'ease', fill: 'both' });
+        // outside (parent tab's colour) until edge-on, then its inside
+        animate(cover, faces(state.cover, state.paper), { duration: timing.duration, fill: 'both' });
         fronts.forEach(function (f) {
           animate(f.el, [
             { transform: closedPose + f.z },
-            { transform: 'translateY(0px) rotateX(180deg)' + f.z }
+            { transform: 'translateY(0px) rotateX(-180deg)' + f.z }
           ], timing);
-          animate(f.el, [{ backgroundColor: f.colour }, { backgroundColor: state.paper }],
-            { duration: 600, delay: 900, easing: 'ease', fill: 'both' });
+          // turned over they lie on top of the cover, so they show the
+          // section's colour from edge-on too
+          animate(f.el, faces(f.colour, state.paper), { duration: timing.duration, fill: 'both' });
         });
         animate(label, [
           { left: state.tabX + 'px', bottom: '100%' },

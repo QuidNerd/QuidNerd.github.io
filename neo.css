@@ -105,12 +105,16 @@
   --green: #2e7d32;
 }
 
-body.f-yellow { --folder: var(--yellow); }
-body.f-pink   { --folder: var(--pink); }
-body.f-cyan   { --folder: var(--cyan); }
-body.f-lime   { --folder: var(--lime); }
-body.f-orange { --folder: var(--orange); }
-body.f-red    { --folder: var(--red); }
+/* --folder follows the open section (neo-motion.js repaints it); --cover is
+   the file's own colour, the parent tab's: the outside of the front cover,
+   seen while it is shut and swinging. Lying open, the cover shows its
+   inside, the section's colour (--folder). */
+body.f-yellow { --folder: var(--yellow); --cover: var(--yellow); }
+body.f-pink   { --folder: var(--pink); --cover: var(--pink); }
+body.f-cyan   { --folder: var(--cyan); --cover: var(--cyan); }
+body.f-lime   { --folder: var(--lime); --cover: var(--lime); }
+body.f-orange { --folder: var(--orange); --cover: var(--orange); }
+body.f-red    { --folder: var(--red); --cover: var(--red); }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -275,7 +279,7 @@ h1 .char { display: inline-block; animation: char-shutter 0.65s cubic-bezier(.21
   /* 1px wider on the hinge side and hinged 1px in, so once open it overlaps
      the folder by a pixel and no hairline seam shows at the join */
   position: absolute; inset: 0 0 0 -1px; z-index: 30;
-  background: var(--folder);             /* flat colour, no sheen or shadow */
+  background: var(--folder);   /* lying open: its inside, the section's own colour; flat, no sheen or shadow */
   border-radius: inherit;
   transform-origin: 1px center;
   transform: rotateY(-180deg);
@@ -851,6 +855,8 @@ a { color: var(--black); }
 .file-arriving .site-footer { visibility: hidden; }
 .file-closing .frame > .page { visibility: hidden; }
 .file-closing, .file-rewinding { pointer-events: none; }
+/* see paint() in neo-motion.js: the opening colour, set without a fade */
+.no-folder-fade *, .no-folder-fade *::before, .no-folder-fade *::after { transition: none !important; }
 html.home-returning .folder { opacity: 0; }
 html.home-returning .home-intro { opacity: 0; }
 html.home-returning .folder, html.home-returned .folder,
@@ -866,6 +872,7 @@ html.home-returning .folder { transition: none; }
 }
 .file-flight-window {
   position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: 6px 6px 0 0;
+  transform: translateZ(0.25px);   /* above the tabs, below the cover (neo-transition.js) */
 }
 .page.file-flight-content {
   position: absolute; left: 0; top: 100%;
