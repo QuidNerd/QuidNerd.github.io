@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../neo.css?v=cover-depth-2">
-<script src="../neo-transition.js?v=cover-depth-2"></script>
-<script src="../neo-motion.js?v=cover-depth-2"></script>
+<link rel="stylesheet" href="../neo.css?v=full-measure-1">
+<script src="../neo-transition.js?v=full-measure-1"></script>
+<script src="../neo-motion.js?v=full-measure-1"></script>
 <style>
 /* page-specific — shared chrome lives in ../neo.css */
 /* this page's name is a long filename, so its title runs smaller than the
@@ -50,8 +50,7 @@
   .tab-hint-label { font-size: 0.62rem; padding: 6px 9px; }
 }
 
-/* the notes are long-form, so give the prose a comfortable measure */
-.notes p, .notes li { max-width: 68ch; }
+/* the notes run the full width of the sheet (no reading-measure cap) */
 
 /* SPOILER — a redaction bar. Text is there but blacked out; click (or
    Enter/Space when focused) reveals it. box-decoration-break paints the
@@ -241,25 +240,63 @@
    its own wrapper instead of shoving the page sideways on a narrow screen. */
 .duel-compare-wrap { overflow-x: auto; margin: 16px 0 10px; border: 1px solid var(--rule); box-shadow: var(--lift-sm); }
 .duel-compare { border-collapse: collapse; width: 100%; min-width: 480px; }
-.duel-compare th, .duel-compare td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--rule); font-family: var(--font-mono); font-size: 0.82rem; }
+.duel-compare th, .duel-compare td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--rule); font-family: var(--font-mono); font-size: 0.92rem; }
 .duel-compare thead th { background: var(--black); color: var(--card); font-size: 0.64rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
 .duel-compare tbody tr:last-child td { border-bottom: none; }
 .duel-compare .dc-name { text-align: left; }
-.duel-compare tbody td.dc-name { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 0.92rem; min-width: 160px; }
-.duel-compare .dc-yr { font-family: var(--font-mono); font-weight: 400; font-size: 0.62rem; color: var(--ink-dim); text-transform: uppercase; margin-left: 5px; }
-.duel-compare .dc-note { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.64rem; line-height: 1.4; color: var(--ink-dim); margin-top: 3px; white-space: normal; }
-.duel-compare tr.dc-group td { background: var(--cyan); text-align: left; font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 0.78rem; letter-spacing: 0.5px; text-transform: uppercase; }
+.duel-compare tbody td.dc-name { font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1.05rem; min-width: 160px; }
+.duel-compare .dc-yr { font-family: var(--font-mono); font-weight: 400; font-size: 0.7rem; color: var(--ink-dim); text-transform: uppercase; margin-left: 5px; }
+.duel-compare .dc-note { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 0.74rem; line-height: 1.45; color: var(--ink-dim); margin-top: 3px; white-space: normal; }
+.duel-compare tr.dc-group td { background: var(--cyan); text-align: left; font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 0.86rem; letter-spacing: 0.5px; text-transform: uppercase; }
 /* ARC is the whole point of this comparison, so its column is tinted */
 .duel-compare td.dc-arc { background: #fdeeb0; font-weight: 700; }
 .duel-compare thead th.dc-arc { background: #2a2a2a; color: var(--yellow); }
 .duel-compare-cap { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-dim); margin: 0 0 22px; }
+/* Up to 700px wide: six stat columns plus names cannot fit (ACC got cut off), so each duellist becomes
+   a card, name on top and the six stats in a row underneath, labelled from
+   the column order (STA EVA STR WIS ARC ACC); the group rows become tags. */
+@media (max-width: 700px) {
+  .duel-compare-wrap { border: none; box-shadow: none; overflow: visible; border-radius: 0; }
+  .duel-compare, .duel-compare tbody { display: block; min-width: 0; }
+  .duel-compare thead { display: none; }
+  .duel-compare tbody tr {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px 4px;
+    background: var(--card); border: 1px solid var(--rule); border-radius: var(--radius);
+    padding: 9px 10px 8px; margin: 0 0 8px;
+  }
+  .duel-compare tbody td {
+    display: block; border: none; border-top: 1px solid var(--rule);
+    padding: 3px 0 0; font-size: 0.92rem; text-align: center;
+  }
+  .duel-compare tbody td::before {
+    display: block; font-size: 0.56rem; letter-spacing: 0.5px; color: var(--ink-dim); font-weight: 400;
+  }
+  .duel-compare tbody td:nth-child(2)::before { content: "STA"; }
+  .duel-compare tbody td:nth-child(3)::before { content: "EVA"; }
+  .duel-compare tbody td:nth-child(4)::before { content: "STR"; }
+  .duel-compare tbody td:nth-child(5)::before { content: "WIS"; }
+  .duel-compare tbody td:nth-child(6)::before { content: "ARC"; }
+  .duel-compare tbody td:nth-child(7)::before { content: "ACC"; }
+  .duel-compare tbody td.dc-arc { border-radius: 2px; }
+  .duel-compare tbody td.dc-name {
+    grid-column: 1 / -1; border-top: none; padding: 0 0 3px; min-width: 0;
+    text-align: left; font-size: 1.08rem;
+  }
+  .duel-compare tbody td.dc-name::before { content: none; }
+  .duel-compare tr.dc-group { display: block; background: none; border: none; padding: 0; margin: 16px 0 7px; }
+  .duel-compare tr.dc-group:first-child { margin-top: 0; }
+  .duel-compare tr.dc-group td {
+    display: inline-block; border: none; border-radius: 3px; padding: 3px 8px; line-height: 1.35;
+  }
+  .duel-compare tr.dc-group td::before { content: none; }
+}
 
 /* prose */
-.notes p { font-size: 0.98rem; line-height: 1.75; color: var(--black); margin-bottom: 14px; }
+.notes p { font-size: 1.05rem; line-height: 1.75; color: var(--black); margin-bottom: 14px; }
 .notes img { display: block; max-width: 100%; margin: 14px 0; border: 1px solid var(--rule); }
 .notes strong { font-weight: 700; }
 .notes ul { margin: 0 0 14px 22px; }
-.notes li { font-size: 0.96rem; line-height: 1.7; margin-bottom: 5px; }
+.notes li { font-size: 1.02rem; line-height: 1.7; margin-bottom: 5px; }
 /* block + fit-content so the next heading can't flow up beside it */
 .notes .label {
   display: block; width: fit-content; font-family: var(--font-mono); font-weight: 700; font-size: 0.7rem;
@@ -287,13 +324,13 @@
   display: block; width: auto; margin: 0;
   background: var(--black); color: var(--card);
   border: none; padding: 10px 14px;
-  font-size: 0.72rem; letter-spacing: 2px;
+  font-size: 0.8rem; letter-spacing: 2px;
 }
 .abilities-box .group-label {
   display: block; width: fit-content;
   background: var(--yellow); border: 1px solid var(--rule);
   padding: 4px 10px; margin: 20px 16px 10px;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
 }
 .abilities-box .group-label::before { content: none; }
 
@@ -301,7 +338,7 @@
 .abilities-box ul { list-style: none; margin: 0; padding: 0 16px 6px; }
 .abilities-box li {
   position: relative; padding: 9px 0 9px 20px; margin: 0;
-  font-size: 0.9rem; line-height: 1.55;
+  font-size: 1rem; line-height: 1.55;
   border-bottom: 1px dashed rgba(0,0,0,0.3);
 }
 .abilities-box li:last-child { border-bottom: none; }
@@ -329,7 +366,7 @@
   background: var(--cyan); color: var(--black);
   border: 1px solid var(--rule); padding: 4px 10px;
 }
-.addendum p { font-size: 0.92rem; line-height: 1.7; margin: 0 0 12px; }
+.addendum p { font-size: 0.98rem; line-height: 1.7; margin: 0 0 12px; }
 .addendum p:last-child { margin-bottom: 0; }
 
 .quote-block {
@@ -662,7 +699,7 @@
         </div>
 
         <div class="position-heading">stalking everyone's trunks (for science)</div>
-        <p>uhhh i went through a bunch of duellists' Y6/Y7 duel stats and the pattern that i keep seeing is every minmaxer with a good win rate leaves their ARC at 10. the ARC-heavy crowd are a rare breed, and their win rates feels kinda sad. (Alan/lamb i honestly can't tell how many times he won bc his trunk was already hidden for inactivity by the time i was collecting data, but Hanako's been at this for years and has all of 5 wins to show for it, <s>though tbh i don't think the problem is high ARC / low WIS, it's that the EVA is just way too low</s>)</p>
+        <p>uhhh i went through a bunch of duellists’ Y6/Y7 duel stats and the pattern i keep seeing is that every minmaxer with a good win rate leaves their ARC at 10. the ARC-heavy crowd are a rare breed, and their win rates feel kinda sad. (Alan/Lamb i honestly can’t tell how many times he won bc his trunk was already hidden for inactivity by the time i was collecting data, but Hanako’s been at this for years and has a grand total of 5 wins to show for it, <s>though tbh i don’t think the problem is high ARC / low WIS, it’s that the EVA is just way too low</s>)</p>
 
         <div class="duel-compare-wrap">
           <table class="duel-compare">

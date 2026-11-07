@@ -412,7 +412,7 @@ button.side-tab:focus-visible { outline: 2px solid var(--desk-ink); outline-offs
 .block-note, .chapter .desc, .intro {
   font-family: var(--font-body); font-style: italic;
   font-size: 1rem; line-height: 1.55;
-  color: var(--ink-dim); margin: 0 0 18px; max-width: 62ch;
+  color: var(--ink-dim); margin: 0 0 18px;
 }
 
 /* ============================================================
