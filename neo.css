@@ -851,6 +851,10 @@ a { color: var(--black); }
 ::view-transition-old(root), ::view-transition-new(root) {
   animation: none; mix-blend-mode: normal;
 }
+/* After back/forward the page left is still on screen, in full: fade the
+   arriving page in over it, then the folder swings (neo-transition.js) */
+html.flight-replay::view-transition-new(root) { animation: flight-replay-in 0.35s ease-out both; }
+@keyframes flight-replay-in { from { opacity: 0; } }
 .file-arriving .frame > .page { visibility: hidden; }
 .file-arriving .site-footer { visibility: hidden; }
 .file-closing .frame > .page { visibility: hidden; }

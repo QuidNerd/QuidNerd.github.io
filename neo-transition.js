@@ -12,6 +12,10 @@
   // page underneath could show through instead of it.
   var LIFT = '1px';
   var HOME_KEY = 'junk-drawer:home-layout';
+  // Back and forward leave a page with no chance to animate first, so the
+  // page arrived at plays the hand-off instead. Each file notes its shape as
+  // it is left (FILE_KEY), and every page notes that it was left (LEFT_KEY).
+  var FILE_KEY = 'junk-drawer:file-shape', LEFT_KEY = 'junk-drawer:left';
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var incoming = null, returning = null, leaving = false, reveal = null, startFlight = null, resetClose = null;
   try {
@@ -19,7 +23,8 @@
     sessionStorage.removeItem(KEY);
     var nav = performance.getEntriesByType('navigation')[0];
     if (!incoming || incoming.url !== location.href || Date.now() - incoming.time > 15000 ||
-        (nav && nav.type !== 'navigate') || reduce) incoming = null;
+        (nav && nav.type !== (incoming.traverse ? 'back_forward' : 'navigate')) || reduce) incoming = null;
+    if (!incoming && nav && nav.type === 'back_forward') useTraversal(traversal());
   } catch (_) { incoming = null; }
   if (incoming && incoming.kind === 'close') {
     returning = incoming;
@@ -66,6 +71,75 @@
     return h;
   }
   function layoutFits(layout) { return !!layout && layout.width === innerWidth && layout.vh === vh(); }
+  function bare(u) {
+    try { var x = new URL(u, location.href); x.hash = ''; return x.href; } catch (_) { return ''; }
+  }
+  function readJSON(key) {
+    try { return JSON.parse(sessionStorage.getItem(key)); } catch (_) { return null; }
+  }
+  // The page this one was reached from. The note the old page left wins
+  // while it is fresh; the Navigation API's record covers a note not yet
+  // written when a page loads afresh in another process.
+  function cameFrom() {
+    var left = readJSON(LEFT_KEY);
+    if (left && Date.now() - left.time < 4000 && bare(left.url) !== bare(location.href)) return left.url;
+    try {
+      var from = navigation.activation && navigation.activation.from;
+      if (from && from.url) return from.url;
+    } catch (_) {}
+    return null;
+  }
+  // After back or forward: a file left for home closes on home ({close}),
+  // home left for a file opens on the file ({open}); anything else plays
+  // as an ordinary visit.
+  function traversal() {
+    if (reduce) return null;
+    var from = cameFrom();
+    if (!from || bare(from) === bare(location.href)) return null;
+    var shapes = readJSON(FILE_KEY), shape = shapes && shapes[bare(from)];
+    if (shape && bare(shape.homeUrl) === bare(location.href)) return { close: shape };
+    var layout = readJSON(HOME_KEY);
+    if (layout && layout.home && bare(layout.home) === bare(from) && layoutFits(layout) &&
+        layout.targets.some(function (t) { return bare(t.url) === bare(location.href); })) return { open: true };
+    return null;
+  }
+  function useTraversal(t) {
+    if (!t) return;
+    incoming = t.close ? { kind: 'close', replay: t.close } : { pending: true, url: location.href, time: Date.now() };
+    document.documentElement.classList.add('flight-replay');
+  }
+  // A replayed opening only knows it came from home; the folder it opens
+  // from is read off home's remembered layout once the rail says which tab
+  // this page has open.
+  function resolveOpen(rail) {
+    if (!incoming || !incoming.pending) return;
+    var active = rail && (rail.querySelector('.is-active') || rail.firstElementChild);
+    var label = active ? active.textContent.trim() : '';
+    var layout = readJSON(HOME_KEY), t = null;
+    if (layoutFits(layout)) {
+      t = layout.targets.find(function (x) { return x.url === location.href; }) ||
+        layout.targets.find(function (x) { return x.label === label; }) ||
+        layout.targets.find(function (x) { return bare(x.url) === bare(location.href); });
+    }
+    if (!t || !t.perspective) {
+      incoming = null;
+      document.documentElement.classList.remove('file-arriving');
+      return;
+    }
+    incoming = { url: location.href, time: Date.now(), box: t.box, tab: t.tab, label: t.label, tabX: t.tabX,
+      ink: t.ink, paper: t.paper, cover: t.cover, coverTransform: 'none', light: '0',
+      perspective: t.perspective, gap: t.gap, fronts: t.fronts };
+    // A section with no tab on home (on a phone, Frontend Notes) opens out
+    // of its folder's tab, but showing its own name and colour from the start
+    if (active && label && t.label !== label) {
+      incoming.label = label;
+      // the rail is not in the page yet, so read its colour token (var(--pink))
+      var token = /--[\w-]+/.exec(active.style.getPropertyValue('--c'));
+      var colour = token && getComputedStyle(document.documentElement).getPropertyValue(token[0]).trim();
+      if (colour) incoming.paper = colour;
+      incoming.tab = Object.assign({}, t.tab, { width: 'auto' });
+    }
+  }
   // Object.assign onto el.style silently drops custom properties (--x), so
   // the swing's --cover-light, --folder and tab shoulders never took effect.
   function setStyle(el, props) {
@@ -167,6 +241,7 @@
   }
 
   function fitRail(rail) {
+    resolveOpen(rail);
     if (!incoming) return;
     var m = incoming.tab;
     rail.style.setProperty('--file-tab-height', m.height);
@@ -214,11 +289,21 @@
         var box = { x: stackBox.x + folder.offsetLeft, y: stackBox.y + folder.offsetTop + scrollY,
           width: folder.offsetWidth, height: folder.offsetHeight };
         var tabX = tab.offsetLeft + tab.parentElement.offsetLeft;
+        // and what depart() hands over, so back/forward can open from here
+        var stack = folder.closest('.stack'), sr = rect(stack);
+        var origin = getComputedStyle(stack).perspectiveOrigin.split(' ');
         return { url: sheet.href, label: tab.textContent.trim(), box: box, tabX: tabX, tab: metric(tab),
           paper: getComputedStyle(sheet).backgroundColor,
-          cover: getComputedStyle(folder.querySelector('.folder-band')).backgroundColor };
+          cover: getComputedStyle(folder.querySelector('.folder-band')).backgroundColor,
+          ink: getComputedStyle(tab).color,
+          gap: getComputedStyle(folder).getPropertyValue('--tgap').trim() || '14px',
+          perspective: [sr.x + parseFloat(origin[0]), sr.y + scrollY + parseFloat(origin[1])],
+          fronts: Array.from(folder.querySelectorAll('.folder-page')).filter(function (p) {
+            return +p.getAttribute('data-k') < +sheet.getAttribute('data-k');
+          }).sort(function (x, y) { return +y.getAttribute('data-k') - +x.getAttribute('data-k'); })
+            .map(function (p) { return getComputedStyle(p).backgroundColor; }) };
       }).filter(Boolean);
-      try { sessionStorage.setItem(HOME_KEY, JSON.stringify({ width: innerWidth, vh: vh(), targets: targets })); } catch (_) {}
+      try { sessionStorage.setItem(HOME_KEY, JSON.stringify({ width: innerWidth, vh: vh(), home: location.href, targets: targets })); } catch (_) {}
     }
     // Only measure at rest: home return animations temporarily transform the
     // stack, and the folders ease to their final heights (--cover-min lands
@@ -242,11 +327,17 @@
   // has scrolled to, half off screen. So glide back to the top first, then
   // close. A long way down jumps most of the distance at once, so the glide
   // is only ever about a screen long.
-  function closeHome(url) {
+  // `key`: a history entry to go back to (the back button, see armBack),
+  // instead of a new visit to `url`
+  function leaveFor(url, key) {
+    if (key) navigation.traverseTo(key);
+    else location.assign(url.href);
+  }
+  function closeHome(url, key) {
     var page = document.querySelector('.frame > .page');
     if (!page || reduce || leaving || document.documentElement.classList.contains('file-arriving')) return false;
     if (!page.querySelector('.side-tab')) return false;
-    if (scrollY <= 1) return closeHomeNow(url);
+    if (scrollY <= 1) return closeHomeNow(url, key);
     leaving = true;
     var html = document.documentElement;
     html.classList.add('file-rewinding');
@@ -259,7 +350,7 @@
       removeEventListener('scrollend', check);
       html.classList.remove('file-rewinding');
       leaving = false;
-      if (!closeHomeNow(url)) location.assign(url.href);
+      if (!closeHomeNow(url, key)) leaveFor(url, key);
     }
     function check() {
       if (scrollY <= 1 || Date.now() - started > 1500) go();
@@ -271,23 +362,36 @@
     return true;
   }
 
-  function closeHomeNow(url) {
-    var page = document.querySelector('.frame > .page');
-    if (!page || leaving) return false;
+  // What closing a file needs to know about it, plain data, so that home can
+  // replay the close after the back button (see traversal).
+  function shapeOf(page) {
     var active = page.querySelector('.side-tab.is-active') || page.querySelector('.side-tab');
-    if (!active) return false;
-    leaving = true;
-    var box = rect(page), tab = metric(active), colour = getComputedStyle(page, '::before').backgroundColor;
-    // The cover's two faces: lying open it shows its inside, the section's
-    // colour; shut, its outside, the parent tab's (--cover). The swap
-    // happens edge-on, halfway through the turn, where neither face shows.
-    var outside = getComputedStyle(document.body).getPropertyValue('--cover').trim() || colour;
-    var target = null;
+    if (!active) return null;
+    var box = rect(page), colour = getComputedStyle(page, '::before').backgroundColor;
+    box.y += scrollY;   // as it lies at the top, where the close starts
+    var home = document.querySelector('.topbar-home[href]');
+    return { url: location.href, homeUrl: home ? home.href : '', box: box, tab: metric(active),
+      label: active.textContent.trim(), colour: colour,
+      // The cover's two faces: lying open it shows its inside, the section's
+      // colour; shut, its outside, the parent tab's (--cover). The swap
+      // happens edge-on, halfway through the turn, where neither face shows.
+      outside: getComputedStyle(document.body).getPropertyValue('--cover').trim() || colour,
+      labels: Array.from(page.querySelectorAll('.side-tab')).map(function (original) {
+        var style = getComputedStyle(original);
+        return { text: original.textContent, left: original.offsetLeft, m: metric(original), color: style.color,
+          bg: style.backgroundColor, transform: style.transform, active: original === active };
+      }) };
+  }
+
+  // Build and start the closing swing for a file of this shape, carrying
+  // `content` (its paper) when there is one. Returns the hand-off state.
+  function flyClosed(s, content) {
+    var box = s.box, tab = s.tab, colour = s.colour, target = null;
     try {
       var layout = JSON.parse(sessionStorage.getItem(HOME_KEY));
       if (layoutFits(layout)) {
-        target = layout.targets.find(function (t) { return t.label === active.textContent.trim(); }) ||
-          layout.targets.find(function (t) { return new URL(t.url).pathname === location.pathname; });
+        target = layout.targets.find(function (t) { return t.label === s.label; }) ||
+          layout.targets.find(function (t) { return new URL(t.url).pathname === new URL(s.url).pathname; });
       }
     } catch (_) {}
     var end = target ? target.box : { x: innerWidth <= 620 ? 10 : 16, y: innerHeight - 190,
@@ -295,11 +399,9 @@
     // A section with no tab of its own on home (Summoner's court; on a phone,
     // anything but each folder's first) closes into that folder's own tab.
     // It lands as itself, then home swaps it for the right one (arriveHome).
-    var swap = target && target.label !== active.textContent.trim() ?
-      { label: active.textContent.trim(), colour: colour } : null;
-    var state = { kind: 'close', url: url.href, time: Date.now(), source: location.href,
-      label: target ? target.label : active.textContent.trim(), box: end, cover: target ? target.cover : colour,
-      swap: swap };
+    var swap = target && target.label !== s.label ? { label: s.label, colour: colour } : null;
+    var state = { kind: 'close', time: Date.now(), source: s.url,
+      label: target ? target.label : s.label, box: end, cover: target ? target.cover : colour, swap: swap };
     var stage = document.createElement('div');
     stage.className = 'file-flight-stage'; stage.inert = true; stage.setAttribute('aria-hidden', 'true');
     var flight = document.createElement('div');
@@ -309,56 +411,37 @@
       transform: 'translate(' + (box.x + box.width) + 'px,' + box.y + 'px) rotate(90deg)' });
     var windowEl = document.createElement('div');
     windowEl.className = 'file-flight-window'; windowEl.style.backgroundColor = colour;
-    var content = page.cloneNode(true);
-    content.classList.remove('is-sliding'); content.classList.add('file-flight-content');
-    content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
-    // Ids stay: pieces styled by id (#bb-input) would otherwise change size
-    // at the hand-off. The copy sits after the real page, so lookups by id
-    // still find the real elements, and it is gone once the swing ends.
     // Pinned to the tab edge by a fixed offset (not top:100%, which moves as
     // the folder resizes mid-turn), so the paper rides rigidly with it.
-    setStyle(content, { width: box.width + 'px', height: box.height + 'px', margin: '0',
-      top: box.width + 'px', padding: getComputedStyle(page).padding, opacity: '1', '--folder': colour });
-    windowEl.appendChild(content); flight.appendChild(windowEl);
+    if (content) { content.style.top = box.width + 'px'; windowEl.appendChild(content); }
+    flight.appendChild(windowEl);
     // Each flying tab gets a 4px skirt of its own colour (the box-shadow),
     // tucked behind the folder: while it turns, sub-pixel rounding would
     // otherwise open a hairline of desk between tab and folder.
-    var labels = Array.from(page.querySelectorAll('.side-tab')).map(function (original) {
-      var m = metric(original), style = getComputedStyle(original), copy = document.createElement('span');
-      copy.className = 'file-flight-tab'; copy.textContent = original.textContent;
-      setStyle(copy, { left: original.offsetLeft + 'px', bottom: 'calc(100% - 2px)',
-        height: m.height, width: m.width, fontSize: m.fontSize, padding: m.padding,
-        color: style.color, backgroundColor: style.backgroundColor, boxShadow: '0 4px 0 ' + style.backgroundColor, transform: style.transform,
-        '--file-tab-shoulder': m.shoulder });
+    var labels = s.labels.map(function (l) {
+      var copy = document.createElement('span');
+      copy.className = 'file-flight-tab'; copy.textContent = l.text;
+      setStyle(copy, { left: l.left + 'px', bottom: 'calc(100% - 2px)',
+        height: l.m.height, width: l.m.width, fontSize: l.m.fontSize, padding: l.m.padding,
+        color: l.color, backgroundColor: l.bg, boxShadow: '0 4px 0 ' + l.bg, transform: l.transform,
+        '--file-tab-shoulder': l.m.shoulder });
       flight.appendChild(copy);
-      return { el: copy, active: original === active, left: original.offsetLeft, transform: style.transform };
+      return { el: copy, active: l.active, left: l.left, transform: l.transform };
     });
     var cover = document.createElement('div');
     cover.className = 'file-flight-cover';
     setStyle(cover, { backgroundColor: colour, transform: 'rotateX(-180deg) translateZ(' + LIFT + ')' });
     flight.appendChild(cover); stage.appendChild(flight); document.body.appendChild(stage);
-    document.documentElement.classList.add('file-closing');
-    var animations = [], navigated = false, timeout;
+    var animations = [];
     function animate(el, frames, options) { var a = el.animate(frames, options); animations.push(a); return a; }
-    function go() {
-      if (navigated) return;
-      navigated = true; clearTimeout(timeout);
-      state.time = Date.now();
-      try { sessionStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {}
-      location.assign(url.href);
-    }
-    resetClose = function () {
-      clearTimeout(timeout); animations.forEach(function (a) { a.cancel(); }); stage.remove();
-      document.documentElement.classList.remove('file-closing'); leaving = false;
-    };
     var timing = { duration: 1500, easing: SWING, fill: 'both' };
     var move = animate(flight, [
       { width: length + 'px', height: box.width + 'px', transform: flight.style.transform },
       { width: end.width + 'px', height: end.height + 'px', transform: 'translate(' + end.x + 'px,' + end.y + 'px) rotate(0deg)' }
     ], timing);
     animate(cover, [{ transform: 'rotateX(-180deg) translateZ(' + LIFT + ')' }, { transform: 'rotateX(0deg) translateZ(' + LIFT + ')' }], timing);
-    animate(cover, faces(colour, target ? target.cover : outside), { duration: timing.duration, fill: 'both' });
-    animate(content, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 950, fill: 'both' });
+    animate(cover, faces(colour, target ? target.cover : s.outside), { duration: timing.duration, fill: 'both' });
+    if (content) animate(content, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 950, fill: 'both' });
     labels.forEach(function (label) {
       if (!label.active) {
         animate(label.el, [{ transform: label.transform, opacity: 1 }, { transform: 'translateY(110%)', opacity: 0 }],
@@ -375,19 +458,73 @@
         ], timing);
       }
     });
+    return { state: state, stage: stage, move: move, animations: animations, animate: animate };
+  }
+
+  function closeHomeNow(url, key) {
+    var page = document.querySelector('.frame > .page');
+    if (!page || leaving) return false;
+    var shape = shapeOf(page);
+    if (!shape) return false;
+    leaving = true;
+    var content = page.cloneNode(true);
+    content.classList.remove('is-sliding'); content.classList.add('file-flight-content');
+    content.querySelectorAll('.side-tabs, .side-page-peek, .page-cover').forEach(function (el) { el.remove(); });
+    // Ids stay: pieces styled by id (#bb-input) would otherwise change size
+    // at the hand-off. The copy sits after the real page, so lookups by id
+    // still find the real elements, and it is gone once the swing ends.
+    setStyle(content, { width: shape.box.width + 'px', height: shape.box.height + 'px', margin: '0',
+      padding: getComputedStyle(page).padding, opacity: '1', '--folder': shape.colour });
+    var fly = flyClosed(shape, content), state = fly.state, animate = fly.animate;
+    state.url = url.href;
+    if (key) state.traverse = true;
+    document.documentElement.classList.add('file-closing');
+    var navigated = false, timeout;
+    function go() {
+      if (navigated) return;
+      navigated = true; clearTimeout(timeout);
+      state.time = Date.now();
+      try { sessionStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {}
+      leaveFor(url, key);
+    }
+    resetClose = function () {
+      clearTimeout(timeout); fly.animations.forEach(function (a) { a.cancel(); }); fly.stage.remove();
+      document.documentElement.classList.remove('file-closing'); leaving = false;
+    };
     document.querySelectorAll('.masthead .char').forEach(function (char, i) {
       animate(char, [{ transform: getComputedStyle(char).transform, opacity: 1 }, { transform: 'translateX(-150%)', opacity: 0 }],
         { duration: 650, delay: Math.min(i * 20, 500), easing: 'ease-in-out', fill: 'both' });
     });
     var footer = document.querySelector('.site-footer');
     if (footer) animate(footer, [{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'both' });
-    move.finished.then(go, function () {});
+    fly.move.finished.then(go, function () {});
     timeout = setTimeout(go, 1800);
     return true;
   }
 
+  // Home reached by the back button from a file: the file is already gone,
+  // so its folder closes here instead, from the shape it left behind, then
+  // lands in the stack as after a click on "back to".
+  function replayClose(shape) {
+    var html = document.documentElement, fly = null, landed = false;
+    scrollTo(0, 0);
+    try { fly = flyClosed(shape, null); } catch (_) {}
+    if (!fly) { returning = null; html.classList.remove('home-returning'); return; }
+    returning = fly.state;
+    function land() {
+      if (landed) return;
+      landed = true;
+      arriveHome();
+      fly.animations.forEach(function (a) { a.cancel(); });
+      fly.stage.remove();
+    }
+    fly.move.finished.then(land, land);
+    setTimeout(land, 1800);
+  }
+
   function arriveHome() {
     if (!returning || !document.body.classList.contains('home')) return;
+    if (returning.replay) { replayClose(returning.replay); return; }
     var state = returning, html = document.documentElement, animations = [], done = false;
     html.classList.add('home-returned');
     var sheets = Array.from(document.querySelectorAll('a.folder-page'));
@@ -475,6 +612,7 @@
 
   function arrive(page) {
     var permanentCover = ensureCover(page);
+    resolveOpen(page.querySelector('.side-tabs'));
     if (!incoming) return false;
     var state = incoming;
     var stage, flight, cover, finished = false, started = false, animations = [];
@@ -670,7 +808,103 @@
       band.style.removeProperty('transform');
       band.style.removeProperty('--held-light');
     });
+    // Restored as it was left: finish the hand-off here too
+    var html = document.documentElement, home = document.body.classList.contains('home');
+    function backHome(state) {
+      html.classList.add('home-returning');
+      html.classList.remove('is-picking', 'home-returned');
+      document.querySelectorAll('.folder.is-picked').forEach(function (f) {
+        f.classList.remove('is-picked');
+        f.style.removeProperty('transform');
+      });
+      returning = state;
+      arriveHome();
+    }
+    // the back button's close, played on the file before it left (armBack)
+    var handoff = readJSON(KEY);
+    if (home && handoff && handoff.traverse && handoff.kind === 'close' && handoff.url === location.href &&
+        Date.now() - handoff.time < 15000) {
+      sessionStorage.removeItem(KEY);
+      backHome(handoff);
+      return;
+    }
+    var t = traversal();
+    if (!t) return;
+    if (t.close && home) backHome({ kind: 'close', replay: t.close });
+    else if (t.open) {
+      var page = document.querySelector('.frame > .page');
+      var rail = page && page.querySelector('.side-tabs');
+      if (!rail) return;
+      incoming = { pending: true, url: location.href, time: Date.now() };
+      html.classList.add('file-arriving');
+      fitRail(rail);
+      if (!arrive(page)) return;
+      // the title was left on show: letter it in again, as on a first visit
+      var title = document.querySelector('.masthead h1');
+      var chars = title ? Array.from(title.querySelectorAll('.char')) : [];
+      if (chars.length) {
+        title.style.setProperty('--title-delay', '0.65s');
+        chars.forEach(function (c) { c.style.animation = 'none'; });
+        void title.offsetWidth;
+        chars.forEach(function (c) { c.style.removeProperty('animation'); });
+      }
+    }
   });
+
+  // The back button from a file to home, in browsers with the Navigation
+  // API. Leaving for another document cannot be held up, but a step back
+  // within the same one can: so once someone has clicked or typed on the
+  // file (Chrome skips steps a page adds unprompted), it adds one more
+  // history step for this same address. Back from that step is held, the
+  // file closes exactly as "back to Junk Drawer" closes it, and only then
+  // does the browser go back to home, with forward still to come here.
+  var guardKey = null;
+  function armBack(e) {
+    if (reduce || leaving || !window.navigation || !navigation.currentEntry) return;
+    if (document.body.classList.contains('home') || !document.querySelector('.frame > .page .side-tab')) return;
+    if (!navigator.userActivation || !navigator.userActivation.isActive) return;
+    var cur = navigation.currentEntry;
+    if (cur.key === guardKey) return;
+    // a click that is about to leave the page anyway adds nothing
+    var a = e && e.target && e.target.closest && e.target.closest('a[href]');
+    if (a && bare(a.href) !== bare(location.href)) return;
+    var home = document.querySelector('.topbar-home[href]');
+    var prev = navigation.entries()[cur.index - 1];
+    if (!home || !prev || bare(prev.url) !== bare(home.href)) return;
+    history.pushState(history.state, '', location.href);
+    guardKey = navigation.currentEntry.key;
+  }
+  if (window.navigation && !reduce) {
+    ['pointerup', 'mousedown', 'keydown'].forEach(function (type) {
+      addEventListener(type, armBack, true);
+    });
+    navigation.addEventListener('navigate', function (e) {
+      if (!guardKey || e.navigationType !== 'traverse' || !e.cancelable) return;
+      var cur = navigation.currentEntry, entries = navigation.entries();
+      if (cur.key !== guardKey) return;
+      var base = entries[cur.index - 1], homeEntry = entries[cur.index - 2];
+      if (!base || !homeEntry) return;
+      if (e.destination.key !== base.key && e.destination.key !== homeEntry.key) return;
+      e.preventDefault();
+      var url = new URL(homeEntry.url);
+      if (!closeHome(url, homeEntry.key)) navigation.traverseTo(homeEntry.key);
+    });
+  }
+  // Note this page's leaving, and a file's shape, for the page arrived at
+  function noteLeaving() {
+    try {
+      sessionStorage.setItem(LEFT_KEY, JSON.stringify({ url: location.href, time: Date.now() }));
+      var page = document.querySelector('.frame > .page');
+      if (!page || document.body.classList.contains('home')) return;
+      var shape = shapeOf(page);
+      if (!shape) return;
+      var shapes = readJSON(FILE_KEY) || {};
+      shapes[bare(location.href)] = shape;
+      sessionStorage.setItem(FILE_KEY, JSON.stringify(shapes));
+    } catch (_) {}
+  }
+  addEventListener('pageswap', noteLeaving);
+  addEventListener('pagehide', noteLeaving);
   // A file reached without passing through home (a shared link, a bookmark)
   // has no home layout to close back into, so it would fold up somewhere
   // generic and then jump. Lay home out in a hidden frame at this exact
