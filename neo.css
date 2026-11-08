@@ -180,6 +180,23 @@ a.topbar-home::before {
    well before the folder lands, when .file-arriving comes off) */
 .file-arriving a.topbar-home::before { animation: back-to-in 0.55s var(--ease) 0.35s both; }
 @keyframes back-to-in { from { opacity: 0; margin-top: calc(-1em - 2px); } }
+/* home reached by the browser's back button, while the file's close plays
+   there (neo-transition.js): the file's "back to" folds away as above */
+html.back-label-out .topbar-home { flex-direction: column; justify-content: center; gap: 2px; line-height: 1; }
+html.back-label-out .topbar-home::before {
+  content: "back to";
+  font-family: var(--font-mono); font-weight: 500; font-stretch: 100%;
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: lowercase;
+  animation: back-to-out 0.55s var(--ease) both;
+}
+@keyframes back-to-out {
+  0% { opacity: 1; margin-top: 0; }
+  64% { opacity: 0; }
+  100% { opacity: 0; margin-top: calc(-1em - 2px); }
+}
+/* home as it was left for a file, kept from showing for a frame when the
+   browser brings it back (neo-transition.js) */
+html.home-left main { visibility: hidden; }
 
 .topbar-links { grid-column: 3; justify-self: end; }
 .topbar-links a {
