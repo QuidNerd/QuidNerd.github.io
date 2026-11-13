@@ -68,18 +68,19 @@
 .desc-short { font-size: 0.92rem; line-height: 1.55; color: var(--black); }
 .desc-full {
   font-size: 0.88rem; line-height: 1.65; margin-top: 10px; padding: 12px 14px;
-  background: var(--bg); border: 1px solid var(--rule);
-  border-left: 1px solid var(--rule); white-space: pre-wrap;
+  background: transparent; border: 1px solid var(--black); border-radius: 2px;
+  white-space: pre-wrap;   /* a hairline form-field box, no fill, no side bar */
 }
 .quick-roll {
-  display: inline-block; background: var(--lime);
+  display: inline-block; background: var(--cyan);
   border: 1px solid var(--rule); box-shadow: var(--lift-sm);
-  padding: 4px 10px; margin: 3px 4px 3px 0; cursor: pointer;
+  padding: 4px 10px; margin: 10px 4px 3px 0; cursor: pointer;   /* 10px: the same gap the rule box keeps from the text above */
   font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem;
   text-transform: uppercase; letter-spacing: 1px;
   transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease);
 }
-.quick-roll:hover { background: var(--pink); transform: translateY(-2px); box-shadow: var(--lift); }
+/* hover: ink fill, light text, same as the database's Reset button */
+.quick-roll:hover { background: var(--black); color: var(--card); transform: translateY(-2px); box-shadow: var(--lift); }
 
 /* dice roller */
 #roll-panel {
@@ -171,7 +172,7 @@
   flex-wrap: wrap; font-family: var(--font-mono); font-size: 0.75rem;
 }
 .broom-select-row select { padding: 5px 26px 5px 8px; font-size: 0.7rem; background-position: calc(100% - 15px) calc(50% + 1px), calc(100% - 9px) calc(50% + 1px); background-size: 6px 6px, 6px 6px; }
-.broom-select-row .broom-bonus { font-weight: 700; background: var(--lime); border: 1px solid var(--rule); padding: 2px 7px; }
+.broom-select-row .broom-bonus { font-weight: 700; background: var(--good); border: 1px solid var(--rule); padding: 2px 7px; }
 
 /* database */
 #db-panel .db-controls {
@@ -228,13 +229,11 @@
 .beater-box { background: #ffe0c2; }
 .role-tag, .ability-tag, .quick-roll, .hp-bar strong, .broom-select-row .broom-bonus { border-radius: 999px; border-color: transparent; }
 .stat-info { border-radius: 2px; border-color: transparent; background: #fff1a6; }
-.desc-full { border-radius: var(--radius); border-left: 3px solid var(--folder); }
 .ref-panel li b { background: none; padding: 0; box-shadow: inset 0 -0.45em 0 color-mix(in srgb, var(--yellow) 70%, transparent); }
 .ref-panel h3, #roll-panel h2 { font-size: 1.6rem; line-height: 1; }
 .action-card h3, .player-card .player-header h3 { font-size: 1.45rem; line-height: 1; }
 .collapse-toggle::before { border-radius: 50%; background: var(--folder); border: none; font-size: 0.7em; }
 .collapse-toggle:hover::before { background: var(--folder); }
-.quick-roll:hover { background: var(--folder); }
 .roll-btn:hover { background: var(--folder); }
 #db-table th { background: var(--bg); border-bottom-color: var(--rule-strong); }
 #db-table td input:focus { background: #fffdf0; }

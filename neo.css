@@ -25,25 +25,30 @@
    ============================================================ */
 
 :root {
-  /* --- the palette (unchanged from the old system) --- */
-  --yellow: #ffd93d;
-  --pink: #ff6b9d;
-  --cyan: #4ecdc4;
-  --lime: #b8e986;
-  --orange: #ff9a3c;
-  --red: #ff5252;
+  /* --- the palette: "Harbour" — navy anchor, warm/cool split.
+     The names are historical slots (pages and inline styles refer to them),
+     not descriptions of the colour any more:
+       --yellow mustard · --pink harbour blue · --cyan aqua
+       --lime deep orange (shares --red) · --orange sand · --red deep orange
+     Every slot must keep ≥4.5:1 against the navy ink, which sits on all of them. --- */
+  --yellow: #f9c846;
+  --pink: #5294bd;
+  --cyan: #6fcfd0;
+  --lime: var(--red);           /* was fog; the deep orange carries more of the site now */
+  --orange: #f2a65a;
+  --red: #ee6c4d;
 
   /* --- desk, paper, ink --- */
-  --desk: #1b1b1b;
-  --desk-2: #242422;
+  --desk: #14213d;
+  --desk-2: #1c2b4d;
   --desk-ink: #f3efe4;          /* text that sits on the desk */
-  --desk-dim: #9b968a;
-  --paper: #f6f4ef;             /* the sheet */
+  --desk-dim: #8e9ab0;
+  --paper: #f7f5f0;             /* the sheet */
   --card: #fffefb;              /* index cards on the sheet */
-  --bg: #ebe6d8;                /* recessed: wells, code gutters, quiet boxes */
-  --black: #1d1c1a;             /* ink */
-  --rule: rgba(29, 28, 26, 0.18);
-  --rule-strong: rgba(29, 28, 26, 0.42);
+  --bg: #ebe7df;                /* recessed: wells, code gutters, quiet boxes */
+  --black: #14213d;             /* ink: the desk's navy */
+  --rule: rgba(20, 33, 61, 0.18);
+  --rule-strong: rgba(20, 33, 61, 0.42);
   --paper-line: rgba(64, 104, 168, 0.10);
 
   --folder: var(--yellow);      /* overridden per page by body.f-* */
@@ -87,10 +92,10 @@
   --border-dark: var(--black);
   --border-light: var(--rule);
   --ink: var(--black);
-  --ink-dim: #5b574f;
-  --ink-faint: #8a857a;
+  --ink-dim: #4f5a70;
+  --ink-faint: #7f889a;
   --accent: var(--black);
-  --accent-bright: #c2185b;
+  --accent-bright: #c4462a;
   --red-bright: #c62828;
   --surface: var(--card);
   --surface2: var(--yellow);
@@ -103,6 +108,7 @@
   --text-light: var(--black);
   --dim: var(--ink-dim);
   --green: #2e7d32;
+  --good: var(--cyan);          /* success / done / bonus fills */
 }
 
 /* --folder follows the open section (neo-motion.js repaints it); --cover is
@@ -688,7 +694,17 @@ button:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
 .site-footer .footer-star {
   font-size: 1rem; color: var(--folder);
   animation: spin 8s linear infinite;
-  display: inline-block; width: 1rem; text-align: center;   /* a fixed width, for the indent below */
+  /* a fixed 1rem square, for the indent below. line-height 1 + centring
+     keep the glyph in the middle of the box, so it spins on the spot
+     instead of orbiting the box's centre */
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1rem; height: 1rem; line-height: 1; vertical-align: middle;
+  /* the ✦ glyph's ink sits ~1px below the middle of its line box,
+     so pivot on the ink rather than the box */
+  transform-origin: 50% 57%;
+  /* centred on the x-height it reads a touch low next to lowercase with
+     ascenders (b, l, t, d, f); split the difference with the cap height */
+  position: relative; top: -0.075rem;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .footer-links { display: flex; gap: 6px 16px; flex-wrap: wrap; margin-left: auto; }

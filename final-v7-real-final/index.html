@@ -84,20 +84,22 @@
   background: rgba(0,0,0,0.55); padding: 20px;
 }
 .ad-overlay.is-open { display: flex; }
+/* THE FLYER — the pop-up is a mustard flyer slapped over the page:
+   navy ink on mustard, a navy tag, a navy button that empties to an
+   outline on hover. */
 .ad-box {
   position: relative; width: 100%; max-width: 430px;
-  background: var(--card); border: 1px solid var(--rule);
-  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6); border-radius: 6px;
+  background: var(--yellow); color: var(--black); border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 30px 60px -20px rgba(0,0,0,0.6); border-radius: 4px;
   transform: rotate(-1.5deg);
-  padding: 28px 24px 20px;
+  padding: 30px 26px 18px;
 }
 .ad-tag {
-  position: absolute; top: -15px; left: 18px;
+  position: absolute; top: -13px; left: 20px;
   font-family: var(--font-mono); font-weight: 700; font-size: 0.6rem;
   letter-spacing: 2px; text-transform: uppercase;
-  background: var(--cyan); color: var(--black);
-  border: 1px solid var(--rule); box-shadow: var(--lift-sm);
-  padding: 4px 9px; transform: rotate(2deg);
+  background: var(--black); color: var(--yellow);
+  padding: 5px 11px; transform: rotate(2deg);
 }
 .ad-head {
   font-family: var(--font-display); font-weight: 800; font-stretch: 72%;
@@ -108,37 +110,52 @@
   font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6;
   margin: 0 0 18px;
 }
+/* one hover for the button: the navy fill drains away and leaves an ink
+   outline on the mustard; the arrow steps forward. No lift, no new colour.
+   The border is there at rest too (same navy as the fill), so nothing
+   shifts when it empties. */
 .ad-cta {
-  display: block; text-align: center;
+  display: flex; justify-content: center; gap: 8px;
   font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1rem;
   letter-spacing: 0.5px; text-transform: uppercase;
-  color: var(--black); background: var(--yellow); text-decoration: none;
-  border: 1px solid var(--rule); box-shadow: var(--lift-sm);
-  padding: 13px 16px; cursor: pointer;
-  transition: transform var(--quick) var(--ease), box-shadow var(--quick) var(--ease), background var(--quick) var(--ease);
+  color: var(--yellow); background: var(--black); text-decoration: none;
+  border: 1.5px solid var(--black); border-radius: var(--radius);
+  padding: 12.5px 16px; cursor: pointer;
+  transition: background var(--quick) var(--ease), color var(--quick) var(--ease), transform 0.08s ease;
 }
-.ad-cta:hover { background: var(--pink); transform: translateY(-2px); box-shadow: var(--lift-sm); }
-.ad-cta:active { transform: translateY(0); box-shadow: 0 0 0 var(--black); }
-.ad-skip {
-  display: block; margin: 14px auto 0;
+.ad-cta-arrow { display: inline-block; transition: transform var(--quick) var(--ease); }
+.ad-cta:hover { background: transparent; color: var(--black); }
+.ad-cta:hover .ad-cta-arrow { transform: translateX(5px); }
+.ad-cta:active { transform: scale(0.985); }
+.ad-cta:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
+/* skip is a text link: its underline draws in on hover. Written as
+   button.ad-skip so the site-wide button hover (fill, lift, shadow)
+   can never reach it — not even while it's disabled and counting down. */
+button.ad-skip, button.ad-skip:hover, button.ad-skip:active {
+  display: block; margin: 12px auto 0;
   font-family: var(--font-mono); font-weight: 700; font-size: 0.72rem;
   letter-spacing: 1px; text-transform: uppercase;
-  background: none; border: none; color: var(--ink-dim);
-  cursor: pointer; padding: 4px 6px;
+  color: #5a5434; border: none; border-radius: 0; box-shadow: none; transform: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0% 1.5px no-repeat;
+  cursor: pointer; padding: 4px 2px;
+  transition: background-size var(--quick) var(--ease), color var(--quick) ease;
 }
-.ad-skip:disabled { cursor: default; }
-.ad-skip:not(:disabled):hover { color: var(--black); text-decoration: underline; }
-.ad-skip:focus-visible { outline: 1px solid var(--rule); outline-offset: 2px; }
+button.ad-skip:disabled { cursor: default; opacity: 0.55; }
+button.ad-skip:not(:disabled):hover,
+button.ad-skip:focus-visible { color: var(--black); background-size: 100% 1.5px; }
+button.ad-skip:focus-visible { outline: none; }
 /* step two: the guilt trip. No exit control — a countdown that hauls you to
    the fund whether you like it or not (Esc is still a silent escape hatch). */
 .ad-countdown {
-  font-family: var(--font-mono); font-weight: 700; font-size: 0.82rem;
-  letter-spacing: 1px; text-transform: uppercase;
-  color: var(--black); background: var(--pink);
-  border: 1px solid var(--rule); box-shadow: var(--lift-sm);
-  padding: 11px 13px; margin: 4px 0 0; text-align: center;
+  /* dressed exactly like the resting "take my Galleons" button: same
+     block, same type, so it reads as that button taking over */
+  font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 1rem;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--yellow); background: var(--black);
+  border: 1.5px solid var(--black); border-radius: var(--radius);
+  padding: 12.5px 16px; margin: 4px 0 0; text-align: center;
 }
-.ad-body em { font-style: normal; background: var(--yellow); padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.ad-body em { font-style: normal; background: var(--red); padding: 0 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 /* the step panels are focused programmatically (to move screen-reader focus
    into the dialog), not tabbed to — so kill the stray browser focus ring that
    otherwise draws a box around the whole "no thanks" panel on click. */
@@ -233,7 +250,7 @@
   font-weight: 700; background: var(--bg);
   display: flex; align-items: center;
 }
-.build-compare .bc-cell.accent { font-weight: 700; background: var(--lime); }
+.build-compare .bc-cell.accent { font-weight: 700; background: var(--good); }
 .build-compare .bc-sub { display: block; font-family: var(--font-mono); font-size: 0.68rem; margin-top: 3px; }
 
 /* real-duellist stat comparison: a wide 7-column table, so it scrolls inside
@@ -250,7 +267,7 @@
 .duel-compare tr.dc-group td { background: var(--cyan); text-align: left; font-family: var(--font-display); font-weight: 800; font-stretch: 72%; font-size: 0.86rem; letter-spacing: 0.5px; text-transform: uppercase; }
 /* ARC is the whole point of this comparison, so its column is tinted */
 .duel-compare td.dc-arc { background: #fdeeb0; font-weight: 700; }
-.duel-compare thead th.dc-arc { background: #2a2a2a; color: var(--yellow); }
+.duel-compare thead th.dc-arc { background: var(--black); color: var(--yellow); }
 .duel-compare-cap { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-dim); margin: 0 0 22px; }
 /* Up to 700px wide: six stat columns plus names cannot fit (ACC got cut off), so each duellist becomes
    a card, name on top and the six stats in a row underneath, labelled from
@@ -369,20 +386,37 @@
 .addendum p { font-size: 0.98rem; line-height: 1.7; margin: 0 0 12px; }
 .addendum p:last-child { margin-bottom: 0; }
 
+/* a quote is a form field: a hairline box. When it has a source, the
+   source sits on the top rule like a field label (the same move as the
+   addendum's own label on its dashed border); when it has none, no label.
+   The label has no fill: the box's own top rule is switched off and the
+   label draws it as two lines either side of the text, so the grainy paper
+   (or whatever is behind) shows through untouched. */
 .quote-block {
-  margin: 14px 0; padding: 13px 16px;
-  background: var(--card); border: 1px solid var(--rule);
-  border-left: 10px solid var(--black);
+  display: flex; flex-direction: column;
+  margin: 20px 0 14px; padding: 13px 16px;
+  background: transparent; border: 1px solid var(--black); border-radius: 2px;
 }
-.quote-block + .quote-block { margin-top: 12px; }
+.quote-block:has(.quote-attr) { border-top-color: transparent; border-top-left-radius: 0; border-top-right-radius: 0; }
+.quote-block + .quote-block { margin-top: 20px; }
 .quote-block blockquote { font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.65; margin: 0; }
 .quote-block .quote-attr {
-  display: inline-block; margin-top: 11px;
-  font-family: var(--font-mono); font-weight: 700;
-  font-size: 0.64rem; letter-spacing: 1px; text-transform: uppercase;
-  background: var(--yellow); border: 1px solid var(--rule); padding: 3px 8px;
+  /* in flow and full width (out to the box's border edges), pulled up so
+     its first line straddles the top rule: a long source wraps and pushes
+     the quote down instead of covering it */
+  order: -1; display: flex; align-items: flex-start; gap: 8px;
+  margin: calc(-13px - 0.7em) -17px 8px;
+  font-family: var(--font-mono); font-weight: 400;
+  font-size: 0.64rem; line-height: 1.4; letter-spacing: 1px; text-transform: uppercase;
 }
-.quote-block .quote-attr::before { content: "\2014\00a0"; }
+/* the two halves of the top rule, level with the first line's middle */
+.quote-block .quote-attr::before,
+.quote-block .quote-attr::after {
+  content: ""; border-top: 1px solid var(--black);
+  margin-top: calc(0.7em - 1px);
+}
+.quote-block .quote-attr::before { flex: 0 0 8px; }
+.quote-block .quote-attr::after { flex: 1 0 8px; }
 
 /* ---- filing-cabinet pass ---- */
 /* the intro is a sticky note on the sheet */
@@ -407,15 +441,12 @@
 }
 .build-compare, .abilities-box { box-shadow: var(--lift-sm); }
 .build-compare .bc-head { background: #fff1a6; }
-.notes .label, .addendum-label, .quote-block .quote-attr, .tab-hint-label { border: none; border-radius: 999px; }
+.notes .label, .addendum-label, .tab-hint-label { border: none; border-radius: 999px; }
 .abilities-box .group-label { border: none; border-radius: 2px; background: #fff1a6; }
 .addendum { border-radius: 6px; }
-.quote-block { border-radius: var(--radius); border-left: 3px solid var(--black); }
-.quote-block .quote-attr { background: #fff1a6; }
 .notes img { border-radius: var(--radius); box-shadow: var(--lift); }
-.ad-tag, .ad-countdown { border: none; border-radius: 999px; }
-.ad-cta { border-radius: var(--radius); }
-.ad-overlay { background: rgba(20,20,19,0.7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.ad-tag { border: none; border-radius: 999px; }
+.ad-overlay { background: rgba(20,33,61,0.7); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 .ad-overlay.is-open .ad-box { animation: sheet-in 0.6s var(--ease) both; }
 .spoiler { border-radius: 2px; }
 
@@ -863,7 +894,7 @@ chapterFromHash(true);
     <div id="ad-step1" tabindex="-1">
       <p class="ad-head" id="ad-head">Pay up, freeloader.</p>
       <p class="ad-body">i put hours into writing this and you’re getting all of it at zero cost, so the least you can do is throw something at the Hufflepuff Broom Fund.</p>
-      <a class="ad-cta" id="ad-cta" href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">Fine, take my Galleons →</a>
+      <a class="ad-cta" id="ad-cta" href="https://hogwarts.io/viewtopic.php?t=18994" target="_blank" rel="noopener">Fine, take my Galleons <span class="ad-cta-arrow" aria-hidden="true">→</span></a>
       <button class="ad-skip" id="ad-skip" type="button" disabled>skip in 5</button>
     </div>
 
