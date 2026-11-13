@@ -109,6 +109,7 @@
   --dim: var(--ink-dim);
   --green: #2e7d32;
   --good: var(--cyan);          /* success / done / bonus fills */
+  --pink-ink: var(--desk-ink);  /* the blue slot carries light ink on its tabs and folder text (a choice, below 4.5:1) */
 }
 
 /* --folder follows the open section (neo-motion.js repaints it); --cover is
@@ -377,6 +378,10 @@ button.side-tab:first-child:not(.is-active):focus-visible {
   button.side-tab:not(.is-active):hover { transform: translateY(-12px); }
   button.side-tab:first-child:not(.is-active):hover { transform: translate(var(--peek-inset), -12px); }
 }
+/* the blue folder's tabs take light ink. The tab's colour arrives as an
+   inline --c: var(--pink) (set by neo-motion.js), so match on that. */
+.side-tab[style*="--c: var(--pink)"],
+.tab[style*="--c: var(--pink)"].active { color: var(--pink-ink); }
 .side-tab.is-active, .side-tab.is-active:hover {
   --tc: var(--folder); transform: none; cursor: default;
   filter: none;   /* no shadow at the join, so it reads as one piece */

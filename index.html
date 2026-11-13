@@ -210,6 +210,10 @@ body.home .topbar { margin-left: calc(-1 * var(--gutter)); margin-right: calc(-1
   font-style: normal; display: inline-block; transform: rotate(90deg);
   transition: transform var(--slow) var(--ease);
 }
+/* the blue folder (and any blue sheet in another folder) takes light ink:
+   its tab, its label, and the number, name and line that slide in */
+.folder[style*="--c: var(--pink)"] { color: var(--pink-ink); }
+.folder-page[style*="--pc: var(--pink)"] { --pt: var(--pink-ink); }
 /* the line only visible once the folders in front slide away */
 .folder-more {
   grid-row: 3; grid-column: 1 / -1; margin-top: 22px; max-width: 72ch;
